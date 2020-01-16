@@ -8,22 +8,42 @@
   </url>
   
   <url>
-    <loc>/categories/integration/</loc>
-    <lastmod>2020-01-16T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/integration/</loc>
     <lastmod>2020-01-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/2020/01/integration-portolio/</loc>
+    <loc>/categories/integration/</loc>
+    <lastmod>2020-01-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2020/01/integration-portfolio/</loc>
+    <lastmod>2020-01-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/logistic-regression/</loc>
     <lastmod>2020-01-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/mcmc/</loc>
+    <lastmod>2020-01-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/optimization/</loc>
+    <lastmod>2020-01-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/optimization/</loc>
+    <lastmod>2020-01-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2020/01/optimization-portfolio/</loc>
     <lastmod>2020-01-16T00:00:00+00:00</lastmod>
   </url>
   
@@ -50,26 +70,6 @@
   <url>
     <loc>/tags/</loc>
     <lastmod>2020-01-16T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/2015/07/hello-r-markdown/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/plot/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/r-markdown/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/regression/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
   </url>
   
   <url>

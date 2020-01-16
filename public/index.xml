@@ -12,24 +12,22 @@
     
     
     <item>
-      <title>Integration Portolio</title>
-      <link>/2020/01/integration-portolio/</link>
+      <title>Integration Portfolio</title>
+      <link>/2020/01/integration-portfolio/</link>
       <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2020/01/integration-portolio/</guid>
+      <guid>/2020/01/integration-portfolio/</guid>
       <description>Metropolis-Hastings library(ggplot2) library(tidyverse) library(gridExtra) library(MASS) Random Walk Metropolis Hastings Let’s implement a Random Walk Metropolis-Hastings algorithm with a symmetric proposal density.
 rwmh &amp;lt;- function(start, niter, proposal, target){ # Store accepted, rejected and all samples accepted &amp;lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &amp;quot;accepted&amp;quot;)) rejected &amp;lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &amp;quot;rejected&amp;quot;)) samples &amp;lt;- matrix(NA, nrow=niter) # Set first sample to start and sample uniform random numbers for efficiency z &amp;lt;- start accepted[1] &amp;lt;- z; rejected[1] &amp;lt;- z; samples[1] &amp;lt;- z u &amp;lt;- runif(niter) # Draw candidate, calculate acceptance prob for niter-1 times for (i in 2:niter){ cand &amp;lt;- proposal$sample(z) prob &amp;lt;- min(1, target$density(cand)/target$density(z)) if (u[i] &amp;lt;= prob) {accepted[i] &amp;lt;- cand; z &amp;lt;- cand} else {rejected[i] &amp;lt;- cand} samples[i] &amp;lt;- z } result &amp;lt;- list(&amp;quot;samples&amp;quot;=samples, &amp;quot;accepted&amp;quot;=accepted, &amp;quot;rejected&amp;quot;=rejected, &amp;quot;proposal&amp;quot;=proposal, &amp;quot;target&amp;quot;=target) return(result) }  Plotting Function The following function takes the output of the Random-Walk Metropolis-Hastings algorithm and it produces two plots:</description>
     </item>
     
     <item>
-      <title>Hello R Markdown</title>
-      <link>/2015/07/hello-r-markdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>Optimization Portfolio</title>
+      <link>/2020/01/optimization-portfolio/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2015/07/hello-r-markdown/</guid>
-      <description>R Markdown This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars) ## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
+      <guid>/2020/01/optimization-portfolio/</guid>
+      <description>library(MASS) library(microbenchmark) library(tidyverse) Utility functions kernel_matrix &amp;lt;- function(X, sigmasq, Y=NULL){ if (is.null(Y)){ Y &amp;lt;- X } n &amp;lt;- nrow(X) m &amp;lt;- nrow(Y) # Find three matrices above Xnorm &amp;lt;- matrix(apply(X^2, 1, sum), n, m) Ynorm &amp;lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE) XY &amp;lt;- tcrossprod(X, Y) return(exp(-(Xnorm - 2*XY + Ynorm) / (2*sigmasq))) } # Creates a logical one-hot encoding, assumes classes 0, .. , K-1 make_flags &amp;lt;- function(y){ classes &amp;lt;- unique(y) flags &amp;lt;- data.</description>
     </item>
     
   </channel>
