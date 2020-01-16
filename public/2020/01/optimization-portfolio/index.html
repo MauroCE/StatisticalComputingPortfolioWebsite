@@ -23,10 +23,10 @@
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2020-01-16T00:00:00">
+    <meta property="article:published_time" content="2020-01-15T00:00:00">
   
   
-    <meta property="article:modified_time" content="2020-01-16T00:00:00">
+    <meta property="article:modified_time" content="2020-01-15T00:00:00">
   
   
   
@@ -234,9 +234,9 @@
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2020-01-16T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-01-15T00:00:00Z">
         
-  January 16, 2020
+  January 15, 2020
 
       </time>
     
@@ -359,7 +359,7 @@ y &lt;- data %&gt;% dplyr::select(y) %&gt;% as.matrix</code></pre>
   return(p)
 }
 plot_dataset(data)</code></pre>
-<p><img src="/post/2020-01-16-optimization-portfolio_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
 </div>
 <div id="fisher-discriminant-analysis" class="section level1">
@@ -441,7 +441,7 @@ plot_dataset(data)</code></pre>
 <h3>Results</h3>
 <pre class="r"><code>fda_object &lt;- fda(X, y)
 plot(fda_object)</code></pre>
-<p><img src="/post/2020-01-16-optimization-portfolio_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 </div>
 </div>
 <div id="naive-bayes" class="section level1">
@@ -516,7 +516,7 @@ Let’s assume each class is Gaussian distributed.</p>
 <div id="results-1" class="section level3">
 <h3>Results</h3>
 <pre class="r"><code>plot(naive_bayes(X, y))</code></pre>
-<p><img src="/post/2020-01-16-optimization-portfolio_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
 </div>
 <div id="logistic-regression" class="section level1">
@@ -770,7 +770,7 @@ lr_nm_map   &lt;- logistic_regression(X, y, cost=&quot;MAP&quot;, method=&quot;N
 }</code></pre>
 <p>We can see indeed that the laplace approximation to the posterior is more uncertain when points from either side are closer together, as one would expect.</p>
 <pre class="r"><code>plot(logistic_regression(X, y, cost=&quot;MAP&quot;, method=&quot;BFGS&quot;, laplace = TRUE))</code></pre>
-<p><img src="/post/2020-01-16-optimization-portfolio_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 </div>
 </div>
 
@@ -800,7 +800,7 @@ lr_nm_map   &lt;- logistic_regression(X, y, cost=&quot;MAP&quot;, method=&quot;N
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/matrices-portfolio/" data-tooltip="Matrices Portfolio">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/integration-portfolio/" data-tooltip="Integration Portfolio">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -808,7 +808,7 @@ lr_nm_map   &lt;- logistic_regression(X, y, cost=&quot;MAP&quot;, method=&quot;N
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/packages-portfolio/" data-tooltip="Packages Portfolio">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/matrices-portfolio/" data-tooltip="Matrices Portfolio">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -886,7 +886,7 @@ lr_nm_map   &lt;- logistic_regression(X, y, cost=&quot;MAP&quot;, method=&quot;N
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/matrices-portfolio/" data-tooltip="Matrices Portfolio">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/integration-portfolio/" data-tooltip="Integration Portfolio">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -894,7 +894,7 @@ lr_nm_map   &lt;- logistic_regression(X, y, cost=&quot;MAP&quot;, method=&quot;N
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/packages-portfolio/" data-tooltip="Packages Portfolio">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/matrices-portfolio/" data-tooltip="Matrices Portfolio">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -1025,6 +1025,10 @@ lr_nm_map   &lt;- logistic_regression(X, y, cost=&quot;MAP&quot;, method=&quot;N
 
 <script src="/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
 
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha256-XrZQp+ZMfovqr6Hb2M6okHvSEYaB/+Xbx7toWmOOZUM=" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+  
 
 <script lang="javascript">
 window.onload = updateMinWidth;

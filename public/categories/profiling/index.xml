@@ -6,7 +6,7 @@
     <description>Recent content in profiling on Statistical Computing Portfolio Website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 16 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 13 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/profiling/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Profiling Portfolio</title>
       <link>/2020/01/profiling-portfolio/</link>
-      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 13 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/2020/01/profiling-portfolio/</guid>
       <description>Implementations Data Generation and Problem Settings Import the necessary packages. The library provfis is a stochastic profiler and can be used to profile our code.

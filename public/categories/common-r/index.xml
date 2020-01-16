@@ -6,7 +6,7 @@
     <description>Recent content in Common-R on Statistical Computing Portfolio Website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 16 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 10 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/common-r/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Common R Portfolio</title>
       <link>/2020/01/common-r-portfolio/</link>
-      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 10 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/2020/01/common-r-portfolio/</guid>
       <description>Vectorization As a general rule of thumb, we want to avoid writing for-loops as much as possible, and instead vectorize operations to speed up our calculations. For example suppose that we want to calculate \[\sum_{i=1}^n\cos(i) \times \sin(i) \times \tan(i) - \cos(i)^2-\sin(i)^3\]

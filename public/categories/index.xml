@@ -12,65 +12,11 @@
     
     
     <item>
-      <title>Common-R</title>
-      <link>/categories/common-r/</link>
-      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/common-r/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>functional-programming</title>
-      <link>/categories/functional-programming/</link>
-      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/functional-programming/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>integration</title>
       <link>/categories/integration/</link>
       <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/categories/integration/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>matrices</title>
-      <link>/categories/matrices/</link>
-      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/matrices/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>optimization</title>
-      <link>/categories/optimization/</link>
-      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/optimization/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Packages</title>
-      <link>/categories/packages/</link>
-      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/packages/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>profiling</title>
-      <link>/categories/profiling/</link>
-      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/categories/profiling/</guid>
       <description></description>
     </item>
     
@@ -84,20 +30,74 @@
     </item>
     
     <item>
-      <title>Reproducibility</title>
-      <link>/categories/reproducibility/</link>
-      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      <title>optimization</title>
+      <link>/categories/optimization/</link>
+      <pubDate>Wed, 15 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>/categories/reproducibility/</guid>
+      <guid>/categories/optimization/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>matrices</title>
+      <link>/categories/matrices/</link>
+      <pubDate>Tue, 14 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/matrices/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>profiling</title>
+      <link>/categories/profiling/</link>
+      <pubDate>Mon, 13 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/profiling/</guid>
       <description></description>
     </item>
     
     <item>
       <title>tidyverse</title>
       <link>/categories/tidyverse/</link>
-      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 12 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/categories/tidyverse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>functional-programming</title>
+      <link>/categories/functional-programming/</link>
+      <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/functional-programming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Common-R</title>
+      <link>/categories/common-r/</link>
+      <pubDate>Fri, 10 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/common-r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Packages</title>
+      <link>/categories/packages/</link>
+      <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/packages/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Reproducibility</title>
+      <link>/categories/reproducibility/</link>
+      <pubDate>Wed, 08 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/reproducibility/</guid>
       <description></description>
     </item>
     

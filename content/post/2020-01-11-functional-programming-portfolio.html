@@ -1,0 +1,314 @@
+---
+title: Functional Programming Portfolio
+author: Mauro Camara Escudero
+date: '2020-01-11'
+slug: functional-programming-portfolio
+categories:
+  - R
+  - functional-programming
+tags:
+  - functional-programming
+keywords:
+  - tech
+---
+
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<div id="mathematical-set-up" class="section level2">
+<h2>Mathematical Set Up</h2>
+<p>Suppose we have a training matrix <span class="math inline">\(X\)</span> with <span class="math inline">\(n\)</span> observations and <span class="math inline">\(d\)</span> features
+<span class="math display">\[
+X = \begin{pmatrix}
+x_{11} &amp; x_{12} &amp; \ldots &amp; x_{1d}\\
+x_{21} &amp; x_{22} &amp; \ldots &amp; x_{2d} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+x_{n1} &amp; x_{n2} &amp; \ldots &amp; x_{nd}
+\end{pmatrix}
+=\begin{pmatrix}
+{\bf{x}}_1^\top \\
+{\bf{x}}_2^\top \\
+\vdots \\
+{\bf{x}}_n^\top
+\end{pmatrix}
+\in\mathbb{R}^{n\times d}
+\]</span>
+and that we want to do a <strong>feature transform</strong> of this data using the Radial Basis Function. To do this, we</p>
+<ul>
+<li>choose <span class="math inline">\(b\)</span> rows of <span class="math inline">\(X\)</span> and we call them <strong>centroids</strong>
+<span class="math display">\[
+{\bf{x}}^{(1)}, \ldots, {\bf{x}}^{(b)}
+\]</span></li>
+<li>calculate using some heuristic a <strong>bandwidth</strong> parameter <span class="math inline">\(\sigma^2\)</span></li>
+</ul>
+<p>And then, for every centroid we define a radial basis function as follows
+<span class="math display">\[
+\phi^{(i)}({\bf{x}}):=\exp\left(- \frac{\parallel{\bf{x}} - {\bf{x}}^{(i)}\parallel^2}{\sigma^2}\right) \qquad \forall i\in\{1, \ldots, b\} \quad \text{for } {\bf{x}}\in\mathbb{R}^{d}
+\]</span>
+We can therefore obtain a transformed data matrix as
+<span class="math display">\[
+\Phi:=\begin{pmatrix}
+1 &amp; \phi^{(1)}({\bf{x}}_1) &amp; \phi^{(2)}({\bf{x}}_1) &amp; \cdots &amp; \phi^{(b)}({\bf{x}}_1) \\
+1 &amp; \phi^{(1)}({\bf{x}}_2) &amp; \phi^{(2)}({\bf{x}}_2) &amp; \cdots &amp; \phi^{(b)}({\bf{x}}_2) \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+1 &amp; \phi^{(1)}({\bf{x}}_n) &amp; \phi^{(2)}({\bf{x}}_n) &amp; \cdots &amp; \phi^{(b)}({\bf{x}}_n)
+\end{pmatrix} \in\mathbb{R}^{n\times (b+1)}
+\]</span>
+Then we fit a <strong>regularized</strong> linear model so that <strong>optimal parameters</strong> are given by
+<span class="math display">\[
+{\bf{w}}:=(\Phi^\top\Phi + \lambda I_n)^{-1}\Phi^\top{\bf{y}}
+\]</span>
+These parameters are usually found by solving the associated system of linear equations for <span class="math inline">\({\bf{w}}\)</span>
+<span class="math display">\[
+(\Phi^\top\Phi + \lambda I_n) {\bf{w}} = \Phi^\top {\bf{y}}
+\]</span>
+This will be one of the strategies that we’ll see below. However, we are required to apply regularization with a very small regularization parameter <span class="math inline">\(\lambda\)</span>. This hints at the fact that maybe we can simply set <span class="math inline">\(\lambda=0\)</span> and then find <span class="math inline">\({\bf{w}}\)</span> simply by finding the pseudoinverse of <span class="math inline">\(\Phi\)</span>
+<span class="math display">\[
+(\Phi^\top\Phi)^{-1}\Phi^\top
+\]</span>
+and then multiply this by <span class="math inline">\({\bf{y}}\)</span> on the left. This approach looks more stable and can be implemented by setting <code>pseudoinverse=TRUE</code> in the function <code>make_predictor</code> defined in this document.</p>
+</div>
+<div id="parameters" class="section level2">
+<h2>Parameters</h2>
+<p>In the following code chunk you can set up <span class="math inline">\(n\)</span> the number of training observations, <span class="math inline">\(d\)</span> the dimensionality of the input (i.e. the number of features), <span class="math inline">\(\lambda\)</span> the regularization coefficient, <span class="math inline">\(m\)</span> the number of testing observations, and <span class="math inline">\(b\)</span> dimensionality of the data after the feature transform, which in this case corresponds to the number of centroids.</p>
+<pre class="r"><code>n &lt;-  1000
+d &lt;-  2
+lambda &lt;-  0.00001
+m &lt;-  200
+b &lt;-  50</code></pre>
+</div>
+<div id="training-and-testing-sets" class="section level2">
+<h2>Training and Testing Sets</h2>
+<p>We work with synthetic data sets. For simplicity, we will generate <span class="math inline">\(X\)</span> uniformly in an interval (which in this case is <span class="math inline">\([-4, 4]\)</span>) and then <span class="math inline">\(y\)</span> will be taken to be a multivariate normal of each row of <span class="math inline">\(X\)</span>.
+Note that we create a <strong>factory of functions</strong> to generate multivariate normal
+closures, yet the same behavior would be achieved writing up a simple function.
+The factory of functions is defined in order to work with the functional
+programming paradigm.</p>
+<pre class="r"><code># Explanatory variable is uniformly distributed between -4 and 4, then reshaped
+X &lt;-  matrix(runif(n*d, min=-4, max=4), nrow=n, ncol=d)
+# Factory of multivariate normal distributions
+normal_factory &lt;- function(mean_vector, cov_matrix){
+  d &lt;- nrow(cov_matrix)
+  normal_pdf &lt;- function(x){
+    exponent &lt;- -mahalanobis(x, center=mean_vector, cov=cov_matrix) / 2
+    return(
+      (2*pi)^(-d/2) * det(cov_matrix)^(-1/2) * exp(exponent)
+    )
+  }
+}
+# Closure will be our data-generating process for training and test response.
+target_normal &lt;- normal_factory(rnorm(d), diag(d))
+y &lt;- matrix(apply(X, 1, target_normal))</code></pre>
+<p>Similarly, create test data.</p>
+<pre class="r"><code>Xtest &lt;- matrix(runif(m*d, min=-4, max=4), nrow=m, ncol=d)
+ytest &lt;- matrix(apply(Xtest, 1, target_normal))</code></pre>
+</div>
+<div id="feature-transform-implementation" class="section level2">
+<h2>Feature Transform Implementation</h2>
+<p>Define a function that, given a training data matrix <span class="math inline">\(X\)</span>, finds the distance matrix containing all the pairwise distances squared, and then return the median of such distances. Essentially, it returns the badwidth squared <span class="math inline">\(\sigma^2\)</span>.</p>
+<pre class="r"><code>compute_sigmasq &lt;- function(X){
+  # Compute distance matrix expanding the norm. Return its median
+  Xcross &lt;- tcrossprod(X)
+  Xnorms &lt;- matrix(diag(Xcross), nrow(X), nrow(X), byrow=TRUE)
+  return(median(Xnorms - 2*Xcross + t(Xnorms)))
+}</code></pre>
+<p>Define a function that gets <span class="math inline">\(b\)</span> random samples from the rows of an input matrix <span class="math inline">\(X\)</span>, these will be the centroids.</p>
+<pre class="r"><code>get_centroids &lt;- function(X, n_centroids){
+  # Find indeces of centroids
+  idx &lt;- sample(1:nrow(X), n_centroids)
+  return(X[idx, ])
+}</code></pre>
+<p>Construct a factory of Radial Basis Functions. The factory constructs an RBF, given a centroid and a <span class="math inline">\(\sigma^2\)</span>.</p>
+<pre class="r"><code>rbf &lt;- function(centroid, sigmasq){
+  rbfdot &lt;- function(x){
+    return(
+      exp(-sum((x - centroid)^2) / sigmasq)
+    )
+  }
+  return(rbfdot)
+}</code></pre>
+<p>Finally, we can put all of these functions together to compute <span class="math inline">\(\Phi\)</span> and eventually make predictions.</p>
+<pre class="r"><code>compute_phiX &lt;- function(X, centroids, sigmasq){
+  # Create a list of rbfdot functions and apply each of them to every row of X
+  phiX &lt;- mapply(
+    function(f) apply(X, 1, f), 
+    apply(centroids, 1, rbf, sigmasq=sigmasq)
+  )
+  # Reshape phiX correctly
+  phiX &lt;- matrix(phiX, nrow(X), nrow(centroids))
+  # Recall we need the first column to contain 1s for the bias
+  return(cbind(1, phiX))  # this is a (n, d+1) matrix
+}</code></pre>
+</div>
+<div id="prediction" class="section level2">
+<h2>Prediction</h2>
+<p>We’re now ready to define a factory of functions that returns prediction functions.</p>
+<pre class="r"><code>library(corpcor)
+make_predictor &lt;- function(X, y, lambda, n_centroids, pseudoinverse=FALSE){
+  # Randomly sample centoids
+  centroids &lt;- get_centroids(X, n_centroids)
+  sigmasq &lt;- compute_sigmasq(X)
+  # Get transformed data matrix
+  phiX &lt;- compute_phiX(X, centroids, sigmasq)
+  # Find optimal parameters
+  if (pseudoinverse){
+    # This method works best cause it does automatic regularization with SVD
+    w &lt;- pseudoinverse(phiX) %*% y
+  } else {
+    w &lt;- solve(t(phiX)%*%phiX + lambda*diag(n_centroids+1), t(phiX) %*% y)
+  }
+  # Construct predictor closure for a new batch of testing data Xtest
+  predictor &lt;- function(Xtest){
+    # Need to transform test data into a phi matrix
+    phi_Xtest &lt;- compute_phiX(Xtest, centroids, sigmasq)
+    return(phi_Xtest %*% w)
+  }
+  return(predictor)
+}</code></pre>
+<p>We can test its effectiveness now. Notice that in general we might need a lot of centroids to make this work.</p>
+<pre class="r"><code># Construct prediction functions. One with regularization, other with pseudoinv
+predict &lt;- make_predictor(X, y, lambda, n_centroids = b)
+pseudo_predict &lt;- make_predictor(X, y, lambda, n_centroids = b, pseudoinverse = TRUE)
+# Get predictions
+yhat &lt;- predict(Xtest)
+yhat_pseudo &lt;- pseudo_predict(Xtest)</code></pre>
+<p>Predictions can be assessed by plotting predicted values against the true test
+values.</p>
+<pre class="r"><code>library(ggplot2)
+# Put data into a dataframe for ggplot2
+df &lt;- data.frame(real=ytest, pred=yhat, pseudo_pred=yhat_pseudo)
+ggplot(data=df) + 
+  geom_point(aes(x=real, y=pred), color=&quot;darkblue&quot;) + 
+  geom_abline(intercept=0, slope=1) + 
+  ggtitle(paste(&quot;Predictions vs Actual with b =&quot;, b)) + 
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.title = element_text(size=15, face=&quot;bold&quot;),
+    axis.title.y = element_text(angle=0, vjust=0.5)
+  ) +
+  xlab(expression(y)) + 
+  ylab(expression(hat(y))) + 
+  coord_fixed()</code></pre>
+<p><img src="/post/2020-01-11-functional-programming-portfolio_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Similarly, we can see the performance of our prediction using the pseudoinverse</p>
+<pre class="r"><code>ggplot(data=df) + 
+  geom_point(aes(x=real, y=pseudo_pred), color=&quot;darkblue&quot;) + 
+  geom_abline(intercept=0, slope=1) + 
+  ggtitle(paste(&quot;Pseudo-Predictions vs Actual with b =&quot;, b)) + 
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.title = element_text(size=15, face=&quot;bold&quot;),
+    axis.title.y = element_text(angle=0, vjust=0.5)
+  ) +
+  xlab(expression(y)) + 
+  ylab(expression(hat(y))) + 
+  coord_fixed()</code></pre>
+<p><img src="/post/2020-01-11-functional-programming-portfolio_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+<div id="technical-note-on-calculating-the-bandwidth" class="section level2">
+<h2>Technical Note on Calculating the Bandwidth</h2>
+<p>To vectorize this operation, we aim to create a matrix containing all the squared norms of the difference between the vectors
+<span class="math display">\[
+D = 
+\begin{pmatrix}
+  \parallel \boldsymbol{\mathbf{x}}_1 - \boldsymbol{\mathbf{x}}_1 \parallel^2 &amp; \parallel \boldsymbol{\mathbf{x}}_1 - \boldsymbol{\mathbf{x}}_2 \parallel^2 &amp; \cdots &amp; \parallel \boldsymbol{\mathbf{x}}_1 - \boldsymbol{\mathbf{x}}_n \parallel^2 \\
+  \parallel \boldsymbol{\mathbf{x}}_2 - \boldsymbol{\mathbf{x}}_1 \parallel^2 &amp; \parallel \boldsymbol{\mathbf{x}}_2 - \boldsymbol{\mathbf{x}}_2 \parallel^2 &amp; \cdots &amp; \parallel \boldsymbol{\mathbf{x}}_2 - \boldsymbol{\mathbf{x}}_n \parallel^2 \\
+  \vdots             &amp; \vdots             &amp; \ddots &amp; \vdots \\
+  \parallel \boldsymbol{\mathbf{x}}_n - \boldsymbol{\mathbf{x}}_1 \parallel^2 &amp; \parallel \boldsymbol{\mathbf{x}}_n - \boldsymbol{\mathbf{x}}_2 \parallel^2 &amp; \cdots &amp; \parallel \boldsymbol{\mathbf{x}}_n - \boldsymbol{\mathbf{x}}_n \parallel^2
+\end{pmatrix}
+\]</span>
+Notice that we can rewrite the norm of the difference between two vectors <span class="math inline">\(\boldsymbol{\mathbf{x}}_i\)</span> and <span class="math inline">\(\boldsymbol{\mathbf{x}}_j\)</span> as follows
+<span class="math display">\[
+\parallel \boldsymbol{\mathbf{x}}_i - \boldsymbol{\mathbf{x}}_j \parallel^2 = (\boldsymbol{\mathbf{x}}_i - \boldsymbol{\mathbf{x}}_j)^\top (\boldsymbol{\mathbf{x}}_i - \boldsymbol{\mathbf{x}}_j) = \boldsymbol{\mathbf{x}}_i^\top\boldsymbol{\mathbf{x}}_i - 2\boldsymbol{\mathbf{x}}_i^\top \boldsymbol{\mathbf{x}}_j + \boldsymbol{\mathbf{x}}_j^\top\boldsymbol{\mathbf{x}}_j
+\]</span>
+Broadcasting this, we can rewrite the matrix <span class="math inline">\(D\)</span> as
+<span class="math display">\[
+D =
+\begin{pmatrix}
+  \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} - 2\boldsymbol{\mathbf{x}}_{1}^\top \boldsymbol{\mathbf{x}}_{1} + \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \quad\boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} - 2\boldsymbol{\mathbf{x}}_{1}^\top \boldsymbol{\mathbf{x}}_{2} + \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \quad\cdots &amp; \quad\boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} - 2\boldsymbol{\mathbf{x}}_{1}^\top \boldsymbol{\mathbf{x}}_{n} + \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}\\
+  \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} - 2\boldsymbol{\mathbf{x}}_{2}^\top \boldsymbol{\mathbf{x}}_{1} + \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \quad\boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} - 2\boldsymbol{\mathbf{x}}_{2}^\top \boldsymbol{\mathbf{x}}_{2} + \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \quad\cdots &amp; \quad\boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} - 2\boldsymbol{\mathbf{x}}_{2}^\top \boldsymbol{\mathbf{x}}_{n} + \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}\\
+  \vdots          &amp; \quad\vdots          &amp; \quad\ddots &amp; \quad\vdots \\
+  \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n} - 2\boldsymbol{\mathbf{x}}_{n}^\top \boldsymbol{\mathbf{x}}_{1} + \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \quad\boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n} - 2\boldsymbol{\mathbf{x}}_{n}^\top \boldsymbol{\mathbf{x}}_{2} + \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \quad\cdots &amp; \quad\boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n} - 2\boldsymbol{\mathbf{x}}_{n}^\top \boldsymbol{\mathbf{x}}_{n} + \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}
+\end{pmatrix}
+\]</span>
+This can now be split into three matrices, where we can notice that the third matrix is nothing but the transpose of the first.
+<span class="math display">\[
+D =
+\begin{pmatrix}
+\boldsymbol{\mathbf{x}}_1^\top\boldsymbol{\mathbf{x}}_1 &amp; \boldsymbol{\mathbf{x}}_1^\top\boldsymbol{\mathbf{x}}_1 &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_1^\top\boldsymbol{\mathbf{x}}_1\\
+\boldsymbol{\mathbf{x}}_2^\top\boldsymbol{\mathbf{x}}_2 &amp; \boldsymbol{\mathbf{x}}_2^\top\boldsymbol{\mathbf{x}}_2 &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_2^\top\boldsymbol{\mathbf{x}}_2 \\
+\vdots          &amp; \vdots          &amp; \ddots &amp; \vdots\\
+\boldsymbol{\mathbf{x}}_n^\top\boldsymbol{\mathbf{x}}_n &amp; \boldsymbol{\mathbf{x}}_n^\top\boldsymbol{\mathbf{x}}_n &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_n^\top\boldsymbol{\mathbf{x}}_n
+\end{pmatrix}
+-2
+\begin{pmatrix}
+  \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{n} \\
+  \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{n} \\
+  \vdots     &amp; \vdots     &amp; \ddots &amp; \vdots \\
+  \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}
+\end{pmatrix}
++
+\begin{pmatrix}
+\boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n} \\
+\boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n} \\
+\vdots     &amp; \vdots     &amp; \ddots &amp; \vdots \\
+\boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n} 
+\end{pmatrix}
+\]</span></p>
+<p>The key is not to notice that we can obtain the middle matrix from <span class="math inline">\(X\)</span> with a simple operation:
+<span class="math display">\[
+XX^\top = 
+\begin{pmatrix}
+  \boldsymbol{\mathbf{x}}_1^\top \\
+  \boldsymbol{\mathbf{x}}_2^\top \\
+  \vdots \\
+  \boldsymbol{\mathbf{x}}_n^\top
+\end{pmatrix}
+\begin{pmatrix}
+\boldsymbol{\mathbf{x}}_1 &amp; \boldsymbol{\mathbf{x}}_2 &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_n 
+\end{pmatrix}
+=
+\begin{pmatrix}
+  \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{n} \\
+  \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{n} \\
+  \vdots     &amp; \vdots     &amp; \ddots &amp; \vdots \\
+  \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}
+\end{pmatrix}
+\]</span></p>
+<p>and then the first matrix can be obtained as follows
+<span class="math display">\[
+\begin{pmatrix}
+  1 \\
+  1 \\
+  \vdots \\
+  1
+\end{pmatrix}_{n\times 1}
+\begin{pmatrix}
+  \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}
+\end{pmatrix}_{1\times n}
+= 
+\begin{pmatrix}
+\boldsymbol{\mathbf{x}}_1^\top\boldsymbol{\mathbf{x}}_1 &amp; \boldsymbol{\mathbf{x}}_1^\top\boldsymbol{\mathbf{x}}_1 &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_1^\top\boldsymbol{\mathbf{x}}_1\\
+\boldsymbol{\mathbf{x}}_2^\top\boldsymbol{\mathbf{x}}_2 &amp; \boldsymbol{\mathbf{x}}_2^\top\boldsymbol{\mathbf{x}}_2 &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_2^\top\boldsymbol{\mathbf{x}}_2 \\
+\vdots          &amp; \vdots          &amp; \ddots &amp; \vdots\\
+\boldsymbol{\mathbf{x}}_n^\top\boldsymbol{\mathbf{x}}_n &amp; \boldsymbol{\mathbf{x}}_n^\top\boldsymbol{\mathbf{x}}_n &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_n^\top\boldsymbol{\mathbf{x}}_n
+\end{pmatrix}
+\]</span>
+where
+<span class="math display">\[
+\text{diag}\left[
+\begin{pmatrix}
+  \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{n} \\
+  \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{n} \\
+  \vdots     &amp; \vdots     &amp; \ddots &amp; \vdots \\
+  \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}
+\end{pmatrix}
+\right]
+=
+\begin{pmatrix}
+  \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}
+\end{pmatrix}_{1\times n}
+\]</span></p>
+</div>

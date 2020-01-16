@@ -9,11 +9,11 @@
 <meta name="author" content="Mauro Camara Escudero">
 <meta name="keywords" content="tech">
 <meta name="description" content="library(Matrix) library(tidyverse) library(igraph) We work with the same dataset used for Tidyverse containing data regarding some of the top-voted kaggle kernels.
-kaggle &lt;- read_csv(&quot;kagglekernels.csv&quot;, col_types = cols( Votes=col_double(), Owner=col_factor(), Kernel=col_factor(), Dataset=col_factor(), Output=col_character(), `Code Type`=col_factor(), Language=col_factor(), Comments=col_double(), Views=col_double(), Forks=col_double() )) kaggle # Tibbles automatically print head(tibble) ## # A tibble: 971 x 12 ## Votes Owner Kernel Dataset `Version Histor… Tags Output `Code Type` Language ## &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt; &lt;fct&gt; ## 1 2130 Mega… Explo… Titani… Version 8,2017-… tuto… This … Script markdown ## 2 1395 Guid… Full … Data S… Version 19,2017… tuto… This … Notebook Python ## 3 1363 Pedr… Compr… House … Version 47,2018… begi… This … Notebook Python ## 4 1316 Anis… Intro… Titani… Version 93,2018… tuto… This … Notebook Python ## 5 1078 Kaan… Data … Pokemo… Version 389,201… begi… This … Notebook Python ## 6 1003 Phil… Explo… Zillow… Version 44,2017… begi… This … Script markdown ## 7 946 Mana… Titan… Titani… Version 16,2017… tuto… This … Notebook Python ## 8 826 Omar… A Jou… Titani… Version 6,2016-… begi… This … Notebook Python ## 9 814 anok… Data … Quora … &lt;NA&gt; inte… This … Notebook Python ## 10 726 SRK Simpl… Zillow… Version 19,2017… eda,… This … Notebook Python ## # … with 961 more rows, and 3 more variables: Comments &lt;dbl&gt;, Views &lt;dbl&gt;, ## # Forks &lt;dbl&gt; Again, we can use the Tags to create a number of different new variables, each representing one Tag.">
+# Use `` for column names with spaces kaggle &lt;- &quot;kagglekernels.csv&quot; %&gt;% read_csv(col_types = cols( Votes=col_double(), Owner=col_factor(), Kernel=col_factor(), Dataset=col_factor(), Output=col_character(), `Code Type`=col_factor(), Language=col_factor(), Comments=col_double(), Views=col_double(), Forks=col_double()) ) kaggle # Tibbles automatically print head(tibble) ## # A tibble: 971 x 12 ## Votes Owner Kernel Dataset `Version Histor… Tags Output `Code Type` Language ## &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt; &lt;fct&gt; ## 1 2130 Mega… Explo… Titani… Version 8,2017-… tuto… This … Script markdown ## 2 1395 Guid… Full … Data S… Version 19,2017… tuto… This … Notebook Python ## 3 1363 Pedr… Compr… House … Version 47,2018… begi… This … Notebook Python ## 4 1316 Anis… Intro… Titani… Version 93,2018… tuto… This … Notebook Python ## 5 1078 Kaan… Data … Pokemo… Version 389,201… begi… This … Notebook Python ## 6 1003 Phil… Explo… Zillow… Version 44,2017… begi… This … Script markdown ## 7 946 Mana… Titan… Titani… Version 16,2017… tuto… This … Notebook Python ## 8 826 Omar… A Jou… Titani… Version 6,2016-… begi… This … Notebook Python ## 9 814 anok… Data … Quora … &lt;NA&gt; inte… This … Notebook Python ## 10 726 SRK Simpl… Zillow… Version 19,2017… eda,… This … Notebook Python ## # … with 961 more rows, and 3 more variables: Comments &lt;dbl&gt;, Views &lt;dbl&gt;, ## # Forks &lt;dbl&gt; Again, we can use the Tags to create a number of different new variables, each representing one Tag.">
 
 
 <meta property="og:description" content="library(Matrix) library(tidyverse) library(igraph) We work with the same dataset used for Tidyverse containing data regarding some of the top-voted kaggle kernels.
-kaggle &lt;- read_csv(&quot;kagglekernels.csv&quot;, col_types = cols( Votes=col_double(), Owner=col_factor(), Kernel=col_factor(), Dataset=col_factor(), Output=col_character(), `Code Type`=col_factor(), Language=col_factor(), Comments=col_double(), Views=col_double(), Forks=col_double() )) kaggle # Tibbles automatically print head(tibble) ## # A tibble: 971 x 12 ## Votes Owner Kernel Dataset `Version Histor… Tags Output `Code Type` Language ## &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt; &lt;fct&gt; ## 1 2130 Mega… Explo… Titani… Version 8,2017-… tuto… This … Script markdown ## 2 1395 Guid… Full … Data S… Version 19,2017… tuto… This … Notebook Python ## 3 1363 Pedr… Compr… House … Version 47,2018… begi… This … Notebook Python ## 4 1316 Anis… Intro… Titani… Version 93,2018… tuto… This … Notebook Python ## 5 1078 Kaan… Data … Pokemo… Version 389,201… begi… This … Notebook Python ## 6 1003 Phil… Explo… Zillow… Version 44,2017… begi… This … Script markdown ## 7 946 Mana… Titan… Titani… Version 16,2017… tuto… This … Notebook Python ## 8 826 Omar… A Jou… Titani… Version 6,2016-… begi… This … Notebook Python ## 9 814 anok… Data … Quora … &lt;NA&gt; inte… This … Notebook Python ## 10 726 SRK Simpl… Zillow… Version 19,2017… eda,… This … Notebook Python ## # … with 961 more rows, and 3 more variables: Comments &lt;dbl&gt;, Views &lt;dbl&gt;, ## # Forks &lt;dbl&gt; Again, we can use the Tags to create a number of different new variables, each representing one Tag.">
+# Use `` for column names with spaces kaggle &lt;- &quot;kagglekernels.csv&quot; %&gt;% read_csv(col_types = cols( Votes=col_double(), Owner=col_factor(), Kernel=col_factor(), Dataset=col_factor(), Output=col_character(), `Code Type`=col_factor(), Language=col_factor(), Comments=col_double(), Views=col_double(), Forks=col_double()) ) kaggle # Tibbles automatically print head(tibble) ## # A tibble: 971 x 12 ## Votes Owner Kernel Dataset `Version Histor… Tags Output `Code Type` Language ## &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt; &lt;fct&gt; ## 1 2130 Mega… Explo… Titani… Version 8,2017-… tuto… This … Script markdown ## 2 1395 Guid… Full … Data S… Version 19,2017… tuto… This … Notebook Python ## 3 1363 Pedr… Compr… House … Version 47,2018… begi… This … Notebook Python ## 4 1316 Anis… Intro… Titani… Version 93,2018… tuto… This … Notebook Python ## 5 1078 Kaan… Data … Pokemo… Version 389,201… begi… This … Notebook Python ## 6 1003 Phil… Explo… Zillow… Version 44,2017… begi… This … Script markdown ## 7 946 Mana… Titan… Titani… Version 16,2017… tuto… This … Notebook Python ## 8 826 Omar… A Jou… Titani… Version 6,2016-… begi… This … Notebook Python ## 9 814 anok… Data … Quora … &lt;NA&gt; inte… This … Notebook Python ## 10 726 SRK Simpl… Zillow… Version 19,2017… eda,… This … Notebook Python ## # … with 961 more rows, and 3 more variables: Comments &lt;dbl&gt;, Views &lt;dbl&gt;, ## # Forks &lt;dbl&gt; Again, we can use the Tags to create a number of different new variables, each representing one Tag.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Matrices Portfolio">
 <meta name="twitter:title" content="Matrices Portfolio">
@@ -21,16 +21,16 @@ kaggle &lt;- read_csv(&quot;kagglekernels.csv&quot;, col_types = cols( Votes=col
 <meta property="twitter:url" content="/2020/01/matrices-portfolio/">
 <meta property="og:site_name" content="Statistical Computing Portfolio Website">
 <meta property="og:description" content="library(Matrix) library(tidyverse) library(igraph) We work with the same dataset used for Tidyverse containing data regarding some of the top-voted kaggle kernels.
-kaggle &lt;- read_csv(&quot;kagglekernels.csv&quot;, col_types = cols( Votes=col_double(), Owner=col_factor(), Kernel=col_factor(), Dataset=col_factor(), Output=col_character(), `Code Type`=col_factor(), Language=col_factor(), Comments=col_double(), Views=col_double(), Forks=col_double() )) kaggle # Tibbles automatically print head(tibble) ## # A tibble: 971 x 12 ## Votes Owner Kernel Dataset `Version Histor… Tags Output `Code Type` Language ## &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt; &lt;fct&gt; ## 1 2130 Mega… Explo… Titani… Version 8,2017-… tuto… This … Script markdown ## 2 1395 Guid… Full … Data S… Version 19,2017… tuto… This … Notebook Python ## 3 1363 Pedr… Compr… House … Version 47,2018… begi… This … Notebook Python ## 4 1316 Anis… Intro… Titani… Version 93,2018… tuto… This … Notebook Python ## 5 1078 Kaan… Data … Pokemo… Version 389,201… begi… This … Notebook Python ## 6 1003 Phil… Explo… Zillow… Version 44,2017… begi… This … Script markdown ## 7 946 Mana… Titan… Titani… Version 16,2017… tuto… This … Notebook Python ## 8 826 Omar… A Jou… Titani… Version 6,2016-… begi… This … Notebook Python ## 9 814 anok… Data … Quora … &lt;NA&gt; inte… This … Notebook Python ## 10 726 SRK Simpl… Zillow… Version 19,2017… eda,… This … Notebook Python ## # … with 961 more rows, and 3 more variables: Comments &lt;dbl&gt;, Views &lt;dbl&gt;, ## # Forks &lt;dbl&gt; Again, we can use the Tags to create a number of different new variables, each representing one Tag.">
+# Use `` for column names with spaces kaggle &lt;- &quot;kagglekernels.csv&quot; %&gt;% read_csv(col_types = cols( Votes=col_double(), Owner=col_factor(), Kernel=col_factor(), Dataset=col_factor(), Output=col_character(), `Code Type`=col_factor(), Language=col_factor(), Comments=col_double(), Views=col_double(), Forks=col_double()) ) kaggle # Tibbles automatically print head(tibble) ## # A tibble: 971 x 12 ## Votes Owner Kernel Dataset `Version Histor… Tags Output `Code Type` Language ## &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt; &lt;fct&gt; ## 1 2130 Mega… Explo… Titani… Version 8,2017-… tuto… This … Script markdown ## 2 1395 Guid… Full … Data S… Version 19,2017… tuto… This … Notebook Python ## 3 1363 Pedr… Compr… House … Version 47,2018… begi… This … Notebook Python ## 4 1316 Anis… Intro… Titani… Version 93,2018… tuto… This … Notebook Python ## 5 1078 Kaan… Data … Pokemo… Version 389,201… begi… This … Notebook Python ## 6 1003 Phil… Explo… Zillow… Version 44,2017… begi… This … Script markdown ## 7 946 Mana… Titan… Titani… Version 16,2017… tuto… This … Notebook Python ## 8 826 Omar… A Jou… Titani… Version 6,2016-… begi… This … Notebook Python ## 9 814 anok… Data … Quora … &lt;NA&gt; inte… This … Notebook Python ## 10 726 SRK Simpl… Zillow… Version 19,2017… eda,… This … Notebook Python ## # … with 961 more rows, and 3 more variables: Comments &lt;dbl&gt;, Views &lt;dbl&gt;, ## # Forks &lt;dbl&gt; Again, we can use the Tags to create a number of different new variables, each representing one Tag.">
 <meta name="twitter:description" content="library(Matrix) library(tidyverse) library(igraph) We work with the same dataset used for Tidyverse containing data regarding some of the top-voted kaggle kernels.
-kaggle &lt;- read_csv(&quot;kagglekernels.csv&quot;, col_types = cols( Votes=col_double(), Owner=col_factor(), Kernel=col_factor(), Dataset=col_factor(), Output=col_character(), `Code Type`=col_factor(), Language=col_factor(), Comments=col_double(), Views=col_double(), Forks=col_double() )) kaggle # Tibbles automatically print head(tibble) ## # A tibble: 971 x 12 ## Votes Owner Kernel Dataset `Version Histor… Tags Output `Code Type` Language ## &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt; &lt;fct&gt; ## 1 2130 Mega… Explo… Titani… Version 8,2017-… tuto… This … Script markdown ## 2 1395 Guid… Full … Data S… Version 19,2017… tuto… This … Notebook Python ## 3 1363 Pedr… Compr… House … Version 47,2018… begi… This … Notebook Python ## 4 1316 Anis… Intro… Titani… Version 93,2018… tuto… This … Notebook Python ## 5 1078 Kaan… Data … Pokemo… Version 389,201… begi… This … Notebook Python ## 6 1003 Phil… Explo… Zillow… Version 44,2017… begi… This … Script markdown ## 7 946 Mana… Titan… Titani… Version 16,2017… tuto… This … Notebook Python ## 8 826 Omar… A Jou… Titani… Version 6,2016-… begi… This … Notebook Python ## 9 814 anok… Data … Quora … &lt;NA&gt; inte… This … Notebook Python ## 10 726 SRK Simpl… Zillow… Version 19,2017… eda,… This … Notebook Python ## # … with 961 more rows, and 3 more variables: Comments &lt;dbl&gt;, Views &lt;dbl&gt;, ## # Forks &lt;dbl&gt; Again, we can use the Tags to create a number of different new variables, each representing one Tag.">
+# Use `` for column names with spaces kaggle &lt;- &quot;kagglekernels.csv&quot; %&gt;% read_csv(col_types = cols( Votes=col_double(), Owner=col_factor(), Kernel=col_factor(), Dataset=col_factor(), Output=col_character(), `Code Type`=col_factor(), Language=col_factor(), Comments=col_double(), Views=col_double(), Forks=col_double()) ) kaggle # Tibbles automatically print head(tibble) ## # A tibble: 971 x 12 ## Votes Owner Kernel Dataset `Version Histor… Tags Output `Code Type` Language ## &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt; &lt;fct&gt; ## 1 2130 Mega… Explo… Titani… Version 8,2017-… tuto… This … Script markdown ## 2 1395 Guid… Full … Data S… Version 19,2017… tuto… This … Notebook Python ## 3 1363 Pedr… Compr… House … Version 47,2018… begi… This … Notebook Python ## 4 1316 Anis… Intro… Titani… Version 93,2018… tuto… This … Notebook Python ## 5 1078 Kaan… Data … Pokemo… Version 389,201… begi… This … Notebook Python ## 6 1003 Phil… Explo… Zillow… Version 44,2017… begi… This … Script markdown ## 7 946 Mana… Titan… Titani… Version 16,2017… tuto… This … Notebook Python ## 8 826 Omar… A Jou… Titani… Version 6,2016-… begi… This … Notebook Python ## 9 814 anok… Data … Quora … &lt;NA&gt; inte… This … Notebook Python ## 10 726 SRK Simpl… Zillow… Version 19,2017… eda,… This … Notebook Python ## # … with 961 more rows, and 3 more variables: Comments &lt;dbl&gt;, Views &lt;dbl&gt;, ## # Forks &lt;dbl&gt; Again, we can use the Tags to create a number of different new variables, each representing one Tag.">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2020-01-16T00:00:00">
+    <meta property="article:published_time" content="2020-01-14T00:00:00">
   
   
-    <meta property="article:modified_time" content="2020-01-16T00:00:00">
+    <meta property="article:modified_time" content="2020-01-14T00:00:00">
   
   
   
@@ -242,9 +242,9 @@ kaggle &lt;- read_csv(&quot;kagglekernels.csv&quot;, col_types = cols( Votes=col
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2020-01-16T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-01-14T00:00:00Z">
         
-  January 16, 2020
+  January 14, 2020
 
       </time>
     
@@ -272,18 +272,20 @@ kaggle &lt;- read_csv(&quot;kagglekernels.csv&quot;, col_types = cols( Votes=col
 library(tidyverse)
 library(igraph)</code></pre>
 <p>We work with the same dataset used for <code>Tidyverse</code> containing data regarding some of the top-voted kaggle kernels.</p>
-<pre class="r"><code>kaggle &lt;- read_csv(&quot;kagglekernels.csv&quot;, col_types = cols(
-  Votes=col_double(),
-  Owner=col_factor(),
-  Kernel=col_factor(),
-  Dataset=col_factor(),
-  Output=col_character(),
-  `Code Type`=col_factor(),
-  Language=col_factor(),
-  Comments=col_double(),
-  Views=col_double(),
-  Forks=col_double()
-))
+<pre class="r"><code># Use `` for column names with spaces
+kaggle &lt;- &quot;kagglekernels.csv&quot; %&gt;% 
+  read_csv(col_types = cols(
+      Votes=col_double(),
+      Owner=col_factor(),
+      Kernel=col_factor(),
+      Dataset=col_factor(),
+      Output=col_character(),
+      `Code Type`=col_factor(),
+      Language=col_factor(),
+      Comments=col_double(),
+      Views=col_double(),
+      Forks=col_double())
+      )
 kaggle # Tibbles automatically print head(tibble)</code></pre>
 <pre><code>## # A tibble: 971 x 12
 ##    Votes Owner Kernel Dataset `Version Histor… Tags  Output `Code Type` Language
@@ -364,7 +366,7 @@ tagmatrix</code></pre>
   Matrix::drop0()</code></pre>
 <p>We can look at the sparsity pattern with the function <code>Matrix::image()</code> to get an idea of what this matrix looks like.</p>
 <pre class="r"><code>Matrix::image(tagmatrix, main=&quot;Sparsity Patter of Tag Pairings&quot;)</code></pre>
-<p><img src="/post/2020-01-16-matrices-portfolio_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="/post/2020-01-14-matrices-portfolio_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>Alternatively, we can look at the percentage of sparsity.</p>
 <pre class="r"><code>nnzero(tagmatrix) / length(tagmatrix)</code></pre>
 <pre><code>## [1] 0.08214881</code></pre>
@@ -379,14 +381,14 @@ graph &lt;- graph_from_adjacency_matrix(tagmatrix, weighted = TRUE)</code></pre>
 <p>We first choose to plot the network using a standard circle layout.</p>
 <pre class="r"><code>plot(graph, layout=layout_in_circle(graph), vertex.label.cex=1.0,
      edge.arrow.size=1.0, vertex.label.color=&quot;black&quot;, vertex.size=24)</code></pre>
-<p><img src="/post/2020-01-16-matrices-portfolio_files/figure-html/unnamed-chunk-8-1.png" width="1440" /></p>
+<p><img src="/post/2020-01-14-matrices-portfolio_files/figure-html/unnamed-chunk-8-1.png" width="1440" /></p>
 <p>While at first this graph looks insightful, it’s hard to see some structure. Rather, we can specify a layout by choosing ourselves the coordinates of each node. After some trail and error, it’s possible to come up with a layout similar to this one.</p>
 <pre class="r"><code># graph
 layout &lt;- matrix(c(0, 1, 1, 0, -1, 2, 3, -1, 3, 4, 4, 1, 1, -1, 2, 0, 3, 4, 4,
                    0, 1, 2, 2,  2, 1, 2,  1, 0, 0, 2, 3, 0,  0, 0, 3, 3, 3, 1), nrow=19, ncol=2)
 plot(graph, layout=layout, vertex.label.cex=1.0, edge.arrow.size=1.0, 
      vertex.label.color=&quot;black&quot;, vertex.size=24)</code></pre>
-<p><img src="/post/2020-01-16-matrices-portfolio_files/figure-html/unnamed-chunk-9-1.png" width="1440" /></p>
+<p><img src="/post/2020-01-14-matrices-portfolio_files/figure-html/unnamed-chunk-9-1.png" width="1440" /></p>
 <p>We can see a few important features. First of all it looks like there are three main clusters. One is about <em>deep learning</em>, one is about <em>finance and crime</em> data and the other cluster gathers together most other variables. In this latter cluster, we can see that <code>data visualization</code> dominates.</p>
 
               
@@ -419,7 +421,7 @@ plot(graph, layout=layout, vertex.label.cex=1.0, edge.arrow.size=1.0,
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/integration-portfolio/" data-tooltip="Integration Portfolio">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/optimization-portfolio/" data-tooltip="Optimization Portfolio">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -427,7 +429,7 @@ plot(graph, layout=layout, vertex.label.cex=1.0, edge.arrow.size=1.0,
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/optimization-portfolio/" data-tooltip="Optimization Portfolio">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/profiling-portfolio/" data-tooltip="Profiling Portfolio">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -505,7 +507,7 @@ plot(graph, layout=layout, vertex.label.cex=1.0, edge.arrow.size=1.0,
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/integration-portfolio/" data-tooltip="Integration Portfolio">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/optimization-portfolio/" data-tooltip="Optimization Portfolio">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -513,7 +515,7 @@ plot(graph, layout=layout, vertex.label.cex=1.0, edge.arrow.size=1.0,
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/optimization-portfolio/" data-tooltip="Optimization Portfolio">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/profiling-portfolio/" data-tooltip="Profiling Portfolio">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -644,6 +646,10 @@ plot(graph, layout=layout, vertex.label.cex=1.0, edge.arrow.size=1.0,
 
 <script src="/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
 
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha256-XrZQp+ZMfovqr6Hb2M6okHvSEYaB/+Xbx7toWmOOZUM=" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+  
 
 <script lang="javascript">
 window.onload = updateMinWidth;

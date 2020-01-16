@@ -6,7 +6,7 @@
     <description>Recent content in Packages on Statistical Computing Portfolio Website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 16 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 09 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/packages/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Packages Portfolio</title>
       <link>/2020/01/packages-portfolio/</link>
-      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 09 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/2020/01/packages-portfolio/</guid>
       <description>Creating an R Package with RStudio To Create a package open RStudio, on the menu browse

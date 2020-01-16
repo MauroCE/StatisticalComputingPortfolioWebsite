@@ -1,0 +1,530 @@
+---
+title: Optimization Portfolio
+author: Mauro Camara Escudero
+date: '2020-01-15'
+slug: optimization-portfolio
+categories:
+  - R
+  - optimization
+tags:
+  - optimization
+  - logistic-regression
+keywords:
+  - tech
+---
+
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<pre class="r"><code>library(MASS)
+library(microbenchmark)
+library(tidyverse)</code></pre>
+<div id="utility-functions" class="section level1">
+<h1>Utility functions</h1>
+<pre class="r"><code>kernel_matrix &lt;- function(X, sigmasq, Y=NULL){
+  if (is.null(Y)){
+    Y &lt;- X
+  }
+  n &lt;- nrow(X)
+  m &lt;- nrow(Y)
+  # Find three matrices above
+  Xnorm &lt;- matrix(apply(X^2, 1, sum), n, m)
+  Ynorm &lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE)
+  XY &lt;- tcrossprod(X, Y)
+  return(exp(-(Xnorm - 2*XY + Ynorm) / (2*sigmasq)))
+}
+
+# Creates a logical one-hot encoding, assumes classes 0, .. , K-1
+make_flags &lt;- function(y){
+  classes &lt;- unique(y)
+  flags &lt;- data.frame(y=y) %&gt;% 
+            mutate(rn=row_number(), value=1) %&gt;% 
+            spread(y, value, fill=0) %&gt;% 
+            dplyr::select(-rn) %&gt;% as.matrix %&gt;% as.logical %&gt;%
+            matrix(nrow=nrow(y)) 
+  return(flags)
+}
+# Calculates a function (usually mean or sd) for all classes
+calc_func_per_class &lt;- function(X, y, func){
+  flags &lt;- make_flags(y)
+  return(t(apply(flags, 2, function(f) apply(X[f, ], 2, func))))
+}
+# Calculates density of a gaussian
+gaussian_density &lt;- function(x, mu, sigma, log=FALSE, precision=FALSE){
+  # If precision=TRUE, we&#39;re provided with precision matrix, which is the inverse
+  # of the variance-covariance matrix
+  if (!precision){
+    # Cholesky, L is upper triangular
+    L &lt;- chol(sigma)
+    kernel &lt;- -0.5*crossprod(forwardsolve(t(L), x - mu))
+    value  &lt;- -length(x)*log(2*pi)/2 -sum(log(diag(L))) + kernel
+  } else {
+    kernel &lt;- -0.5* t(x-  mu) %*% (sigma %*% (x - mu))
+    value  &lt;- -length(x)*log(2*pi)/2 -log(det(L)) + kernel
+  }
+  if (!log){
+    value &lt;- exp(value)
+  }
+  return(value[[1]])
+}
+# Fastest known pure-R way to compute means across dimensions.
+center_matrix &lt;- function(A){
+  return(A - rep(1, nrow(A)) %*% t(colMeans(A)))
+}</code></pre>
+</div>
+<div id="binary-dataset-generation" class="section level1">
+<h1>Binary Dataset Generation</h1>
+<div id="settings-for-data-creation" class="section level3">
+<h3>Settings for Data Creation</h3>
+<pre class="r"><code># Settings
+n1 &lt;- 100
+n2 &lt;- 100
+m1 &lt;- c(6, 6)
+m2 &lt;- c(-1, 1)
+s1 &lt;- matrix(c(1, 0, 0, 10), nrow=2, ncol=2)
+s2 &lt;- matrix(c(1, 0, 0, 10), nrow=2, ncol=2)</code></pre>
+</div>
+<div id="data-generating-function" class="section level3">
+<h3>Data Generating Function</h3>
+<pre class="r"><code>generate_binary_data &lt;- function(n1, n2, m1, s1, m2, s2){
+  # x1, x2 and y for both classes (both 0,1 and -1,1 will be created for convenience)
+  class1 &lt;- mvrnorm(n1, m1, s1)
+  class2 &lt;- mvrnorm(n2, m2, s2)
+  y      &lt;- c(rep(0, n1), rep(1, n2))   # {0 , 1}
+  y2     &lt;- c(rep(-1, n1), rep(1, n2))  # {-1, 1}
+  # Generate dataframe
+  data &lt;- data.frame(rbind(class1, class2), y, y2)
+  return(data)
+}
+# Generate reproducible data
+set.seed(123)
+data &lt;- generate_binary_data(n1, n2, m1, s1, m2, s2)
+X &lt;- data %&gt;% dplyr::select(-y, -y2) %&gt;% as.matrix
+y &lt;- data %&gt;% dplyr::select(y) %&gt;% as.matrix</code></pre>
+</div>
+<div id="data-appearance" class="section level3">
+<h3>Data Appearance</h3>
+<pre class="r"><code>plot_dataset &lt;- function(data){
+  p &lt;- ggplot(data=data, aes(x=X1, y=X2, color=as_factor(y))) + 
+        geom_point() + 
+        theme(plot.title=element_text(hjust=0.5, size=20)) + 
+        labs(color=&quot;Class&quot;, title=&quot;Linearly Separable Dataset&quot;)
+  return(p)
+}
+plot_dataset(data)</code></pre>
+<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+</div>
+<div id="fisher-discriminant-analysis" class="section level1">
+<h1>Fisher Discriminant Analysis</h1>
+<div id="fda-class" class="section level3">
+<h3>FDA Class</h3>
+<p>Define an S3 object performing FDA.</p>
+<pre class="r"><code>fda &lt;- function(X, y){
+  # Use y to create a logical one-hot encoding called `flags`
+  flags &lt;- make_flags(y)
+  # Define objective function 
+  fda_objective &lt;- function(w){
+    mu &lt;- mean(X %*% w)           # embedded DATASET center
+    muks &lt;- rep(0, ncol(flags))   # embedded center for class k
+    swks &lt;- rep(0, ncol(flags))   # within class scatterness
+    sbks &lt;- rep(0, ncol(flags))   # between class scatterness
+    for (class in 1:ncol(flags)){
+      Xk &lt;- X[flags[, class], ]
+      mk &lt;- mean(Xk %*% w)
+      muks[class] &lt;- mk
+      swks[class] &lt;- sum(((Xk %*% w) - mk)^2)
+      sbks[class] &lt;- sum(flags[, class]) * (mk - mu)^2
+    }
+    # Calculate objective value
+    value &lt;- sum(sbks) / sum(swks)
+    return(-value) # remember we want to maximize, but optim minimizes
+  }
+  # Optimize
+  w_start &lt;- matrix(1, nrow=ncol(X), ncol=1)
+  sol &lt;- optim(par=w_start, fn=fda_objective, method=&quot;BFGS&quot;)$par
+  # Return object
+  fda_object &lt;- list(sol=sol, flags=flags, X=X, y=y)
+  class(fda_object) &lt;- &quot;FDA&quot;
+  return(fda_object)
+}</code></pre>
+</div>
+<div id="fda-plot-method" class="section level3">
+<h3>FDA Plot Method</h3>
+<pre class="r"><code>plot.FDA &lt;- function(x, y=NULL, ...){
+  # Find unit vector of w and take dot product
+  sol_unit &lt;- x$sol / sqrt(sum(x$sol^2))
+  dot_products &lt;-  x$X %*% sol_unit
+  if (ncol(x$X) &gt; 2){
+    # Plot on a simple horizontal line
+  df &lt;- data.frame(x1=dot_products, x2=rep(0, nrow(dot_products)), y=x$y)
+  p &lt;- ggplot(data=df) + 
+        geom_point(aes(x=x1, y=x2, color=as_factor(x$y)))
+  } else {
+    # Find embedded points in 2D
+    x_emb &lt;- dot_products %*% t(sol_unit)
+    dfembed &lt;- data.frame(x1=x_emb[, 1], x2=x_emb[, 2], y=x$y)
+    # Find data mean, and mean per cluster
+    datamean &lt;- apply(x$X, 2, mean)
+    datamean &lt;- data.frame(x=datamean[1], y=datamean[2])
+    meanmatrix &lt;- calc_func_per_class(x$X, x$y, mean)
+    dfclassmeans &lt;- data.frame(meanmatrix, y=(1:nrow(meanmatrix) - 1))
+    # Dataframe to plot w
+    wdf &lt;- data.frame(x=x$sol[1], y=x$sol[2], x0=c(0.0), y0=c(0.0))
+    # Plot
+    p &lt;- ggplot() + 
+          geom_point(data=data.frame(x$X, x$y), 
+                     aes(x=X1, y=X2, color=as_factor(y)), alpha=0.2) + 
+          geom_point(data=dfclassmeans, 
+                     aes(x=X1, y=X2, color=as_factor(y)),
+                     shape=3, size=8, show.legend=FALSE) + 
+          geom_point(data=datamean, aes(x=x, y=y), size=8, shape=3, color=&quot;black&quot;) +
+          geom_point(data=dfembed, aes(x=x1, y=x2, color=as_factor(y))) + 
+          geom_segment(data=wdf, 
+                       aes(x=x0, y=y0, xend=x, yend=y, color=&quot;w&quot;), 
+                       arrow = arrow(length=unit(0.15, &quot;inches&quot;)), 
+                       color=&quot;darkred&quot;, size=1)
+  }
+  p + 
+    labs(color=&quot;Class&quot;, title=&quot;FDA-Embedded Dataset&quot;, x=&quot;X1&quot;, y=&quot;X2&quot;) + 
+    theme(plot.title=element_text(hjust=0.5, size=20))
+}</code></pre>
+</div>
+<div id="results" class="section level3">
+<h3>Results</h3>
+<pre class="r"><code>fda_object &lt;- fda(X, y)
+plot(fda_object)</code></pre>
+<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+</div>
+<div id="naive-bayes" class="section level1">
+<h1>Naive Bayes</h1>
+<div id="mathematics" class="section level3">
+<h3>Mathematics</h3>
+<p><span class="math display">\[
+\widehat{y} = {\arg \max}_{k\in\left\{1, \ldots, K\right\}} p(C_k) \prod_{i=1}^N p(x_i \mid C_k)
+\]</span>
+Let’s assume each class is Gaussian distributed.</p>
+</div>
+<div id="naive-bayes-class" class="section level3">
+<h3>Naive Bayes Class</h3>
+<pre class="r"><code>naive_bayes &lt;- function(X, y){
+  # For every class, find mean and variance (one class per row)
+  means &lt;- calc_func_per_class(X, y, mean)
+  vars  &lt;- calc_func_per_class(X, y, function(x) sd(x)^2)
+  # Create a gaussian for each class
+  nb &lt;- list(means=means, vars=vars, X=X, y=y)
+  class(nb) &lt;- &quot;naive_bayes&quot;
+  return(nb)
+}</code></pre>
+</div>
+<div id="predict-method" class="section level3">
+<h3>Predict Method</h3>
+<pre class="r"><code>predict.naive_bayes &lt;- function(x, xtest){
+  # for every test point (row of xtest), want to calculate the density value for
+  # every class, and pick the highest one. 
+  # Instantiate matrix of correct dimensions.
+  table &lt;- matrix(0, nrow=nrow(xtest), ncol=nrow(x$means))
+  # calculate priors from data
+  priors &lt;- log(apply(make_flags(x$y), 2, function(f) length(x$y[f, ]) / length(x$y)))
+  # need two for loops unfortunately
+  for (r_ix in 1:nrow(xtest)){
+    for (c_ix in 1:nrow(x$means)){
+      # independence gives 
+      table[r_ix, c_ix] &lt;- gaussian_density(
+        x=matrix(as.double(xtest[r_ix, ])), 
+        mu=matrix(x$means[c_ix, ]), 
+        sigma=diag(x$vars[c_ix, ]), log=TRUE)
+    }
+  }
+  table &lt;- table + priors
+  classes &lt;- apply(table, 1, which.max)
+  return(classes - 1)
+}</code></pre>
+</div>
+<div id="plot-method-for-naive-bayes" class="section level3">
+<h3>Plot Method for Naive Bayes</h3>
+<pre class="r"><code>plot.naive_bayes &lt;- function(x, y=NULL, ngrid=75, ...){
+  if (ncol(x$X) &gt; 2) {
+    print(&quot;Naive Bayes plotting for more than 2 dimensions, not implemented.&quot;)
+  } else {
+    # Generate a grid of points on X
+    coord_range &lt;- apply(x$X, 2, range)
+    grid &lt;- expand.grid(
+      X1=seq(from=coord_range[1, 1], to=coord_range[2, 1], length=ngrid),
+      X2=seq(from=coord_range[1, 2], to=coord_range[2, 2], length=ngrid)
+      )
+    # Use naive bayes to predict at each point of the grid
+    cl &lt;- predict(x, grid)
+    dfgrid &lt;- data.frame(grid, y=cl)
+    # plot those points
+    ggplot() + 
+      geom_point(data=dfgrid, aes(x=X1, y=X2, color=as_factor(y)), alpha=0.2, size=0.5) + 
+      geom_point(data=data.frame(x$X, y=x$y), aes(x=X1, y=X2, color=as_factor(y))) + 
+      labs(color=&quot;Class&quot;, title=&quot;Naive Bayes Decision Boundary&quot;) + 
+      theme(plot.title=element_text(hjust=0.5, size=20))
+  }
+}</code></pre>
+</div>
+<div id="results-1" class="section level3">
+<h3>Results</h3>
+<pre class="r"><code>plot(naive_bayes(X, y))</code></pre>
+<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+</div>
+<div id="logistic-regression" class="section level1">
+<h1>Logistic Regression</h1>
+<div id="mathematical-setting" class="section level3">
+<h3>Mathematical Setting</h3>
+<p>Let <span class="math inline">\(Y_i\mid \boldsymbol{\mathbf{x}}_i \sim \text{Bernoulli}(p_i)\)</span> with <span class="math inline">\(p_i = \sigma(\boldsymbol{\mathbf{x}}_i^\top \boldsymbol{\mathbf{\beta}})\)</span> where <span class="math inline">\(\sigma(\cdot)\)</span> is the <strong>sigmoid function</strong>. The joint log-likelihood is given by
+<span class="math display">\[
+\ln p(\boldsymbol{\mathbf{y}}\mid \boldsymbol{\mathbf{\beta}}) = \sum_{i=1}^n y_i \ln(p_i) + (1 - y_i)\ln(1 - p_i)
+\]</span></p>
+</div>
+<div id="maximum-likelihood-estimation" class="section level3">
+<h3>Maximum Likelihood Estimation</h3>
+<p>Maximizing the likelihood is equivalent to minimizing the negative log-likelihood. Minimizing the negative log likelihood is equivalent to solving the following optimization problem</p>
+<p><span class="math display">\[
+\min_{\boldsymbol{\mathbf{\beta}}}\sum_{i=1}^n\ln\left(1 + \exp((1 - 2y_i)\boldsymbol{\mathbf{x}}_i^\top\boldsymbol{\mathbf{\beta}})\right)
+\]</span></p>
+</div>
+<div id="maximum-a-posteriori-and-ridge-regularization" class="section level3">
+<h3>Maximum-A-Posteriori and Ridge Regularization</h3>
+<p>We can introduce an isotropic Gaussian prior on <strong>all</strong> the coefficients <span class="math inline">\(p(\boldsymbol{\mathbf{\beta}}) = N(\boldsymbol{\mathbf{0}}, \sigma_{\boldsymbol{\mathbf{\beta}}}^2 I)\)</span>. Maximizing the posterior <span class="math inline">\(p(\boldsymbol{\mathbf{\beta}}\mid \boldsymbol{\mathbf{y}})\)</span> is equivalent to minimizing the negative log posterior <span class="math inline">\(-\ln p(\boldsymbol{\mathbf{\beta}}\mid \boldsymbol{\mathbf{y}})\)</span> giving</p>
+<p><span class="math display">\[
+\min_{\boldsymbol{\mathbf{\beta}}} \sigma^2_{\boldsymbol{\mathbf{\beta}}}\sum_{i=1}^n\ln\left(1 + \exp((1 - 2y_i)\boldsymbol{\mathbf{x}}_i^\top\boldsymbol{\mathbf{\beta}})\right) + \frac{1}{2}\boldsymbol{\mathbf{\beta}}^\top\boldsymbol{\mathbf{\beta}}
+\]</span>
+Often we don’t want to regularize the intercept. For this reason we place an isotropic Gaussian prior on <span class="math inline">\(\boldsymbol{\mathbf{\beta}}_{1:p-1}:=(\beta_1, \ldots, \beta_{p-1})\)</span> and instead we place a uniform distribution on <span class="math inline">\(\beta_0\)</span>, which doesn’t depend on <span class="math inline">\(\beta_0\)</span>. This leads to
+<span class="math display">\[
+\min_{\boldsymbol{\mathbf{\beta}}} \sigma_{\boldsymbol{\mathbf{\beta}}_{1:p-1}}^2\sum_{i=1}^n\ln\left(1 + \exp((1 - 2y_i)\boldsymbol{\mathbf{x}}_i^\top\boldsymbol{\mathbf{\beta}})\right) + \frac{1}{2}\boldsymbol{\mathbf{\beta}}_{1:p-1}^\top\boldsymbol{\mathbf{\beta}}_{1:p-1}
+\]</span></p>
+</div>
+<div id="laplace-approximation" class="section level3">
+<h3>Laplace Approximation</h3>
+<p>A fully-Bayesian treatment is intractable. Instead we approximate the posterior with a multivariate Gaussian distribution centered at the mode
+<span class="math display">\[
+q(\boldsymbol{\mathbf{\beta}}) = N\left(\boldsymbol{\mathbf{\beta}}_{\text{MAP}}, \left[-\nabla^2 \ln p(\boldsymbol{\mathbf{\beta}}_{\text{MAP}}\mid \boldsymbol{\mathbf{y}})\right]^{-1}\right)
+\]</span>
+where one can show that the variance-covariance matrix
+<span class="math display">\[
+-\nabla_{\boldsymbol{\mathbf{\beta}}}^2 \ln p(\boldsymbol{\mathbf{\beta}}\mid \boldsymbol{\mathbf{y}}) = \boldsymbol{\mathbf{\Sigma}}_0^{-1} + \sum_{i=1}^n \sigma(\boldsymbol{\mathbf{x}}_i^\top \boldsymbol{\mathbf{\beta}})(1 - \sigma(\boldsymbol{\mathbf{x}}_i^\top \boldsymbol{\mathbf{\beta}})) \boldsymbol{\mathbf{x}}_i\boldsymbol{\mathbf{x}}_i^\top = \boldsymbol{\mathbf{\Sigma}}_0^{-1} + X^\top D X
+\]</span>
+where
+<span class="math display">\[
+D = 
+\begin{pmatrix}
+\sigma(\boldsymbol{\mathbf{x}}_1^\top\boldsymbol{\mathbf{\beta}})(1 - \sigma(\boldsymbol{\mathbf{x}}_1^\top\boldsymbol{\mathbf{\beta}})) &amp; 0 &amp; \ldots &amp; 0 \\
+0 &amp; \sigma(\boldsymbol{\mathbf{x}}_2^\top\boldsymbol{\mathbf{\beta}})(1 - \sigma(\boldsymbol{\mathbf{x}}_2^\top\boldsymbol{\mathbf{\beta}})) &amp; \ldots &amp; 0 \\
+\vdots &amp; \ldots &amp; \ddots &amp; \vdots \\
+0 &amp; 0 &amp; \ldots &amp;\sigma(\boldsymbol{\mathbf{x}}_n^\top\boldsymbol{\mathbf{\beta}})(1 - \sigma(\boldsymbol{\mathbf{x}}_n^\top\boldsymbol{\mathbf{\beta}})) 
+\end{pmatrix}
+\]</span></p>
+</div>
+<div id="gradient-ascent-mle-no-regularization" class="section level3">
+<h3>Gradient Ascent (MLE, No Regularization)</h3>
+<p>Updates take the form
+<span class="math display">\[
+\boldsymbol{\mathbf{\beta}}_{k+1} \leftarrow \boldsymbol{\mathbf{\beta}}_k + \gamma X^\top(\boldsymbol{\mathbf{y}}- \sigma(X\boldsymbol{\mathbf{\beta}}_k))
+\]</span>
+where the step size <span class="math inline">\(\gamma\)</span> can either be chosen small.</p>
+</div>
+<div id="gradient-ascent-map-ridge-regularization" class="section level3">
+<h3>Gradient Ascent (MAP, Ridge Regularization)</h3>
+<p>The update takes the form
+<span class="math display">\[
+\boldsymbol{\mathbf{\beta}}_{k+1}\leftarrow  \boldsymbol{\mathbf{\beta}}_k + \gamma_k\left[\sigma_{\boldsymbol{\mathbf{\beta}}}^2X^\top(\boldsymbol{\mathbf{y}}- \sigma(X\boldsymbol{\mathbf{\beta}}_k)) - \boldsymbol{\mathbf{\beta}}_k\right]
+\]</span></p>
+</div>
+<div id="newtons-method-mle-no-regularization" class="section level3">
+<h3>Newton’s Method (MLE, No Regularization)</h3>
+<p>The iterations are as follows, where for stability one can add a learning rate <span class="math inline">\(\alpha\)</span>, which is in practice often set to <span class="math inline">\(\alpha=0.1\)</span>.
+<span class="math display">\[
+\boldsymbol{\mathbf{\beta}}_{k+1} \leftarrow \boldsymbol{\mathbf{\beta}}_k +  \alpha(X^\top D X)^{-1} X^\top(\boldsymbol{\mathbf{y}}- \sigma(X\boldsymbol{\mathbf{\beta}}_k))
+\]</span>
+In practice we would solve the corresponding system for <span class="math inline">\(\boldsymbol{\mathbf{d}}\)</span>
+<span class="math display">\[
+(X^\top D X)\boldsymbol{\mathbf{d}}_k = \alpha X^\top(\boldsymbol{\mathbf{y}}- \sigma(X\boldsymbol{\mathbf{\beta}}_k))
+\]</span>
+and then perform the update
+<span class="math display">\[
+\boldsymbol{\mathbf{\beta}}_{k+1}\leftarrow \boldsymbol{\mathbf{\beta}}_k + \boldsymbol{\mathbf{d}}_k
+\]</span></p>
+</div>
+<div id="newtons-method-map-ridge-regularization" class="section level3">
+<h3>Newton’s Method (MAP, Ridge Regularization)</h3>
+<p>The update takes the form
+<span class="math display">\[
+\boldsymbol{\mathbf{\beta}}_{k+1} \leftarrow \boldsymbol{\mathbf{\beta}}_k + \alpha \left[\sigma^2_{\boldsymbol{\mathbf{\beta}}} X^\top D X + I\right]^{-1}\left(\sigma^2_{\boldsymbol{\mathbf{\beta}}} X^\top (\boldsymbol{\mathbf{y}}- \sigma(X\boldsymbol{\mathbf{\beta}}_k)) - \boldsymbol{\mathbf{\beta}}_k\right)
+\]</span></p>
+</div>
+<div id="implementations-of-the-optimization-methods" class="section level3">
+<h3>Implementations of the Optimization Methods</h3>
+<pre class="r"><code>sigmoid &lt;- function(x) 1.0 / (1.0 + exp(-x))</code></pre>
+<pre class="r"><code>grad_ascent &lt;- function(beta, niter=100, gamma=0.001, cost=&quot;MLE&quot;, sigmab=1.0){
+  if (cost==&quot;MLE&quot;){
+    for (i in 1:niter) beta &lt;- beta + gamma * t(X) %*% (y - sigmoid(X %*% beta))
+  } else if (cost==&quot;MAP&quot;){
+    for (i in 1:niter) {
+      beta &lt;- beta + gamma*(sigmab^2*t(X) %*% (y - sigmoid(X %*% beta)) - beta)
+    }
+  }
+  return(beta)
+}</code></pre>
+<pre class="r"><code>newton_method &lt;- function(beta, niter=100, alpha=0.1, cost=&quot;MLE&quot;, sigmab=1.0){
+  # Learning rate is suggested at 0.1. For 1.0 standard Newton method is recovered
+  if (cost==&quot;MLE&quot;){
+    for (i in 1:niter){
+      D_k &lt;- diag(drop(sigmoid(X%*%beta)*(1 - sigmoid(X%*%beta))))
+      d_k &lt;- solve(t(X)%*%D_k %*% X, alpha*t(X) %*% (y - sigmoid(X %*% beta)))
+      beta &lt;- beta + d_k
+    }
+  } else if (cost==&quot;MAP&quot;){
+    n &lt;- ncol(X)
+    for (i in 1:niter){
+      D_k &lt;- diag(drop(sigmoid(X%*%beta)*(1 - sigmoid(X%*%beta))))
+      d_k &lt;- solve(
+        sigmab^2*t(X)%*%D_k%*%X + diag(n),
+        alpha*(sigmab^2*t(X)%*%(y - sigmoid(X %*% beta)) - beta)
+      )
+      beta &lt;- beta + d_k
+    }
+  }
+  return(beta)
+}</code></pre>
+</div>
+<div id="the-logistic-regression-s3-class-and-its-methods" class="section level3">
+<h3>The Logistic Regression S3 Class and Its methods</h3>
+<pre class="r"><code>logistic_regression &lt;- function(X, y, cost=&quot;MLE&quot;, method=&quot;BFGS&quot;, sigmab=1.0, niter=100,
+                                alpha=0.1, gamma=0.001, laplace=FALSE){
+  start &lt;- matrix(0, nrow=ncol(X))
+  # Define cost functions
+  mle_cost &lt;- function(beta) sum(log(1 + exp((1 - 2*y) * (X %*% beta))))
+  map_cost &lt;- function(beta) (sigmab^2)*mle_cost(beta) + 0.5*sum(beta^2)
+  # Determine selected Cost Function
+  if      (cost == &quot;MLE&quot;) costfunc &lt;- mle_cost
+  else if (cost == &quot;MAP&quot;) costfunc &lt;- map_cost
+  # Use selected method for selected cost function
+  if      (method==&quot;BFGS&quot;)   sol &lt;- optim(par=start, fn=costfunc, method=method)$par
+  else if (method==&quot;GA&quot;)     sol &lt;- grad_ascent(start, niter, gamma, cost, sigmab)
+  else if (method==&quot;NEWTON&quot;) sol &lt;- newton_method(start, niter, alpha, cost, sigmab)
+  # Laplace only works with MAP, not MLE
+  # Can specify precision==TRUE in my builtin gaussian function
+  first &lt;- (sigmab^2)*diag(ncol(X))
+  second &lt;- t(X) %*% diag(drop(sigmoid(X %*% sol)*(1-sigmoid(X %*% sol)))) %*% X
+  precision &lt;- first + second
+  # Build S3 object and return it
+  lr &lt;- list(X=X, y=y, beta=sol, cost=cost, method=method, 
+             prec=precision, costfunc=costfunc)
+  class(lr) &lt;- &quot;logistic_regression&quot;
+  return(lr)
+}</code></pre>
+<p>We provide a print method to compare results later.</p>
+<pre class="r"><code>print.logistic_regression &lt;- function(x, ...){
+  cat(&quot;S3 Object of Class logistic_regression.\n&quot;)
+  cat(&quot;Cost Function:        &quot;, x$cost, &quot;\n&quot;)
+  cat(&quot;Optimization Method:  &quot;, x$method, &quot;\n&quot;)
+  cat(&quot;Solution:             &quot;, x$beta, &quot;\n&quot;)
+}</code></pre>
+<p>The predict function will be useful for plotting. The sigmoid function gives the probability of being in class <span class="math inline">\(1\)</span>.</p>
+<pre class="r"><code>predict.logistic_regression &lt;- function(x, xtest){
+  # sigmoid gives probability of being in class 1. So will give (rounded) 1 to 1
+  return(round(1.0 / (1.0 + exp(-xtest %*% x$beta))))
+}</code></pre>
+</div>
+<div id="comparing-different-optimization-implementations" class="section level3">
+<h3>Comparing Different Optimization Implementations</h3>
+<p>Let’s run all the different algorithms with both the MLE cost function and the MAP with an isotropic gaussian as a prior. Before doing that, we need to append a column of <span class="math inline">\(1\)</span>s to the design matrix, for the intercept term.</p>
+<pre class="r"><code>X &lt;- cbind(1, X)
+
+lr_bfgs_mle &lt;- logistic_regression(X, y, cost=&quot;MLE&quot;, method=&quot;BFGS&quot;)
+lr_bfgs_map &lt;- logistic_regression(X, y, cost=&quot;MAP&quot;, method=&quot;BFGS&quot;)
+lr_ga_mle   &lt;- logistic_regression(X, y, cost=&quot;MLE&quot;, method=&quot;GA&quot;, niter = 1000)
+lr_ga_map   &lt;- logistic_regression(X, y, cost=&quot;MAP&quot;, method=&quot;GA&quot;, niter = 1000)
+lr_nm_mle   &lt;- logistic_regression(X, y, cost=&quot;MLE&quot;, method=&quot;NEWTON&quot;)
+lr_nm_map   &lt;- logistic_regression(X, y, cost=&quot;MAP&quot;, method=&quot;NEWTON&quot;)</code></pre>
+<p>In particular we can see how in general Newton is closer to BFGS than gradient ascent is. However, we can see that gradient ascent on the regularized problem seems to achieve similar results as the Newton and Quasi-Newton methods!</p>
+<pre class="r"><code>print(lr_bfgs_mle)</code></pre>
+<pre><code>## S3 Object of Class logistic_regression.
+## Cost Function:         MLE 
+## Optimization Method:   BFGS 
+## Solution:              20.67967 -9.520793 -0.5258984</code></pre>
+<pre class="r"><code>print(lr_ga_mle)</code></pre>
+<pre><code>## S3 Object of Class logistic_regression.
+## Cost Function:         MLE 
+## Optimization Method:   GA 
+## Solution:              3.950815 -1.976916 0.03972224</code></pre>
+<pre class="r"><code>print(lr_nm_mle)</code></pre>
+<pre><code>## S3 Object of Class logistic_regression.
+## Cost Function:         MLE 
+## Optimization Method:   NEWTON 
+## Solution:              14.93055 -6.723051 -0.2957674</code></pre>
+<pre class="r"><code>print(lr_bfgs_map)</code></pre>
+<pre><code>## S3 Object of Class logistic_regression.
+## Cost Function:         MAP 
+## Optimization Method:   BFGS 
+## Solution:              2.823674 -1.5538 0.05431627</code></pre>
+<pre class="r"><code>print(lr_ga_map)</code></pre>
+<pre><code>## S3 Object of Class logistic_regression.
+## Cost Function:         MAP 
+## Optimization Method:   GA 
+## Solution:              2.782169 -1.545746 0.0572492</code></pre>
+<pre class="r"><code>print(lr_nm_map)</code></pre>
+<pre><code>## S3 Object of Class logistic_regression.
+## Cost Function:         MAP 
+## Optimization Method:   NEWTON 
+## Solution:              2.823061 -1.552847 0.0542555</code></pre>
+</div>
+<div id="plotting" class="section level3">
+<h3>Plotting</h3>
+<p>We can also specify what happens when we plot an object of class <code>logistic_regression</code>. In this case, we show the decision boundary and the confidence interval obtained from the Laplace Approximation to the posterior.</p>
+<pre class="r"><code>plot.logistic_regression &lt;- function(x, y=NULL, ngrid=70, ...){
+  # Grid to show decision boundary 
+  coord_range &lt;- apply(x$X, 2, range)
+  grid &lt;- expand.grid(
+      X1=seq(from=coord_range[1, 2], to=coord_range[2, 2], length=ngrid),
+      X2=seq(from=coord_range[1, 3], to=coord_range[2, 3], length=ngrid)
+  )
+  # need to append 1 and transform to numeric, somehow it&#39;s losing it
+  grid &lt;- matrix(as.numeric(unlist(grid)), nrow=ngrid^2)
+  # Predict at each point of the grid
+  cl &lt;- predict(x, cbind(1, grid))
+  dfgrid &lt;- data.frame(grid, y=cl)
+  # plot those points
+  p &lt;- ggplot(data=dfgrid)
+  if (!is.null(x$prec)) {
+    # calculate confidence interval
+    sd &lt;- sqrt(diag(solve(x$prec)))
+    beta_min &lt;- x$beta - sd
+    beta_max &lt;- x$beta + sd
+    # get range. Each column is one dimension
+    ranges &lt;- apply(x$X, 2, range)
+    # understand what are the x_1 limits, from the limits of the second coordinate x_2
+    x_lims &lt;- sort((ranges[, 3] * x$beta[3] + x$beta[1]) / (-x$beta[2]))
+    x1_vals &lt;- seq(from=x_lims[1], to=x_lims[2], length.out = 200)
+    x2_vals &lt;- -(x$beta[2]/x$beta[3])*x1_vals - (x$beta[1]/x$beta[3])
+    # define lines
+    min_line &lt;- function(x) -beta_min[2]*x/beta_min[3] - beta_max[1]/beta_min[3]
+    max_line &lt;- function(x) -beta_max[2]*x/beta_max[3] - beta_min[1]/beta_max[3]
+    # create a poly df
+    x_poly &lt;- seq(from=ranges[1, 2], to=ranges[2, 2], length.out=500)
+    dfpoly &lt;- data.frame(x=c(x_poly,x_poly), y=c(min_line(x_poly), max_line(x_poly)))
+    # same but for confidence interval
+    dflaplace &lt;- data.frame(x1=x1_vals, x2=x2_vals)
+    p &lt;- p +
+      coord_cartesian(xlim=ranges[, 2], ylim=ranges[, 3])  +
+      geom_polygon(data=dfpoly, aes(x=x, y=y), fill=&quot;grey80&quot;) + 
+      geom_line(data=dflaplace, aes(x=x1, y=x2)) 
+  }
+  p + 
+    geom_point(data=dfgrid, aes(x=X1, y=X2, color=as_factor(y)), alpha=0.2, size=0.5) + 
+    geom_point(data=data.frame(x$X, y=x$y), aes(x=X1, y=X2, color=as_factor(y))) + 
+    labs(color=&quot;Class&quot;, title=&quot;Logistic Regression Decision Boundary&quot;) + 
+    theme(plot.title=element_text(hjust=0.5, size=20))
+}</code></pre>
+<p>We can see indeed that the laplace approximation to the posterior is more uncertain when points from either side are closer together, as one would expect.</p>
+<pre class="r"><code>plot(logistic_regression(X, y, cost=&quot;MAP&quot;, method=&quot;BFGS&quot;, laplace = TRUE))</code></pre>
+<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+</div>
+</div>

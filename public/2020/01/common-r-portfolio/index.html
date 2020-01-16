@@ -31,10 +31,10 @@ myfunc &lt;- function(n){ total = 0 for (i in 1:n){ total = total &#43; cos(i)*s
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2020-01-16T00:00:00">
+    <meta property="article:published_time" content="2020-01-10T00:00:00">
   
   
-    <meta property="article:modified_time" content="2020-01-16T00:00:00">
+    <meta property="article:modified_time" content="2020-01-10T00:00:00">
   
   
   
@@ -240,9 +240,9 @@ myfunc &lt;- function(n){ total = 0 for (i in 1:n){ total = total &#43; cos(i)*s
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2020-01-16T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-01-10T00:00:00Z">
         
-  January 16, 2020
+  January 10, 2020
 
       </time>
     
@@ -284,7 +284,7 @@ myfunc &lt;- function(n){ total = 0 for (i in 1:n){ total = total &#43; cos(i)*s
 <pre class="r"><code>m &lt;- 1000000
 system.time(myfunc(m))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.458   0.000   0.458</code></pre>
+##   0.436   0.000   0.436</code></pre>
 <p>However this operation can be sped up by doing the same operation on each element of a vector, as follows</p>
 <pre class="r"><code>myfunc2 &lt;- function(n){
   vector &lt;- 1:n
@@ -293,7 +293,7 @@ system.time(myfunc(m))</code></pre>
 <p>then we can see that this function is much faster</p>
 <pre class="r"><code>system.time(myfunc2(m))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.193   0.035   0.229</code></pre>
+##   0.174   0.024   0.198</code></pre>
 </div>
 <div id="apply-family" class="section level2">
 <h2>Apply family</h2>
@@ -476,14 +476,14 @@ plot(log(params, 10), meanerrors, xlab=TeX(&#39;$\\log_{10}(\\lambda)$&#39;), yl
 min_index &lt;- which.min(unlist(meanerrors))
 points(log(params, 10)[min_index], meanerrors[min_index], col=&#39;red&#39;, pch=19)
 legend(x=&#39;left&#39;, legend=c(&quot;Minimum CV Error&quot;), col=c(&#39;red&#39;), bg=&#39;white&#39;, lwd=1)</code></pre>
-<p><img src="/post/2020-01-16-common-r-portfolio_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><img src="/post/2020-01-10-common-r-portfolio_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <p>The minimum CV error is shown as a red point in the plot and corresponds to</p>
 <pre class="r"><code>params[min_index]</code></pre>
-<pre><code>## [1] 4.216965</code></pre>
+<pre><code>## [1] 10</code></pre>
 <p>By using an optimization routine we can indeed see that this value is very close to the optimal one, which can be found like this</p>
 <pre class="r"><code>sol &lt;- optimize(wrapper, params)
 sol$minimum</code></pre>
-<pre><code>## [1] 4.294426</code></pre>
+<pre><code>## [1] 9.638921</code></pre>
 <p>At this point we plot the predictive distribution. To do so, we write a wrapper function for the normal distribution, since the mean and the variance are fairly complicated functions</p>
 <pre class="r"><code>predictive &lt;- function(xhat, X, y, sigmasq, lambda=sol$minimum){
   # First find the mean. This is given by the prediction by the regularized least squares. In our case, we need to find 
@@ -512,7 +512,7 @@ plot(xplot, dnorm(xplot, mean=meanandvar[1], sd=sqrt(meanandvar[2])), main=&quot
 # Plot the actual value of y
 abline(v=exp(1.5*0.1-1), col=&#39;red&#39;, lty=2)
 legend(x=&#39;topleft&#39;, legend=c(&quot;True Value&quot;), col=c(&#39;red&#39;), bg=&#39;white&#39;, lwd=1, lty=2)</code></pre>
-<p><img src="/post/2020-01-16-common-r-portfolio_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p><img src="/post/2020-01-10-common-r-portfolio_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
 <p>and finally we can plot the mean of the predictive distribution as <span class="math inline">\(\widehat{{\bf{x}}}\)</span> changes.</p>
 <pre class="r"><code>library(ggplot2)
 library(reshape2)
@@ -541,7 +541,7 @@ ggplot() +
   scale_size_manual(values=c(2, 3, 3)) + 
   ggtitle(&quot;Predictions, True values, Confidence Band and Data Points&quot;) +
   theme(plot.title=element_text(hjust=0.5))</code></pre>
-<p><img src="/post/2020-01-16-common-r-portfolio_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><img src="/post/2020-01-10-common-r-portfolio_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 </div>
 
               
@@ -568,7 +568,7 @@ ggplot() +
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/functional-programming-portfolio/" data-tooltip="Functional Programming Portfolio">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -576,7 +576,7 @@ ggplot() +
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/functional-programming-portfolio/" data-tooltip="Functional Programming Portfolio">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/packages-portfolio/" data-tooltip="Packages Portfolio">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -654,7 +654,7 @@ ggplot() +
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/functional-programming-portfolio/" data-tooltip="Functional Programming Portfolio">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -662,7 +662,7 @@ ggplot() +
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/functional-programming-portfolio/" data-tooltip="Functional Programming Portfolio">
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/packages-portfolio/" data-tooltip="Packages Portfolio">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -793,6 +793,10 @@ ggplot() +
 
 <script src="/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
 
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha256-XrZQp+ZMfovqr6Hb2M6okHvSEYaB/+Xbx7toWmOOZUM=" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+  
 
 <script lang="javascript">
 window.onload = updateMinWidth;

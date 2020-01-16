@@ -1,0 +1,259 @@
+---
+title: Reproducibility
+author: Mauro Camara Escudero
+date: '2020-01-08'
+categories:
+  - R
+  - Reproducibility
+tags:
+  - Reproducibility
+slug: reproducibility
+keywords:
+  - tech
+bibliography: bibliography.bib
+nocite: |
+  @turingway
+always_allow_html: yes
+---
+
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<div id="strategies-for-reproducibility" class="section level2">
+<h2>Strategies for Reproducibility</h2>
+<p>According to <span class="citation">Lee (2019)</span> reproducibility can be implemented by:</p>
+<ul>
+<li>Organize files logically into <em>modules</em> and <em>packages</em>.</li>
+<li>Use <em>version control</em> software.</li>
+<li>Write human-readable <em>documentation</em>.</li>
+</ul>
+<p>Why is reproducibility important?</p>
+<ul>
+<li>If the research is reproducible, then the analysis and the methodology are clear.</li>
+<li>A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will</li>
+</ul>
+<div id="replication-crisis" class="section level4">
+<h4>Replication crisis</h4>
+<p><strong>Replication crisis</strong> refers to the difficulty or impossibility to reproduce scientific studies, which undermines their results since the reproducibility of experiments is an integral part of the scientific method. Methods to address the crisis include:</p>
+<ul>
+<li>Make our research reproducible.</li>
+<li>Submission of <strong>registered reports</strong></li>
+</ul>
+<p>Our research is said to be reproducible when it is possible to reproduce the same analysis and conclusions given the same raw data. Unfortunately, much of the research done up to date is irreproducible because:</p>
+<ul>
+<li>It was difficult to create code that would work seemlessly on different computer systems.</li>
+<li>Not all data-engineering or data cleaning steps were reported.</li>
+</ul>
+<p>A registered report is a description of the methodology of the study and of the analyses <strong>before</strong> data collection. The registered report is peer-reviewed, and this guarantees that the author of the study follows a certain protocol, reducing the changes that questionable research practices are introduced.</p>
+</div>
+<div id="literate-programming" class="section level4">
+<h4>Literate Programming</h4>
+<p>One way of making our research more reproducible is by providing human-readable code and documentation explaining the functionalities, limits and features of our code. Documentation, however, can often be neglected and quickly become outdated, which makes our code less intellegible. One way around this issue is <strong>literate programming</strong>. Literate programming combines code and documentation into the same source code, so that when code is updated, we can also update the documentation, and this should lead to a much more up-to-date documentation. One of the best ways of doing literate programming in R is to use <strong>Rmarkdown</strong>.</p>
+</div>
+<div id="r-markdown" class="section level4">
+<h4>R Markdown</h4>
+<p>An R Markdown file is recognizable by the <code>.rmd</code> extension. It comprises:</p>
+<ul>
+<li><p>A YAML header that specifies metadata such as author, title, bibliography file, and the type of output document. This section is at the top of the file and it embedded between <code>---</code> before and after. For instance, the YAML file for this R Markdown is as follows</p>
+<pre class="r"><code>---
+title: &quot;Reproducibility&quot;
+output:
+html_document:
+  toc: true
+  toc_float: true
+  toc_depth: 4
+bibliography: bibliography.bib
+runtime: shiny
+nocite: |
+@shiny, @turingway
+---</code></pre>
+the <code>output</code> field defines what type of document we want at the end (HTML, PDF, etc), <code>toc</code> stands for “table of contents” and in the YAML above we’ve allowed it to show headers up to 4 levels and to “float”, i.e. to be always present at the side of the file, even when scrolling down through the document.</li>
+<li><p>Chunks of code and (optional) their output, such as the following:</p>
+<pre class="r"><code>x &lt;- matrix(1:6, 2, 3)
+dim(x)</code></pre>
+<pre><code>## [1] 2 3</code></pre>
+Code chucnks are encapsulated by a pair of three consecutive backticks. After the first, curly braces are used to specify which programming language is being used and several options that go along with that code chunk, such as whether to display the output and whether the code chunk should be evaluated. For instance, to specify R code we can use <code>{r}</code>.</li>
+<li><p>Markdown.</p></li>
+</ul>
+<p>The process to create an Rmarkdown works as follows: when we <code>knit</code> the document, the <code>knitr</code> package grabs all the code chunks, executes them and combines together the markdown text with the code and its (optional) output. Then, a free open-source document converter called <code>pandoc</code> transforms this combined markdown document into the desired output format, which usually is either HTML or PDF.</p>
+<p>In the following, we’ll see several features of R markdown.</p>
+</div>
+</div>
+<div id="rmarkdown-playground" class="section level2">
+<h2>RMarkdown playground</h2>
+<p>Headers are defined by hastags. The biggest header uses only one <code>#</code>, and the smallest one uses six of them <code>######</code>. Text can be written in <em>italics</em> by surrounding it with one pair of <code>*</code>. Using a pair of double asteriscs <code>**</code> we obtain <strong>bold text</strong>. Equations can be written inline by using one pair of dollar signs <span class="math inline">\(x = z + y\)</span> and similarly we can have an indented equation by using a pair of double dollar signs <code>$$</code> <span class="math display">\[x = z + y\]</span></p>
+<p>Tables can also be constructed all in markdown</p>
+<table>
+<thead>
+<tr class="header">
+<th>Leftmost header</th>
+<th>Rightmost header</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>lefmost cell</td>
+<td>rightmost cell</td>
+</tr>
+<tr class="even">
+<td>bottomleft cell</td>
+<td>bottom right cell</td>
+</tr>
+</tbody>
+</table>
+<p>Code can either be evaluated and its output shown, as demonstrated above, or the code can just appear without being evaluated by<code>knitr</code> using the option<code>{r, eval=FALSE}</code>.</p>
+<pre class="r"><code>x &lt;- matrix(1:6, 2, 3)
+dim(x)</code></pre>
+<p>To only display the output, one can use <code>{r, echo=FALSE}</code> to obtain</p>
+<pre><code>## [1] 2 3</code></pre>
+<p>Below I’ll work through the Computing Lab of Statistical Methods 1 given in Lecture 2.</p>
+</div>
+<div id="linear-least-squares" class="section level2">
+<h2>Linear Least Squares</h2>
+<p>First of all, we need to get the data from the website. Since the data is hosted as a <code>.data</code> file, we can use <code>read.table()</code> function in base R to read that file into a dataframe. Notice that the last column in the dataframe is just a boolean variable flagging whether that particular sample was used to train the model at page 38 of the corresponding book.</p>
+<pre class="r"><code># Get data from the weblink
+library(readr)
+url &lt;- &quot;https://web.stanford.edu/~hastie/ElemStatLearn/datasets/prostate.data&quot;
+df &lt;- read.table(url)[1:9]
+head(df, 3)</code></pre>
+<pre><code>##       lcavol  lweight age      lbph svi       lcp gleason pgg45       lpsa
+## 1 -0.5798185 2.769459  50 -1.386294   0 -1.386294       6     0 -0.4307829
+## 2 -0.9942523 3.319626  58 -1.386294   0 -1.386294       6     0 -0.1625189
+## 3 -0.5108256 2.691243  74 -1.386294   0 -1.386294       7    20 -0.1625189</code></pre>
+<p>We will use the columns <code>lcavol</code>, <code>lweight</code>, <code>age</code>, <code>lbph</code>, <code>svi</code>, <code>lcp</code>, <code>gleason</code> and <code>pgg45</code> as explanatory variables, while <code>lpsa</code> will be our target variable. We can therefore divide the data into two dataframes:</p>
+<pre class="r"><code># Recall X must have a feature in each row and an observation in each column
+X &lt;- t(as.matrix(df[1:8]))  # (d+1) * n
+# We add an extra row of 1s for the bias
+X &lt;- rbind(X, rep(1, dim(X)[2]))
+y &lt;- t(as.vector(df$lpsa)) # 1 * n</code></pre>
+<p>Recall that in lectures the solution to linear regression least squares was given by
+<span class="math display">\[{\bf{w}}_{LS} = (X X^\top)^{-1}X{\bf{y}}^\top\]</span>
+where <span class="math inline">\(y=(y_1, \ldots, y_n)\in \mathbb{R}^{1\times n}\)</span> is a <strong>row vector</strong> and <span class="math inline">\(n\)</span> is the number of observations. The matrix <span class="math inline">\(X\in\mathbb{R}^{(d+1)\times n}\)</span> is of the form
+<span class="math display">\[
+X = 
+\begin{bmatrix}
+ {\bf{x}}_1 &amp; {\bf{x}}_2 &amp; \ldots &amp; {\bf{x}}_n\\ 
+ 1 &amp; 1 &amp; \ldots &amp; 1
+\end{bmatrix}
+\]</span>
+where <span class="math inline">\({\bf{x}}_i \in \mathbb{R}^{d\times 1}\)</span> are <strong>column vectors</strong>.
+Notice that <span class="math inline">\({\bf{w}}_{LS}\)</span> can be found by solving the linear system of equations
+<span class="math display">\[A{\bf{w}}_{LS} = {\bf{b}}\]</span>
+where <span class="math inline">\(A = XX^\top\)</span> and <span class="math inline">\({\bf{b}} = X{\bf{y}}^\top\)</span>. Using this trick we can write a function that returns the solution to the least squares</p>
+<pre class="r"><code>least_squares &lt;- function(X, y){
+  # X must have dim (d+1)*n where d = number of features, and n = number of observations
+  # y must be a row vector of dim 1*n
+  A &lt;- X%*%t(X)
+  b &lt;- X%*%t(y)
+  return(solve(A, b))
+}</code></pre>
+<p>In this particular case we obtain</p>
+<pre class="r"><code>least_squares(X, y)</code></pre>
+<pre><code>##                 [,1]
+## lcavol   0.564341280
+## lweight  0.622019788
+## age     -0.021248185
+## lbph     0.096712522
+## svi      0.761673402
+## lcp     -0.106050939
+## gleason  0.049227934
+## pgg45    0.004457512
+##          0.181560845</code></pre>
+<p>Then we can evaluate <span class="math inline">\(f({\bf{x}}, {\bf{w}}_{LS})\)</span>, our fitted solution as follows</p>
+<pre class="r"><code>linear_ls &lt;- function(x, w){
+  # This function simply implements the linear version of f(x, w) = w^t * x
+  # w will be returned as a column vector from least_squares().
+  x &lt;- as.matrix(x)
+  w &lt;- as.matrix(w)
+  # Want this function to do both matrix multiplication and dot product,
+  # so check for dimension and if necessary transpose
+  if ((dim(x)[2] == 1) &amp;&amp; (dim(x)[2] != dim(w)[1])) {
+    x &lt;- t(x)
+  }
+  return(x%*%w)
+}</code></pre>
+<p>This function then can be used as follows</p>
+<pre class="r"><code># Use 1:9 as a new observation
+linear_ls(1:dim(X)[1], least_squares(X, y))</code></pre>
+<pre><code>##          [,1]
+## [1,] 7.317851</code></pre>
+</div>
+<div id="cross-validation" class="section level2">
+<h2>Cross Validation</h2>
+<p>The following function <code>cv</code> implements k-fold Cross Validation. It works by first stacking together <code>X</code> and <code>y</code> to create a new dataframe called <code>xy</code> that has dimension <code>n</code> times <code>d+2</code> (it is <code>d+2</code> rather than <code>d+1</code> because of the extra <code>y</code> column.). Next, the function shuffles the rows of the dataframe using the <code>sample()</code> function.</p>
+<p>At this point, we can use the <code>cut()</code> function to create flags that signal to which of the <code>k</code> groups each row of the dataframe belongs to. After this, we go through a loop where we perform least squares on all the data except the current group of rows, and we test the result exactly on that hold-out group.</p>
+<pre class="r"><code># for testing purposes let&#39;s set a seed
+cv &lt;- function(X, y, k){
+  # K-fold cross validation. For leave-one-out set k to num of observations.
+  # X should be a (d+1)*n matrix with d = num of features, n = numb of samples.
+  # y should be 1*n target vector.
+  # Create a vector where errors will be stored. Length will be k
+  errors &lt;- rep(0, k)
+  # First stack together X and y. y will be last row of X. Then transpose.
+  xy &lt;- t(rbind(X, y))
+  # shuffle the rows
+  xyshuffled &lt;- xy[sample(nrow(xy)), ]
+  # Create flags for the rows of xyshuffled to be divided into k folds
+  folds &lt;- cut(seq(1, nrow(xyshuffled)), breaks=k, labels=FALSE)
+  # Go through each fold and calculate train and test stuff
+  for(i in 1:k){
+    # Find indeces of rows in the hold-out (test) group
+    test_ind &lt;- which(folds==i, arr.ind=TRUE)
+    # Use such indeces to grab test data
+    test_x &lt;- xyshuffled[test_ind, -dim(xyshuffled)[2]]
+    test_y &lt;- xyshuffled[test_ind, dim(xyshuffled)[2]]
+    # Use the remaining indeces to grab training data
+    train_x &lt;- xyshuffled[-test_ind, -dim(xyshuffled)[2]]
+    train_y &lt;- xyshuffled[-test_ind, dim(xyshuffled)[2]]
+    # Now use train_x and train_y data to find the parameters. Recall that we want them
+    # with num of observations as the second dimension
+    w &lt;- least_squares(t(train_x), t(train_y))
+    # Now use these parameters to find the fitted value for the current test data
+    f &lt;- linear_ls(test_x, w)
+    # Now compare the function value with test_y with a suitable error function.
+    e &lt;- sum((f - test_y)^2)
+    # Add error to error list
+    errors[i] &lt;- e
+  }
+  # Finally return the average error
+  return(mean(errors))
+}</code></pre>
+<p>We can try this function using <span class="math inline">\(10\)</span> fold cross validation</p>
+<pre class="r"><code>cv(X, y, 10)</code></pre>
+<pre><code>## [1] 5.712396</code></pre>
+<p>and even <strong>leave-one-out</strong> cross validation</p>
+<pre class="r"><code>cv(X, y, dim(X)[2])</code></pre>
+<pre><code>## [1] 0.5413291</code></pre>
+</div>
+<div id="removing-features" class="section level2">
+<h2>Removing Features</h2>
+<p>We can evaluate leave-one-out cross validation on the dataset where one feature has been removed each time. The code would look similar to</p>
+<pre class="r"><code># There&#39;s dim(X)[1] features if we count also the bias feature
+errors &lt;- rep(0, dim(X)[1])
+# Remove one feature at a time
+for (i in 1:dim(X)[1]){
+  X &lt;- X[-i, ]
+  errors[i] &lt;- cv(X, y, dim(X)[2])
+}
+errors</code></pre>
+<pre><code>## [1] 0.7780061 0.7710748 0.8526117 0.8407295 0.8322292 0.8322292 0.8322292
+## [8] 0.8322292 0.8322292</code></pre>
+<p>The error increases because we are missing information about one of the features. We can plot the errors as follows</p>
+<pre class="r"><code>plot(1:length(errors), errors, xlab=&quot;Features&quot;, xaxt = &quot;n&quot;, main=&quot;CV errors with feature dropping&quot;, ylab=&quot;CV errors&quot;)
+labels &lt;- names(df[1:8])
+labels[9] &lt;- &quot;bias&quot;
+axis(1, at=1:length(errors), labels=labels)</code></pre>
+<p><img src="/post/2020-01-08-reproducibility_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+</div>
+<div id="bibliography" class="section level1 unnumbered">
+<h1>Bibliography</h1>
+<div id="refs" class="references">
+<div id="ref-sc1">
+<p>Lee, Anthony. 2019. “Reproducibility.” <a href="https://awllee.github.io/sc1-2019/reproducibility/">https://awllee.github.io/sc1-2019/reproducibility/</a>.</p>
+</div>
+<div id="ref-turingway">
+<p>Whitaker, Kirstie. 2019. “The Turing Way.” <a href="https://the-turing-way.netlify.com/introduction/introduction">https://the-turing-way.netlify.com/introduction/introduction</a>.</p>
+</div>
+</div>
+</div>

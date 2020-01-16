@@ -223,16 +223,16 @@
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="/2020/01/reproducibility/">
-          Reproducibility
+        <a class="link-unstyled" href="/2020/01/packages-portfolio/">
+          Packages Portfolio
         </a>
       </h1>
       
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2020-01-16T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-01-09T00:00:00Z">
         
-  January 16, 2020
+  January 9, 2020
 
       </time>
     
@@ -241,9 +241,9 @@
   
     <span>in</span>
     
-      <a class="category-link" href="/categories/r">R</a>, 
+      <a class="category-link" href="/categories/packages">Packages</a>, 
     
-      <a class="category-link" href="/categories/reproducibility">Reproducibility</a>
+      <a class="category-link" href="/categories/r">R</a>
     
   
 
@@ -252,12 +252,12 @@
     </div>
     <div class="postShorten-excerpt" itemprop="articleBody">
       
-        Strategies for Reproducibility According to Lee (2019) reproducibility can be implemented by:
- Organize files logically into modules and packages. Use version control software. Write human-readable documentation.  Why is reproducibility important?
- If the research is reproducible, then the analysis and the methodology are clear. A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will  Replication crisis Replication crisis refers to the difficulty or impossibility to reproduce scientific studies, which undermines their results since the reproducibility of experiments is an integral part of the scientific method.
+        Creating an R Package with RStudio To Create a package open RStudio, on the menu browse
+File &gt; New Project &gt; New Directory Then, from the following options choose R Package.
+At this point, we need to assign the R Package a name and tell RStudio where to place the main folder containing our package files without our folder structure. Here, I’ve chosen to put it under the folder University and to call it PerfectRPackage.
       
       <p>
-        <a href="/2020/01/reproducibility/" class="postShorten-excerpt_link link">Continue reading</a>
+        <a href="/2020/01/packages-portfolio/" class="postShorten-excerpt_link link">Continue reading</a>
         
       </p>
     </div>
@@ -283,16 +283,16 @@
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="/2020/01/tidyverse-portfolio/">
-          Tidyverse Portfolio
+        <a class="link-unstyled" href="/2020/01/reproducibility/">
+          Reproducibility
         </a>
       </h1>
       
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2020-01-16T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-01-08T00:00:00Z">
         
-  January 16, 2020
+  January 8, 2020
 
       </time>
     
@@ -303,7 +303,7 @@
     
       <a class="category-link" href="/categories/r">R</a>, 
     
-      <a class="category-link" href="/categories/tidyverse">tidyverse</a>
+      <a class="category-link" href="/categories/reproducibility">Reproducibility</a>
     
   
 
@@ -312,11 +312,12 @@
     </div>
     <div class="postShorten-excerpt" itemprop="articleBody">
       
-        library(tidyverse) library(plotly) library(forcats) library(reshape2) library(magrittr) Spotify: Genre Popularity by Artist Import the spotify data an drop index column cause it contains redundant information.
-spotify &lt;- read_csv(&quot;top50.csv&quot;, col_names=c( &quot;index&quot;, &quot;Song&quot;, &quot;Artist&quot;, &quot;Genre&quot;, &quot;BPM&quot;, &quot;Energy&quot;, &quot;Danceability&quot;, &quot;Loudness&quot;, &quot;Liveness&quot;, &quot;Valence&quot;, &quot;Length&quot;, &quot;Acousticness&quot;, &quot;Speechiness&quot;, &quot;Popularity&quot;), col_types=cols( index=col_double(), Song=col_factor(), Artist=col_factor(), Genre=col_factor()), skip=1) # Index column contains row_numbers spotify &lt;- spotify %&gt;% select(-c(&quot;index&quot;)) For brevity, will change the name of the genres and change one of the artists cause it has a non utf-8 name.
+        Strategies for Reproducibility According to Lee (2019) reproducibility can be implemented by:
+ Organize files logically into modules and packages. Use version control software. Write human-readable documentation.  Why is reproducibility important?
+ If the research is reproducible, then the analysis and the methodology are clear. A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will  Replication crisis Replication crisis refers to the difficulty or impossibility to reproduce scientific studies, which undermines their results since the reproducibility of experiments is an integral part of the scientific method.
       
       <p>
-        <a href="/2020/01/tidyverse-portfolio/" class="postShorten-excerpt_link link">Continue reading</a>
+        <a href="/2020/01/reproducibility/" class="postShorten-excerpt_link link">Continue reading</a>
         
       </p>
     </div>
@@ -403,6 +404,10 @@ spotify &lt;- read_csv(&quot;top50.csv&quot;, col_names=c( &quot;index&quot;, &q
 
 <script src="/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
 
+
+  
+    <script async crossorigin="anonymous" defer integrity="sha256-XrZQp+ZMfovqr6Hb2M6okHvSEYaB/+Xbx7toWmOOZUM=" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script>
+  
 
 <script lang="javascript">
 window.onload = updateMinWidth;

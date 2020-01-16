@@ -6,7 +6,7 @@
     <description>Recent content in optimization on Statistical Computing Portfolio Website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 16 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 15 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/optimization/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Optimization Portfolio</title>
       <link>/2020/01/optimization-portfolio/</link>
-      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 15 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/2020/01/optimization-portfolio/</guid>
       <description>library(MASS) library(microbenchmark) library(tidyverse) Utility functions kernel_matrix &amp;lt;- function(X, sigmasq, Y=NULL){ if (is.null(Y)){ Y &amp;lt;- X } n &amp;lt;- nrow(X) m &amp;lt;- nrow(Y) # Find three matrices above Xnorm &amp;lt;- matrix(apply(X^2, 1, sum), n, m) Ynorm &amp;lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE) XY &amp;lt;- tcrossprod(X, Y) return(exp(-(Xnorm - 2*XY + Ynorm) / (2*sigmasq))) } # Creates a logical one-hot encoding, assumes classes 0, .. , K-1 make_flags &amp;lt;- function(y){ classes &amp;lt;- unique(y) flags &amp;lt;- data.</description>

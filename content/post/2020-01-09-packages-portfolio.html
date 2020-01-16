@@ -1,0 +1,168 @@
+---
+title: Packages Portfolio
+author: Mauro Camara Escudero
+date: '2020-01-09'
+slug: packages-portfolio
+categories:
+  - Packages
+  - R
+tags:
+  - Packages
+keywords:
+  - tech
+---
+
+
+
+<div id="creating-an-r-package-with-rstudio" class="section level2">
+<h2>Creating an R Package with RStudio</h2>
+<p>To Create a package open RStudio, on the menu browse</p>
+<pre><code>File &gt; New Project &gt; New Directory</code></pre>
+<p><img src="/post/images/CreateProject.png" /></p>
+<p>Then, from the following options choose <code>R Package</code>.</p>
+<p><img src="/post/images/RPackageScreen.png" /></p>
+<p>At this point, we need to assign the R Package a name and tell RStudio where to place the main folder containing our package files without our folder structure. Here, I’ve chosen to put it under the folder <code>University</code> and to call it <code>PerfectRPackage</code>.</p>
+<p><img src="/post/images/RPackageDirectory.png" /></p>
+<p>After this, RStudio will open a new session that should look like the following one, with a <code>hello.R</code> file and with a lot of new content such as</p>
+<ul>
+<li><code>.Rbuildignore</code></li>
+<li><code>.Rproj.user</code></li>
+<li><code>DESCRIPTION</code></li>
+<li><code>man</code></li>
+<li><code>NAMESPACE</code></li>
+<li><code>PerfectRPackage.Rproj</code></li>
+<li><code>R</code></li>
+</ul>
+<p><img src="/post/images/RPackageWelcomeScreen.png" /></p>
+<p>Now it’s time to create a GitHub repository. Browse inside the package directory, in this case called <code>PerfectRPackage</code> on the terminal. Type <code>git init</code> to initialize a repository, then follow it with <code>git add .</code> to stage all the new files created by RStudio when it created the package. Then, commit these staged changes using <code>git commit -m&quot;&quot;</code> and put some helpful message in between <code>&quot;&quot;</code>. It should look something like this</p>
+<p><img src="/post/images/TerminalGit.png" /></p>
+<p>Now we need to create an upstream repository on GitHub. To do that, go on www.github.com, log in and click on the green button <code>New</code> to create a new repository</p>
+<p><img src="/post/images/GitHubNewRepoButton.png" /></p>
+<p>you will be directed to the following page where you can specify the name of the GitHub repository and add other details. I suggest naming it with the same name of the RPackage, in this case <code>PerfectRPackage</code>, to add a useful description, keep it Public, and to not initialize it with a README.md file just yet. Finally, click on the green button at the bottom saying <code>Create Repository</code></p>
+<p><img src="/post/images/NewRepository.png" /></p>
+<p>Scroll to the bottom, and copy the following commands</p>
+<p><img src="/post/images/GitPushExistingRepo.png" /></p>
+<p>Now go back to your terminal, paste the commmands and this will connect the repository upstream.</p>
+<p><img src="/post/images/GitAddedRepository.png" /></p>
+<p>Next, we want to add a <code>README.md</code> file. This will be the “welcome page” of our GitHub repository. To do so, simply go on the <code>PerfectRPackage</code> repository on GitHub and click on <code>Create New File</code> button on the right of the screen. This will load the following page. Call your file <code>README.md</code> and write some useful description.</p>
+<p><img src="/post/images/readme.png" /></p>
+<p>Next, scroll to the bottom of the page, add a comment to describe what you’re doing and commit to the master branch, as show in the following screenshot.</p>
+<p><img src="/post/images/commitreadme.png" /></p>
+<p>Click <code>Commit new file</code>. Next, we need to get these changes on our local version of the repository, so open up the terminal in the package directory, which is <code>PerfectRPackage</code> in this case. Type in <code>git status</code> to see what’s going on in your local repository. If everything is up to date and you don’t have any changes pending to be staged, simply type <code>git pull</code>. Otherwise, add your changes by typing <code>git add .</code> and then commit them with some useful message, using the command <code>git commit -m&quot;&quot;</code> as shown below.</p>
+<p><img src="/post/images/GitCommittingChangesBeforePulling.png" /></p>
+<p>Next type</p>
+<pre><code>git fetch origin --prune</code></pre>
+<p>followed by</p>
+<pre><code>git rebase --preserve-merges origin/master</code></pre>
+<p>This will allow you to finally push your changes using <code>git push</code>.</p>
+<p><img src="/post/images/rebasingGit.png" /></p>
+<div id="testing-documentation-licensing-and-readme.md" class="section level3">
+<h3>Testing, Documentation, Licensing and README.md</h3>
+<p>First of all, we need to install some packages. Open RStudio, go to the console and type</p>
+<pre><code>install.packages(c(&quot;devtools&quot;, &quot;roxygen2&quot;, &quot;testthat&quot;, &quot;knitr&quot;))</code></pre>
+<p>When they’re finished installing, simply load the <code>devtools</code> package by typing</p>
+<pre><code>library(devtools)</code></pre>
+<p>Now we want to add an author to the package. So type in something like this</p>
+<pre><code>mauro &lt;- person(given=&quot;Mauro&quot;, family=&quot;Camara Escudero&quot;, email=&quot;maurocamaraescudero@gmail.com&quot;)</code></pre>
+<p>and assign it to the <code>author</code> variable by typing</p>
+<pre><code>devtools.desc.author = mauro</code></pre>
+<p>Now it’s time to add a LICENCE to our Package. The easiest way to add an MIT license is to type</p>
+<pre><code>use_mit_license(&quot;Mauro Camara Escudero&quot;)</code></pre>
+<p>Now, we can add some documentation with Roxygen. To do this, simply open the <code>hello.R</code> script and click anywhere on the body of the <code>hello</code> function. Then, in the menu click</p>
+<pre><code>Code &gt; Insert roxygen skeleton</code></pre>
+<p>To add a documentation skeleton. Remember to save the R script file. Now it’s time to actually create the documentation. Since the file <code>NAMESPACE</code> was created by RStudio and not by Roxygen, we can delete such file for now. Then, go to the console and type</p>
+<pre><code>document()</code></pre>
+<p>This will re-create the <code>NAMESPACE</code> file and add a new folder called <code>man</code>, containing markdown documents with the documentation. The next thing to do is to install the package. Go to the console and type</p>
+<pre><code>install()</code></pre>
+<p>Next, we want to create some tests. Type</p>
+<pre><code>use_testthat()</code></pre>
+<p>and you should get an output that looks like this</p>
+<p><img src="/post/images/usetestthat.png" /></p>
+<p>To create a new test file for the function <code>hello</code> go to the console and type</p>
+<pre><code>use_test(&quot;hello&quot;)</code></pre>
+<p>This will create a new file called <code>test-hello.R</code>, which will look like this</p>
+<p><img src="/post/images/testhello.png" /></p>
+<p>Modify this function to do a sensible test. For instance, give a sensible name and check that the function <code>hello</code> actually prints <code>Hello, World!</code>. It should look like this:</p>
+<p><img src="/post/images/testfunctionsensible.png" /></p>
+<p>Now we can actually test our function. To do so, go to the console, load the <code>testthat</code> package by typing</p>
+<pre><code>library(testthat)</code></pre>
+<p>Then load the <code>PerfectRPackage</code> in the console by typing</p>
+<pre><code>load_all()</code></pre>
+<p>and test it using</p>
+<pre><code>test()</code></pre>
+<p>Hopefully, the test will be fine and you should obtain a summary of the testing that looks like this:</p>
+<p><img src="/post/images/testingpackage.png" /></p>
+<p>At this point you could push all the new changes to the upstream repository. Notice that if you did not create a <code>README.md</code> file, you can create it now together with its RMarkdown version by typing the following in the console</p>
+<pre><code>use_readme_rmd()</code></pre>
+<p>If you do this, remember to re-knit the README document before committing the changes.</p>
+</div>
+<div id="travis-for-continuous-integration" class="section level3">
+<h3>Travis for Continuous Integration</h3>
+<p>To do continuous deployment, go on <a href="https://travis-ci.com/" class="uri">https://travis-ci.com/</a> and login with your GitHub account, granting access to the repositories for which you want continuous development. Next, create a new text file called <code>.travis.yml</code> and paste the following content</p>
+<pre><code>language: r
+dist: xenial
+cache: packages
+branches:
+  only:
+    - master
+
+r_github_packages:
+  - r-lib/covr
+
+after_success:
+  - Rscript -e &#39;covr::codecov()&#39;</code></pre>
+<p>commit the changes. From the <strong>next</strong> commit, travis will start building and testing your package. Go on the travis website and you should be able to see a screen looking like this</p>
+<p><img src="/post/images/travisbuild.png" /></p>
+</div>
+<div id="adding-travis-badge-to-github-readme" class="section level3">
+<h3>Adding travis badge to GitHub readme</h3>
+<p>If you want to add a badge to your README.md file, simply go on the travis website shown above and click on the badge saying <code>build unknown</code>. Select <code>Markdown</code></p>
+<p><img src="/post/images/badgemd.png" /></p>
+<p>Copy the text in the last cell, go into your <code>README.rmd</code> file and type it under the comments saying where to add the badge, like shown in the picture below</p>
+<p><img src="/post/images/addbadgetormd.png" /></p>
+<p>Save the RMarkdown file. If everything went well, in the travis website you should now see a successful build.</p>
+<p><img src="/post/images/travisbuildsuccessful.png" /></p>
+<p>Finally, knit the <code>README.rmd</code> and then push your changes to the upstream directory, and you should then be able to see the badge on your README.md file on GitHub.</p>
+</div>
+<div id="hosting-a-website-with-travis-on-github-pages" class="section level3">
+<h3>Hosting a Website with Travis on GitHub pages</h3>
+<p>Go to GitHub and click on your profile image on the top right corner to toggle the menu. Click on <code>Settings</code> and then click to the bottom option <code>Developer Settings</code>. Here, click on <code>Personal access tokens</code> and click on <code>Generate new token</code>. Make sure that <code>public_repo</code> is selected.</p>
+<p><img src="/post/images/tokengithubpublicrepo.png" /></p>
+<p>Copy the token and go to the travis website. In the successful build, click on <code>More options</code> on the right of the screen and choose <code>Settings</code>.</p>
+<p>Scroll down to <code>Environment Variables</code>. Here, choose a name that will be used as a variable holding your personal access token. For instance <code>GITHUB_PAT</code> and paste your Personal Access Token from github in the <code>value</code> box. Then click <code>Add</code>. In the following screenshot I show you where you should be adding this information, without actually adding it for security reasons</p>
+<p><img src="/post/images/envvartravis.png" /></p>
+<p>Now go into the <code>.travis.yml</code> file and change the content to</p>
+<pre><code>language: r
+dist: xenial
+cache: packages
+branches:
+    only:
+        - master
+r_packages:
+    - rmarkdown
+
+script:
+    - Rscript -e &#39;rmarkdown::render(&quot;website.Rmd&quot;, output_dir=&quot;public&quot;)&#39;
+
+deploy:
+    provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_PAT
+    on:
+        branch: master
+    local_dir: public
+    target_branch: gh-pages</code></pre>
+<p>Make sure that the setting <code>github_token</code> is set to the same name that you’ve given to the github token on travis, in this case <code>GITHUB_PAT</code>. Notice how we’ve set <code>target_branch: gh-pages</code>. Go on GitHub and create a new branch called <code>gh-pages</code>. To do so, click <code>Branch:master</code> type <code>gh-pages</code> and click at the bottom where it says <code>Create branch: gh-pages</code>.</p>
+<p><img src="/post/images/ghpagescreation.png" /></p>
+<p>Finally, notice how we’ve told travis to build the website for <code>website.Rmd</code> RMarkdown file. This doesn’t exist yet, so we’ll create it now. Go to RStudio and create such file in the main folder <code>PerfectRPackage</code>.</p>
+<p><img src="/post/images/websitermd.png" /></p>
+<p>Finally, add, commit and push the changes so that travis can build the website. When travis build will be successful, your website will be available at <a href="https://mauroce.github.io/PerfectRPackage/website.html" class="uri">https://mauroce.github.io/PerfectRPackage/website.html</a>.</p>
+</div>
+<div id="adding-codecov-badge" class="section level3">
+<h3>Adding Codecov Badge</h3>
+<p>To add a codecov badge, go to www.codecov.io and login with github. In the <code>PerfectRPackage</code> repository click on <code>Settings</code> and on <code>Badge</code> on the left hand side of the screen. Copy the code under Markdown, as shown below</p>
+<p><img src="/post/images/codecovbadge.png" /></p>
+<p>and paste it under the travis build badge on the <code>README.Rmd</code> file. Knit it, add the changes, commit them and push them. If the build is successful, you should see a codecov badge on your <code>README.md</code> file on GitHub.</p>
+<p><img src="/post/images/codecovbadgegithub.png" /></p>
+</div>
+</div>

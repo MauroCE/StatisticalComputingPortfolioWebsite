@@ -6,7 +6,7 @@
     <description>Recent content in tidyverse on Statistical Computing Portfolio Website</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 16 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 12 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/categories/tidyverse/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Tidyverse Portfolio</title>
       <link>/2020/01/tidyverse-portfolio/</link>
-      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 12 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/2020/01/tidyverse-portfolio/</guid>
       <description>library(tidyverse) library(plotly) library(forcats) library(reshape2) library(magrittr) Spotify: Genre Popularity by Artist Import the spotify data an drop index column cause it contains redundant information.
