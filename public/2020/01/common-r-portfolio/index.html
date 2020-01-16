@@ -69,7 +69,7 @@ myfunc &lt;- function(n){ total = 0 for (i in 1:n){ total = total &#43; cos(i)*s
 
     <title>Common R Portfolio</title>
 
-    <link rel="icon" href="/favicon.png">
+    <link rel="icon" href="/images/favicon.png">
     
 
     
@@ -284,7 +284,7 @@ myfunc &lt;- function(n){ total = 0 for (i in 1:n){ total = total &#43; cos(i)*s
 <pre class="r"><code>m &lt;- 1000000
 system.time(myfunc(m))</code></pre>
 <pre><code>##    user  system elapsed 
-##    0.44    0.00    0.44</code></pre>
+##   0.458   0.000   0.458</code></pre>
 <p>However this operation can be sped up by doing the same operation on each element of a vector, as follows</p>
 <pre class="r"><code>myfunc2 &lt;- function(n){
   vector &lt;- 1:n
@@ -293,7 +293,7 @@ system.time(myfunc(m))</code></pre>
 <p>then we can see that this function is much faster</p>
 <pre class="r"><code>system.time(myfunc2(m))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.199   0.028   0.227</code></pre>
+##   0.193   0.035   0.229</code></pre>
 </div>
 <div id="apply-family" class="section level2">
 <h2>Apply family</h2>
@@ -479,11 +479,11 @@ legend(x=&#39;left&#39;, legend=c(&quot;Minimum CV Error&quot;), col=c(&#39;red&
 <p><img src="/post/2020-01-16-common-r-portfolio_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <p>The minimum CV error is shown as a red point in the plot and corresponds to</p>
 <pre class="r"><code>params[min_index]</code></pre>
-<pre><code>## [1] 13.33521</code></pre>
+<pre><code>## [1] 4.216965</code></pre>
 <p>By using an optimization routine we can indeed see that this value is very close to the optimal one, which can be found like this</p>
 <pre class="r"><code>sol &lt;- optimize(wrapper, params)
 sol$minimum</code></pre>
-<pre><code>## [1] 13.0817</code></pre>
+<pre><code>## [1] 4.294426</code></pre>
 <p>At this point we plot the predictive distribution. To do so, we write a wrapper function for the normal distribution, since the mean and the variance are fairly complicated functions</p>
 <pre class="r"><code>predictive &lt;- function(xhat, X, y, sigmasq, lambda=sol$minimum){
   # First find the mean. This is given by the prediction by the regularized least squares. In our case, we need to find 

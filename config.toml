@@ -121,7 +121,7 @@ math = true
   # If false it will flat categories.
   hierarchicalCategories = true
 
-  description = "Hugo tranquilpeak theme demo"
+  description = "Statistical Computing Portfolio Website"
 
   # Customization
   # Define the behavior of the sidebar
@@ -161,7 +161,7 @@ math = true
   autoThumbnailImage = true
 
   # Your favicon path, default is "/favicon.png"
-  # favicon = "/favicon.png"
+  favicon = "/images/favicon.png"
 
   # Header configuration
   # The link at the right of the header is customizable

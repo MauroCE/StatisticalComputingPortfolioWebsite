@@ -221,7 +221,7 @@ cv &lt;- function(X, y, k){
 }</code></pre>
 <p>We can try this function using <span class="math inline">\(10\)</span> fold cross validation</p>
 <pre class="r"><code>cv(X, y, 10)</code></pre>
-<pre><code>## [1] 5.359969</code></pre>
+<pre><code>## [1] 5.287675</code></pre>
 <p>and even <strong>leave-one-out</strong> cross validation</p>
 <pre class="r"><code>cv(X, y, dim(X)[2])</code></pre>
 <pre><code>## [1] 0.5413291</code></pre>
