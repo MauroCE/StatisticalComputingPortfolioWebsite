@@ -28,12 +28,12 @@
   </url>
   
   <url>
-    <loc>/categories/functional-programming/</loc>
+    <loc>/tags/functional-programming/</loc>
     <lastmod>2020-01-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/functional-programming/</loc>
+    <loc>/categories/functional-programming/</loc>
     <lastmod>2020-01-16T00:00:00+00:00</lastmod>
   </url>
   
@@ -68,12 +68,12 @@
   </url>
   
   <url>
-    <loc>/tags/matrices/</loc>
+    <loc>/categories/matrices/</loc>
     <lastmod>2020-01-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/matrices/</loc>
+    <loc>/tags/matrices/</loc>
     <lastmod>2020-01-16T00:00:00+00:00</lastmod>
   </url>
   
@@ -88,12 +88,12 @@
   </url>
   
   <url>
-    <loc>/tags/optimization/</loc>
+    <loc>/categories/optimization/</loc>
     <lastmod>2020-01-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/optimization/</loc>
+    <loc>/tags/optimization/</loc>
     <lastmod>2020-01-16T00:00:00+00:00</lastmod>
   </url>
   
@@ -123,12 +123,12 @@
   </url>
   
   <url>
-    <loc>/categories/profiling/</loc>
+    <loc>/tags/profiling/</loc>
     <lastmod>2020-01-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/profiling/</loc>
+    <loc>/categories/profiling/</loc>
     <lastmod>2020-01-16T00:00:00+00:00</lastmod>
   </url>
   
