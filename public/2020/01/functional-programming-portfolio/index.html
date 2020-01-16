@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.58.3 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="author" content="Mauro Camara Escudero">
+<meta name="keywords" content="tech">
+<meta name="description" content="Mathematical Set Up Suppose we have a training matrix \(X\) with \(n\) observations and \(d\) features \[ X = \begin{pmatrix} x_{11} &amp; x_{12} &amp; \ldots &amp; x_{1d}\\ x_{21} &amp; x_{22} &amp; \ldots &amp; x_{2d} \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ x_{n1} &amp; x_{n2} &amp; \ldots &amp; x_{nd} \end{pmatrix} =\begin{pmatrix} {\bf{x}}_1^\top \\ {\bf{x}}_2^\top \\ \vdots \\ {\bf{x}}_n^\top \end{pmatrix} \in\mathbb{R}^{n\times d} \] and that we want to do a feature transform of this data using the Radial Basis Function.">
+
+
+<meta property="og:description" content="Mathematical Set Up Suppose we have a training matrix \(X\) with \(n\) observations and \(d\) features \[ X = \begin{pmatrix} x_{11} &amp; x_{12} &amp; \ldots &amp; x_{1d}\\ x_{21} &amp; x_{22} &amp; \ldots &amp; x_{2d} \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ x_{n1} &amp; x_{n2} &amp; \ldots &amp; x_{nd} \end{pmatrix} =\begin{pmatrix} {\bf{x}}_1^\top \\ {\bf{x}}_2^\top \\ \vdots \\ {\bf{x}}_n^\top \end{pmatrix} \in\mathbb{R}^{n\times d} \] and that we want to do a feature transform of this data using the Radial Basis Function.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Functional Programming Portfolio">
+<meta name="twitter:title" content="Functional Programming Portfolio">
+<meta property="og:url" content="/2020/01/functional-programming-portfolio/">
+<meta property="twitter:url" content="/2020/01/functional-programming-portfolio/">
+<meta property="og:site_name" content="Statistical Computing Portfolio Website">
+<meta property="og:description" content="Mathematical Set Up Suppose we have a training matrix \(X\) with \(n\) observations and \(d\) features \[ X = \begin{pmatrix} x_{11} &amp; x_{12} &amp; \ldots &amp; x_{1d}\\ x_{21} &amp; x_{22} &amp; \ldots &amp; x_{2d} \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ x_{n1} &amp; x_{n2} &amp; \ldots &amp; x_{nd} \end{pmatrix} =\begin{pmatrix} {\bf{x}}_1^\top \\ {\bf{x}}_2^\top \\ \vdots \\ {\bf{x}}_n^\top \end{pmatrix} \in\mathbb{R}^{n\times d} \] and that we want to do a feature transform of this data using the Radial Basis Function.">
+<meta name="twitter:description" content="Mathematical Set Up Suppose we have a training matrix \(X\) with \(n\) observations and \(d\) features \[ X = \begin{pmatrix} x_{11} &amp; x_{12} &amp; \ldots &amp; x_{1d}\\ x_{21} &amp; x_{22} &amp; \ldots &amp; x_{2d} \\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\ x_{n1} &amp; x_{n2} &amp; \ldots &amp; x_{nd} \end{pmatrix} =\begin{pmatrix} {\bf{x}}_1^\top \\ {\bf{x}}_2^\top \\ \vdots \\ {\bf{x}}_n^\top \end{pmatrix} \in\mathbb{R}^{n\times d} \] and that we want to do a feature transform of this data using the Radial Basis Function.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2020-01-16T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2020-01-16T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="R">
+    
+      <meta property="article:section" content="functional-programming">
+    
+  
+  
+    
+      <meta property="article:tag" content="functional-programming">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=640">
+  <meta property="twitter:image" content="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=640">
+
+
+    <title>Functional Programming Portfolio</title>
+
+    <link rel="icon" href="/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="/2020/01/functional-programming-portfolio/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="/">Statistical Computing Portfolio Website</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=90" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="/#about">
+          <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=110" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Mauro Camara Escudero</h4>
+        
+          <h5 class="sidebar-profile-bio">PhD student in Computational Statistics and Data Science at the University of Bristol</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/MauroCE">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://stackoverflow.com/users/6435921/euler-salter">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+      
+      <span class="sidebar-button-desc">Stack Overflow</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      Functional Programming Portfolio
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2020-01-16T00:00:00Z">
+        
+  January 16, 2020
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="/categories/r">R</a>, 
+    
+      <a class="category-link" href="/categories/functional-programming">functional-programming</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<div id="mathematical-set-up" class="section level2">
+<h2>Mathematical Set Up</h2>
+<p>Suppose we have a training matrix <span class="math inline">\(X\)</span> with <span class="math inline">\(n\)</span> observations and <span class="math inline">\(d\)</span> features
+<span class="math display">\[
+X = \begin{pmatrix}
+x_{11} &amp; x_{12} &amp; \ldots &amp; x_{1d}\\
+x_{21} &amp; x_{22} &amp; \ldots &amp; x_{2d} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+x_{n1} &amp; x_{n2} &amp; \ldots &amp; x_{nd}
+\end{pmatrix}
+=\begin{pmatrix}
+{\bf{x}}_1^\top \\
+{\bf{x}}_2^\top \\
+\vdots \\
+{\bf{x}}_n^\top
+\end{pmatrix}
+\in\mathbb{R}^{n\times d}
+\]</span>
+and that we want to do a <strong>feature transform</strong> of this data using the Radial Basis Function. To do this, we</p>
+<ul>
+<li>choose <span class="math inline">\(b\)</span> rows of <span class="math inline">\(X\)</span> and we call them <strong>centroids</strong>
+<span class="math display">\[
+{\bf{x}}^{(1)}, \ldots, {\bf{x}}^{(b)}
+\]</span></li>
+<li>calculate using some heuristic a <strong>bandwidth</strong> parameter <span class="math inline">\(\sigma^2\)</span></li>
+</ul>
+<p>And then, for every centroid we define a radial basis function as follows
+<span class="math display">\[
+\phi^{(i)}({\bf{x}}):=\exp\left(- \frac{\parallel{\bf{x}} - {\bf{x}}^{(i)}\parallel^2}{\sigma^2}\right) \qquad \forall i\in\{1, \ldots, b\} \quad \text{for } {\bf{x}}\in\mathbb{R}^{d}
+\]</span>
+We can therefore obtain a transformed data matrix as
+<span class="math display">\[
+\Phi:=\begin{pmatrix}
+1 &amp; \phi^{(1)}({\bf{x}}_1) &amp; \phi^{(2)}({\bf{x}}_1) &amp; \cdots &amp; \phi^{(b)}({\bf{x}}_1) \\
+1 &amp; \phi^{(1)}({\bf{x}}_2) &amp; \phi^{(2)}({\bf{x}}_2) &amp; \cdots &amp; \phi^{(b)}({\bf{x}}_2) \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+1 &amp; \phi^{(1)}({\bf{x}}_n) &amp; \phi^{(2)}({\bf{x}}_n) &amp; \cdots &amp; \phi^{(b)}({\bf{x}}_n)
+\end{pmatrix} \in\mathbb{R}^{n\times (b+1)}
+\]</span>
+Then we fit a <strong>regularized</strong> linear model so that <strong>optimal parameters</strong> are given by
+<span class="math display">\[
+{\bf{w}}:=(\Phi^\top\Phi + \lambda I_n)^{-1}\Phi^\top{\bf{y}}
+\]</span>
+These parameters are usually found by solving the associated system of linear equations for <span class="math inline">\({\bf{w}}\)</span>
+<span class="math display">\[
+(\Phi^\top\Phi + \lambda I_n) {\bf{w}} = \Phi^\top {\bf{y}}
+\]</span>
+This will be one of the strategies that we’ll see below. However, we are required to apply regularization with a very small regularization parameter <span class="math inline">\(\lambda\)</span>. This hints at the fact that maybe we can simply set <span class="math inline">\(\lambda=0\)</span> and then find <span class="math inline">\({\bf{w}}\)</span> simply by finding the pseudoinverse of <span class="math inline">\(\Phi\)</span>
+<span class="math display">\[
+(\Phi^\top\Phi)^{-1}\Phi^\top
+\]</span>
+and then multiply this by <span class="math inline">\({\bf{y}}\)</span> on the left. This approach looks more stable and can be implemented by setting <code>pseudoinverse=TRUE</code> in the function <code>make_predictor</code> defined in this document.</p>
+</div>
+<div id="parameters" class="section level2">
+<h2>Parameters</h2>
+<p>In the following code chunk you can set up <span class="math inline">\(n\)</span> the number of training observations, <span class="math inline">\(d\)</span> the dimensionality of the input (i.e. the number of features), <span class="math inline">\(\lambda\)</span> the regularization coefficient, <span class="math inline">\(m\)</span> the number of testing observations, and <span class="math inline">\(b\)</span> dimensionality of the data after the feature transform, which in this case corresponds to the number of centroids.</p>
+<pre class="r"><code>n &lt;-  1000
+d &lt;-  2
+lambda &lt;-  0.00001
+m &lt;-  200
+b &lt;-  50</code></pre>
+</div>
+<div id="training-and-testing-sets" class="section level2">
+<h2>Training and Testing Sets</h2>
+<p>We work with synthetic data sets. For simplicity, we will generate <span class="math inline">\(X\)</span> uniformly in an interval (which in this case is <span class="math inline">\([-4, 4]\)</span>) and then <span class="math inline">\(y\)</span> will be taken to be a multivariate normal of each row of <span class="math inline">\(X\)</span>.
+Note that we create a <strong>factory of functions</strong> to generate multivariate normal
+closures, yet the same behavior would be achieved writing up a simple function.
+The factory of functions is defined in order to work with the functional
+programming paradigm.</p>
+<pre class="r"><code># Explanatory variable is uniformly distributed between -4 and 4, then reshaped
+X &lt;-  matrix(runif(n*d, min=-4, max=4), nrow=n, ncol=d)
+# Factory of multivariate normal distributions
+normal_factory &lt;- function(mean_vector, cov_matrix){
+  d &lt;- nrow(cov_matrix)
+  normal_pdf &lt;- function(x){
+    exponent &lt;- -mahalanobis(x, center=mean_vector, cov=cov_matrix) / 2
+    return(
+      (2*pi)^(-d/2) * det(cov_matrix)^(-1/2) * exp(exponent)
+    )
+  }
+}
+# Closure will be our data-generating process for training and test response.
+target_normal &lt;- normal_factory(rnorm(d), diag(d))
+y &lt;- matrix(apply(X, 1, target_normal))</code></pre>
+<p>Similarly, create test data.</p>
+<pre class="r"><code>Xtest &lt;- matrix(runif(m*d, min=-4, max=4), nrow=m, ncol=d)
+ytest &lt;- matrix(apply(Xtest, 1, target_normal))</code></pre>
+</div>
+<div id="feature-transform-implementation" class="section level2">
+<h2>Feature Transform Implementation</h2>
+<p>Define a function that, given a training data matrix <span class="math inline">\(X\)</span>, finds the distance matrix containing all the pairwise distances squared, and then return the median of such distances. Essentially, it returns the badwidth squared <span class="math inline">\(\sigma^2\)</span>.</p>
+<pre class="r"><code>compute_sigmasq &lt;- function(X){
+  # Compute distance matrix expanding the norm. Return its median
+  Xcross &lt;- tcrossprod(X)
+  Xnorms &lt;- matrix(diag(Xcross), nrow(X), nrow(X), byrow=TRUE)
+  return(median(Xnorms - 2*Xcross + t(Xnorms)))
+}</code></pre>
+<p>Define a function that gets <span class="math inline">\(b\)</span> random samples from the rows of an input matrix <span class="math inline">\(X\)</span>, these will be the centroids.</p>
+<pre class="r"><code>get_centroids &lt;- function(X, n_centroids){
+  # Find indeces of centroids
+  idx &lt;- sample(1:nrow(X), n_centroids)
+  return(X[idx, ])
+}</code></pre>
+<p>Construct a factory of Radial Basis Functions. The factory constructs an RBF, given a centroid and a <span class="math inline">\(\sigma^2\)</span>.</p>
+<pre class="r"><code>rbf &lt;- function(centroid, sigmasq){
+  rbfdot &lt;- function(x){
+    return(
+      exp(-sum((x - centroid)^2) / sigmasq)
+    )
+  }
+  return(rbfdot)
+}</code></pre>
+<p>Finally, we can put all of these functions together to compute <span class="math inline">\(\Phi\)</span> and eventually make predictions.</p>
+<pre class="r"><code>compute_phiX &lt;- function(X, centroids, sigmasq){
+  # Create a list of rbfdot functions and apply each of them to every row of X
+  phiX &lt;- mapply(
+    function(f) apply(X, 1, f), 
+    apply(centroids, 1, rbf, sigmasq=sigmasq)
+  )
+  # Reshape phiX correctly
+  phiX &lt;- matrix(phiX, nrow(X), nrow(centroids))
+  # Recall we need the first column to contain 1s for the bias
+  return(cbind(1, phiX))  # this is a (n, d+1) matrix
+}</code></pre>
+</div>
+<div id="prediction" class="section level2">
+<h2>Prediction</h2>
+<p>We’re now ready to define a factory of functions that returns prediction functions.</p>
+<pre class="r"><code>library(corpcor)
+make_predictor &lt;- function(X, y, lambda, n_centroids, pseudoinverse=FALSE){
+  # Randomly sample centoids
+  centroids &lt;- get_centroids(X, n_centroids)
+  sigmasq &lt;- compute_sigmasq(X)
+  # Get transformed data matrix
+  phiX &lt;- compute_phiX(X, centroids, sigmasq)
+  # Find optimal parameters
+  if (pseudoinverse){
+    # This method works best cause it does automatic regularization with SVD
+    w &lt;- pseudoinverse(phiX) %*% y
+  } else {
+    w &lt;- solve(t(phiX)%*%phiX + lambda*diag(n_centroids+1), t(phiX) %*% y)
+  }
+  # Construct predictor closure for a new batch of testing data Xtest
+  predictor &lt;- function(Xtest){
+    # Need to transform test data into a phi matrix
+    phi_Xtest &lt;- compute_phiX(Xtest, centroids, sigmasq)
+    return(phi_Xtest %*% w)
+  }
+  return(predictor)
+}</code></pre>
+<p>We can test its effectiveness now. Notice that in general we might need a lot of centroids to make this work.</p>
+<pre class="r"><code># Construct prediction functions. One with regularization, other with pseudoinv
+predict &lt;- make_predictor(X, y, lambda, n_centroids = b)
+pseudo_predict &lt;- make_predictor(X, y, lambda, n_centroids = b, pseudoinverse = TRUE)
+# Get predictions
+yhat &lt;- predict(Xtest)
+yhat_pseudo &lt;- pseudo_predict(Xtest)</code></pre>
+<p>Predictions can be assessed by plotting predicted values against the true test
+values.</p>
+<pre class="r"><code>library(ggplot2)
+# Put data into a dataframe for ggplot2
+df &lt;- data.frame(real=ytest, pred=yhat, pseudo_pred=yhat_pseudo)
+ggplot(data=df) + 
+  geom_point(aes(x=real, y=pred), color=&quot;darkblue&quot;) + 
+  geom_abline(intercept=0, slope=1) + 
+  ggtitle(paste(&quot;Predictions vs Actual with b =&quot;, b)) + 
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.title = element_text(size=15, face=&quot;bold&quot;),
+    axis.title.y = element_text(angle=0, vjust=0.5)
+  ) +
+  xlab(expression(y)) + 
+  ylab(expression(hat(y))) + 
+  coord_fixed()</code></pre>
+<p><img src="/post/2020-01-16-functional-programming-portfolio_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Similarly, we can see the performance of our prediction using the pseudoinverse</p>
+<pre class="r"><code>ggplot(data=df) + 
+  geom_point(aes(x=real, y=pseudo_pred), color=&quot;darkblue&quot;) + 
+  geom_abline(intercept=0, slope=1) + 
+  ggtitle(paste(&quot;Pseudo-Predictions vs Actual with b =&quot;, b)) + 
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.title = element_text(size=15, face=&quot;bold&quot;),
+    axis.title.y = element_text(angle=0, vjust=0.5)
+  ) +
+  xlab(expression(y)) + 
+  ylab(expression(hat(y))) + 
+  coord_fixed()</code></pre>
+<p><img src="/post/2020-01-16-functional-programming-portfolio_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+<div id="technical-note-on-calculating-the-bandwidth" class="section level2">
+<h2>Technical Note on Calculating the Bandwidth</h2>
+<p>To vectorize this operation, we aim to create a matrix containing all the squared norms of the difference between the vectors
+<span class="math display">\[
+D = 
+\begin{pmatrix}
+  \parallel \boldsymbol{\mathbf{x}}_1 - \boldsymbol{\mathbf{x}}_1 \parallel^2 &amp; \parallel \boldsymbol{\mathbf{x}}_1 - \boldsymbol{\mathbf{x}}_2 \parallel^2 &amp; \cdots &amp; \parallel \boldsymbol{\mathbf{x}}_1 - \boldsymbol{\mathbf{x}}_n \parallel^2 \\
+  \parallel \boldsymbol{\mathbf{x}}_2 - \boldsymbol{\mathbf{x}}_1 \parallel^2 &amp; \parallel \boldsymbol{\mathbf{x}}_2 - \boldsymbol{\mathbf{x}}_2 \parallel^2 &amp; \cdots &amp; \parallel \boldsymbol{\mathbf{x}}_2 - \boldsymbol{\mathbf{x}}_n \parallel^2 \\
+  \vdots             &amp; \vdots             &amp; \ddots &amp; \vdots \\
+  \parallel \boldsymbol{\mathbf{x}}_n - \boldsymbol{\mathbf{x}}_1 \parallel^2 &amp; \parallel \boldsymbol{\mathbf{x}}_n - \boldsymbol{\mathbf{x}}_2 \parallel^2 &amp; \cdots &amp; \parallel \boldsymbol{\mathbf{x}}_n - \boldsymbol{\mathbf{x}}_n \parallel^2
+\end{pmatrix}
+\]</span>
+Notice that we can rewrite the norm of the difference between two vectors <span class="math inline">\(\boldsymbol{\mathbf{x}}_i\)</span> and <span class="math inline">\(\boldsymbol{\mathbf{x}}_j\)</span> as follows
+<span class="math display">\[
+\parallel \boldsymbol{\mathbf{x}}_i - \boldsymbol{\mathbf{x}}_j \parallel^2 = (\boldsymbol{\mathbf{x}}_i - \boldsymbol{\mathbf{x}}_j)^\top (\boldsymbol{\mathbf{x}}_i - \boldsymbol{\mathbf{x}}_j) = \boldsymbol{\mathbf{x}}_i^\top\boldsymbol{\mathbf{x}}_i - 2\boldsymbol{\mathbf{x}}_i^\top \boldsymbol{\mathbf{x}}_j + \boldsymbol{\mathbf{x}}_j^\top\boldsymbol{\mathbf{x}}_j
+\]</span>
+Broadcasting this, we can rewrite the matrix <span class="math inline">\(D\)</span> as
+<span class="math display">\[
+D =
+\begin{pmatrix}
+  \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} - 2\boldsymbol{\mathbf{x}}_{1}^\top \boldsymbol{\mathbf{x}}_{1} + \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \quad\boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} - 2\boldsymbol{\mathbf{x}}_{1}^\top \boldsymbol{\mathbf{x}}_{2} + \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \quad\cdots &amp; \quad\boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} - 2\boldsymbol{\mathbf{x}}_{1}^\top \boldsymbol{\mathbf{x}}_{n} + \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}\\
+  \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} - 2\boldsymbol{\mathbf{x}}_{2}^\top \boldsymbol{\mathbf{x}}_{1} + \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \quad\boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} - 2\boldsymbol{\mathbf{x}}_{2}^\top \boldsymbol{\mathbf{x}}_{2} + \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \quad\cdots &amp; \quad\boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} - 2\boldsymbol{\mathbf{x}}_{2}^\top \boldsymbol{\mathbf{x}}_{n} + \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}\\
+  \vdots          &amp; \quad\vdots          &amp; \quad\ddots &amp; \quad\vdots \\
+  \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n} - 2\boldsymbol{\mathbf{x}}_{n}^\top \boldsymbol{\mathbf{x}}_{1} + \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \quad\boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n} - 2\boldsymbol{\mathbf{x}}_{n}^\top \boldsymbol{\mathbf{x}}_{2} + \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \quad\cdots &amp; \quad\boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n} - 2\boldsymbol{\mathbf{x}}_{n}^\top \boldsymbol{\mathbf{x}}_{n} + \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}
+\end{pmatrix}
+\]</span>
+This can now be split into three matrices, where we can notice that the third matrix is nothing but the transpose of the first.
+<span class="math display">\[
+D =
+\begin{pmatrix}
+\boldsymbol{\mathbf{x}}_1^\top\boldsymbol{\mathbf{x}}_1 &amp; \boldsymbol{\mathbf{x}}_1^\top\boldsymbol{\mathbf{x}}_1 &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_1^\top\boldsymbol{\mathbf{x}}_1\\
+\boldsymbol{\mathbf{x}}_2^\top\boldsymbol{\mathbf{x}}_2 &amp; \boldsymbol{\mathbf{x}}_2^\top\boldsymbol{\mathbf{x}}_2 &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_2^\top\boldsymbol{\mathbf{x}}_2 \\
+\vdots          &amp; \vdots          &amp; \ddots &amp; \vdots\\
+\boldsymbol{\mathbf{x}}_n^\top\boldsymbol{\mathbf{x}}_n &amp; \boldsymbol{\mathbf{x}}_n^\top\boldsymbol{\mathbf{x}}_n &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_n^\top\boldsymbol{\mathbf{x}}_n
+\end{pmatrix}
+-2
+\begin{pmatrix}
+  \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{n} \\
+  \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{n} \\
+  \vdots     &amp; \vdots     &amp; \ddots &amp; \vdots \\
+  \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}
+\end{pmatrix}
++
+\begin{pmatrix}
+\boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n} \\
+\boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n} \\
+\vdots     &amp; \vdots     &amp; \ddots &amp; \vdots \\
+\boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n} 
+\end{pmatrix}
+\]</span></p>
+<p>The key is not to notice that we can obtain the middle matrix from <span class="math inline">\(X\)</span> with a simple operation:
+<span class="math display">\[
+XX^\top = 
+\begin{pmatrix}
+  \boldsymbol{\mathbf{x}}_1^\top \\
+  \boldsymbol{\mathbf{x}}_2^\top \\
+  \vdots \\
+  \boldsymbol{\mathbf{x}}_n^\top
+\end{pmatrix}
+\begin{pmatrix}
+\boldsymbol{\mathbf{x}}_1 &amp; \boldsymbol{\mathbf{x}}_2 &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_n 
+\end{pmatrix}
+=
+\begin{pmatrix}
+  \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{n} \\
+  \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{n} \\
+  \vdots     &amp; \vdots     &amp; \ddots &amp; \vdots \\
+  \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}
+\end{pmatrix}
+\]</span></p>
+<p>and then the first matrix can be obtained as follows
+<span class="math display">\[
+\begin{pmatrix}
+  1 \\
+  1 \\
+  \vdots \\
+  1
+\end{pmatrix}_{n\times 1}
+\begin{pmatrix}
+  \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}
+\end{pmatrix}_{1\times n}
+= 
+\begin{pmatrix}
+\boldsymbol{\mathbf{x}}_1^\top\boldsymbol{\mathbf{x}}_1 &amp; \boldsymbol{\mathbf{x}}_1^\top\boldsymbol{\mathbf{x}}_1 &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_1^\top\boldsymbol{\mathbf{x}}_1\\
+\boldsymbol{\mathbf{x}}_2^\top\boldsymbol{\mathbf{x}}_2 &amp; \boldsymbol{\mathbf{x}}_2^\top\boldsymbol{\mathbf{x}}_2 &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_2^\top\boldsymbol{\mathbf{x}}_2 \\
+\vdots          &amp; \vdots          &amp; \ddots &amp; \vdots\\
+\boldsymbol{\mathbf{x}}_n^\top\boldsymbol{\mathbf{x}}_n &amp; \boldsymbol{\mathbf{x}}_n^\top\boldsymbol{\mathbf{x}}_n &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_n^\top\boldsymbol{\mathbf{x}}_n
+\end{pmatrix}
+\]</span>
+where
+<span class="math display">\[
+\text{diag}\left[
+\begin{pmatrix}
+  \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{n} \\
+  \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{n} \\
+  \vdots     &amp; \vdots     &amp; \ddots &amp; \vdots \\
+  \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}
+\end{pmatrix}
+\right]
+=
+\begin{pmatrix}
+  \boldsymbol{\mathbf{x}}_{1}^\top\boldsymbol{\mathbf{x}}_{1} &amp; \boldsymbol{\mathbf{x}}_{2}^\top\boldsymbol{\mathbf{x}}_{2} &amp; \cdots &amp; \boldsymbol{\mathbf{x}}_{n}^\top\boldsymbol{\mathbf{x}}_{n}
+\end{pmatrix}_{1\times n}
+\]</span></p>
+</div>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="/tags/functional-programming/">functional-programming</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/common-r-portfolio/" data-tooltip="Common R Portfolio">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/integration-portfolio/" data-tooltip="Integration Portfolio">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2020/01/functional-programming-portfolio/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2020/01/functional-programming-portfolio/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2020/01/functional-programming-portfolio/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2020 Mauro Camara Escudero. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/common-r-portfolio/" data-tooltip="Common R Portfolio">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/integration-portfolio/" data-tooltip="Integration Portfolio">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2020/01/functional-programming-portfolio/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2020/01/functional-programming-portfolio/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2020/01/functional-programming-portfolio/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2020%2F01%2Ffunctional-programming-portfolio%2F">
+          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2020%2F01%2Ffunctional-programming-portfolio%2F">
+          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2020%2F01%2Ffunctional-programming-portfolio%2F">
+          <i class="fa fa-google-plus"></i><span>Share on Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=110" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Mauro Camara Escudero</h4>
+    
+      <div id="about-card-bio">PhD student in Computational Statistics and Data Science at the University of Bristol</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        COMPASS PhD Student
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Bristol, United Kingdom
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = '\/2020\/01\/functional-programming-portfolio\/';
+          
+            this.page.identifier = '\/2020\/01\/functional-programming-portfolio\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hugo-tranquilpeak-theme';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+

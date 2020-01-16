@@ -12,6 +12,26 @@
     
     
     <item>
+      <title>Common R Portfolio</title>
+      <link>/2020/01/common-r-portfolio/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/01/common-r-portfolio/</guid>
+      <description>Vectorization As a general rule of thumb, we want to avoid writing for-loops as much as possible, and instead vectorize operations to speed up our calculations. For example suppose that we want to calculate \[\sum_{i=1}^n\cos(i) \times \sin(i) \times \tan(i) - \cos(i)^2-\sin(i)^3\]
+At first one could write a function similar to this:
+myfunc &amp;lt;- function(n){ total = 0 for (i in 1:n){ total = total + cos(i)*sin(i)*tan(i) - cos(i)^2 - sin(i)^3 } return(total) } We can see see how long a function takes to run in R by using the system.</description>
+    </item>
+    
+    <item>
+      <title>Functional Programming Portfolio</title>
+      <link>/2020/01/functional-programming-portfolio/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/01/functional-programming-portfolio/</guid>
+      <description>Mathematical Set Up Suppose we have a training matrix \(X\) with \(n\) observations and \(d\) features \[ X = \begin{pmatrix} x_{11} &amp;amp; x_{12} &amp;amp; \ldots &amp;amp; x_{1d}\\ x_{21} &amp;amp; x_{22} &amp;amp; \ldots &amp;amp; x_{2d} \\ \vdots &amp;amp; \vdots &amp;amp; \ddots &amp;amp; \vdots \\ x_{n1} &amp;amp; x_{n2} &amp;amp; \ldots &amp;amp; x_{nd} \end{pmatrix} =\begin{pmatrix} {\bf{x}}_1^\top \\ {\bf{x}}_2^\top \\ \vdots \\ {\bf{x}}_n^\top \end{pmatrix} \in\mathbb{R}^{n\times d} \] and that we want to do a feature transform of this data using the Radial Basis Function.</description>
+    </item>
+    
+    <item>
       <title>Integration Portfolio</title>
       <link>/2020/01/integration-portfolio/</link>
       <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
@@ -22,12 +42,65 @@ rwmh &amp;lt;- function(start, niter, proposal, target){ # Store accepted, rejec
     </item>
     
     <item>
+      <title>Matrices Portfolio</title>
+      <link>/2020/01/matrices-portfolio/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/01/matrices-portfolio/</guid>
+      <description>library(Matrix) library(tidyverse) library(igraph) We work with the same dataset used for Tidyverse containing data regarding some of the top-voted kaggle kernels.
+kaggle &amp;lt;- read_csv(&amp;quot;kagglekernels.csv&amp;quot;, col_types = cols( Votes=col_double(), Owner=col_factor(), Kernel=col_factor(), Dataset=col_factor(), Output=col_character(), `Code Type`=col_factor(), Language=col_factor(), Comments=col_double(), Views=col_double(), Forks=col_double() )) kaggle # Tibbles automatically print head(tibble) ## # A tibble: 971 x 12 ## Votes Owner Kernel Dataset `Version Histor… Tags Output `Code Type` Language ## &amp;lt;dbl&amp;gt; &amp;lt;fct&amp;gt; &amp;lt;fct&amp;gt; &amp;lt;fct&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;chr&amp;gt; &amp;lt;fct&amp;gt; &amp;lt;fct&amp;gt; ## 1 2130 Mega… Explo… Titani… Version 8,2017-… tuto… This … Script markdown ## 2 1395 Guid… Full … Data S… Version 19,2017… tuto… This … Notebook Python ## 3 1363 Pedr… Compr… House … Version 47,2018… begi… This … Notebook Python ## 4 1316 Anis… Intro… Titani… Version 93,2018… tuto… This … Notebook Python ## 5 1078 Kaan… Data … Pokemo… Version 389,201… begi… This … Notebook Python ## 6 1003 Phil… Explo… Zillow… Version 44,2017… begi… This … Script markdown ## 7 946 Mana… Titan… Titani… Version 16,2017… tuto… This … Notebook Python ## 8 826 Omar… A Jou… Titani… Version 6,2016-… begi… This … Notebook Python ## 9 814 anok… Data … Quora … &amp;lt;NA&amp;gt; inte… This … Notebook Python ## 10 726 SRK Simpl… Zillow… Version 19,2017… eda,… This … Notebook Python ## # … with 961 more rows, and 3 more variables: Comments &amp;lt;dbl&amp;gt;, Views &amp;lt;dbl&amp;gt;, ## # Forks &amp;lt;dbl&amp;gt; Again, we can use the Tags to create a number of different new variables, each representing one Tag.</description>
+    </item>
+    
+    <item>
       <title>Optimization Portfolio</title>
       <link>/2020/01/optimization-portfolio/</link>
       <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/2020/01/optimization-portfolio/</guid>
       <description>library(MASS) library(microbenchmark) library(tidyverse) Utility functions kernel_matrix &amp;lt;- function(X, sigmasq, Y=NULL){ if (is.null(Y)){ Y &amp;lt;- X } n &amp;lt;- nrow(X) m &amp;lt;- nrow(Y) # Find three matrices above Xnorm &amp;lt;- matrix(apply(X^2, 1, sum), n, m) Ynorm &amp;lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE) XY &amp;lt;- tcrossprod(X, Y) return(exp(-(Xnorm - 2*XY + Ynorm) / (2*sigmasq))) } # Creates a logical one-hot encoding, assumes classes 0, .. , K-1 make_flags &amp;lt;- function(y){ classes &amp;lt;- unique(y) flags &amp;lt;- data.</description>
+    </item>
+    
+    <item>
+      <title>Packages Portfolio</title>
+      <link>/2020/01/packages-portfolio/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/01/packages-portfolio/</guid>
+      <description>Creating an R Package with RStudio To Create a package open RStudio, on the menu browse
+File &amp;gt; New Project &amp;gt; New Directory Then, from the following options choose R Package.
+At this point, we need to assign the R Package a name and tell RStudio where to place the main folder containing our package files without our folder structure. Here, I’ve chosen to put it under the folder University and to call it PerfectRPackage.</description>
+    </item>
+    
+    <item>
+      <title>Profiling Portfolio</title>
+      <link>/2020/01/profiling-portfolio/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/01/profiling-portfolio/</guid>
+      <description>Implementations Data Generation and Problem Settings Import the necessary packages. The library provfis is a stochastic profiler and can be used to profile our code.
+library(profvis) library(tidyverse) library(MASS) library(microbenchmark) First, let’s decide some parameters and settings such as the amount of training and testing data.
+# Number of data points for plotting &amp;amp; Bandwidth squared of the RBF kernel ntest &amp;lt;- 500 # Characteristic Length-scale for kernel sigmasq &amp;lt;- 1.</description>
+    </item>
+    
+    <item>
+      <title>Reproducibility</title>
+      <link>/2020/01/reproducibility/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/01/reproducibility/</guid>
+      <description>Strategies for Reproducibility According to Lee (2019) reproducibility can be implemented by:
+ Organize files logically into modules and packages. Use version control software. Write human-readable documentation.  Why is reproducibility important?
+ If the research is reproducible, then the analysis and the methodology are clear. A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will  Replication crisis Replication crisis refers to the difficulty or impossibility to reproduce scientific studies, which undermines their results since the reproducibility of experiments is an integral part of the scientific method.</description>
+    </item>
+    
+    <item>
+      <title>Tidyverse Portfolio</title>
+      <link>/2020/01/tidyverse-portfolio/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/01/tidyverse-portfolio/</guid>
+      <description>library(tidyverse) library(plotly) library(forcats) library(reshape2) library(magrittr) Spotify: Genre Popularity by Artist Import the spotify data an drop index column cause it contains redundant information.
+spotify &amp;lt;- read_csv(&amp;quot;top50.csv&amp;quot;, col_names=c( &amp;quot;index&amp;quot;, &amp;quot;Song&amp;quot;, &amp;quot;Artist&amp;quot;, &amp;quot;Genre&amp;quot;, &amp;quot;BPM&amp;quot;, &amp;quot;Energy&amp;quot;, &amp;quot;Danceability&amp;quot;, &amp;quot;Loudness&amp;quot;, &amp;quot;Liveness&amp;quot;, &amp;quot;Valence&amp;quot;, &amp;quot;Length&amp;quot;, &amp;quot;Acousticness&amp;quot;, &amp;quot;Speechiness&amp;quot;, &amp;quot;Popularity&amp;quot;), col_types=cols( index=col_double(), Song=col_factor(), Artist=col_factor(), Genre=col_factor()), skip=1) # Index column contains row_numbers spotify &amp;lt;- spotify %&amp;gt;% select(-c(&amp;quot;index&amp;quot;)) For brevity, will change the name of the genres and change one of the artists cause it has a non utf-8 name.</description>
     </item>
     
   </channel>

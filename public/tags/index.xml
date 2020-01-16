@@ -12,6 +12,33 @@
     
     
     <item>
+      <title>Common-R</title>
+      <link>/tags/common-r/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/common-r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>functional-programming</title>
+      <link>/tags/functional-programming/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/functional-programming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gaussian-processes</title>
+      <link>/tags/gaussian-processes/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/gaussian-processes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>integration</title>
       <link>/tags/integration/</link>
       <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
@@ -21,11 +48,29 @@
     </item>
     
     <item>
+      <title>kaggle</title>
+      <link>/tags/kaggle/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/kaggle/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>logistic-regression</title>
       <link>/tags/logistic-regression/</link>
       <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/logistic-regression/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>matrices</title>
+      <link>/tags/matrices/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/matrices/</guid>
       <description></description>
     </item>
     
@@ -48,11 +93,65 @@
     </item>
     
     <item>
+      <title>Packages</title>
+      <link>/tags/packages/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/packages/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>profiling</title>
+      <link>/tags/profiling/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/profiling/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>random-walk-metropolis-hastings</title>
       <link>/tags/random-walk-metropolis-hastings/</link>
       <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/tags/random-walk-metropolis-hastings/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Reproducibility</title>
+      <link>/tags/reproducibility/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/reproducibility/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sparse matrices</title>
+      <link>/tags/sparse-matrices/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/sparse-matrices/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>spotify</title>
+      <link>/tags/spotify/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/spotify/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tidyverse</title>
+      <link>/tags/tidyverse/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/tidyverse/</guid>
       <description></description>
     </item>
     

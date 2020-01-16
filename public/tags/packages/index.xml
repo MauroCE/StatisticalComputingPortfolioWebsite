@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Packages on Statistical Computing Portfolio Website</title>
+    <link>/tags/packages/</link>
+    <description>Recent content in Packages on Statistical Computing Portfolio Website</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 16 Jan 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/packages/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Packages Portfolio</title>
+      <link>/2020/01/packages-portfolio/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/01/packages-portfolio/</guid>
+      <description>Creating an R Package with RStudio To Create a package open RStudio, on the menu browse
+File &amp;gt; New Project &amp;gt; New Directory Then, from the following options choose R Package.
+At this point, we need to assign the R Package a name and tell RStudio where to place the main folder containing our package files without our folder structure. Here, I’ve chosen to put it under the folder University and to call it PerfectRPackage.</description>
+    </item>
+    
+  </channel>
+</rss>

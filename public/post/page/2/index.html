@@ -159,7 +159,7 @@
       
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://github.com/kakawait">
+      <a class="sidebar-button-link " href="https://github.com/MauroCE">
     
       <i class="sidebar-button-icon fa fa-lg fa-github"></i>
       
@@ -169,7 +169,7 @@
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://stackoverflow.com/users/636472/kakawait">
+      <a class="sidebar-button-link " href="https://stackoverflow.com/users/6435921/euler-salter">
     
       <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
       
@@ -209,26 +209,30 @@
             
   
     
+      
+        
+      
+    
   
 
 
   
 
-<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
+<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
   <div class="postShorten-wrap">
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="/2013/02/image-gallery-showcase/">
-          Image gallery showcase
+        <a class="link-unstyled" href="/2020/01/reproducibility/">
+          Reproducibility
         </a>
       </h1>
       
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2013-02-18T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-01-16T00:00:00Z">
         
-  February 18, 2013
+  January 16, 2020
 
       </time>
     
@@ -237,9 +241,9 @@
   
     <span>in</span>
     
-      <a class="category-link" href="/categories/tranquilpeak">tranquilpeak</a>, 
+      <a class="category-link" href="/categories/r">R</a>, 
     
-      <a class="category-link" href="/categories/features">features</a>
+      <a class="category-link" href="/categories/reproducibility">Reproducibility</a>
     
   
 
@@ -248,20 +252,16 @@
     </div>
     <div class="postShorten-excerpt" itemprop="articleBody">
       
-        <p>And here is the image gallery!</p>
+        Strategies for Reproducibility According to Lee (2019) reproducibility can be implemented by:
+ Organize files logically into modules and packages. Use version control software. Write human-readable documentation.  Why is reproducibility important?
+ If the research is reproducible, then the analysis and the methodology are clear. A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will  Replication crisis Replication crisis refers to the difficulty or impossibility to reproduce scientific studies, which undermines their results since the reproducibility of experiments is an integral part of the scientific method.
       
       <p>
-        <a href="/2013/02/image-gallery-showcase/" class="postShorten-excerpt_link link">Continue reading</a>
+        <a href="/2020/01/reproducibility/" class="postShorten-excerpt_link link">Continue reading</a>
         
       </p>
     </div>
   </div>
-  
-    <a href="/2013/02/image-gallery-showcase/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="//d1u9biwaxjngwg.cloudfront.net/image-gallery-showcase/city-140.jpg"/>
-      </div>
-    </a>
   
 </article>
 
@@ -269,26 +269,30 @@
             
   
     
+      
+        
+      
+    
   
 
 
   
 
-<article class="postShorten postShorten--thumbnailimg-left" itemscope itemType="http://schema.org/BlogPosting">
+<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
   <div class="postShorten-wrap">
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="/2013/01/japanese-test/">
-          日本語テスト
+        <a class="link-unstyled" href="/2020/01/tidyverse-portfolio/">
+          Tidyverse Portfolio
         </a>
       </h1>
       
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2013-01-02T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-01-16T00:00:00Z">
         
-  January 2, 2013
+  January 16, 2020
 
       </time>
     
@@ -297,9 +301,9 @@
   
     <span>in</span>
     
-      <a class="category-link" href="/categories/tranquilpeak">tranquilpeak</a>, 
+      <a class="category-link" href="/categories/r">R</a>, 
     
-      <a class="category-link" href="/categories/features">features</a>
+      <a class="category-link" href="/categories/tidyverse">tidyverse</a>
     
   
 
@@ -308,20 +312,15 @@
     </div>
     <div class="postShorten-excerpt" itemprop="articleBody">
       
-        <p>This is a Japanese test post to show you how japanese is displayed.</p>
+        library(tidyverse) library(plotly) library(forcats) library(reshape2) library(magrittr) Spotify: Genre Popularity by Artist Import the spotify data an drop index column cause it contains redundant information.
+spotify &lt;- read_csv(&quot;top50.csv&quot;, col_names=c( &quot;index&quot;, &quot;Song&quot;, &quot;Artist&quot;, &quot;Genre&quot;, &quot;BPM&quot;, &quot;Energy&quot;, &quot;Danceability&quot;, &quot;Loudness&quot;, &quot;Liveness&quot;, &quot;Valence&quot;, &quot;Length&quot;, &quot;Acousticness&quot;, &quot;Speechiness&quot;, &quot;Popularity&quot;), col_types=cols( index=col_double(), Song=col_factor(), Artist=col_factor(), Genre=col_factor()), skip=1) # Index column contains row_numbers spotify &lt;- spotify %&gt;% select(-c(&quot;index&quot;)) For brevity, will change the name of the genres and change one of the artists cause it has a non utf-8 name.
       
       <p>
-        <a href="/2013/01/japanese-test/" class="postShorten-excerpt_link link">Continue reading</a>
+        <a href="/2020/01/tidyverse-portfolio/" class="postShorten-excerpt_link link">Continue reading</a>
         
       </p>
     </div>
   </div>
-  
-    <a href="/2013/01/japanese-test/">
-      <div class="postShorten-thumbnailimg">
-        <img alt="" itemprop="image" src="//d1u9biwaxjngwg.cloudfront.net/japanese-test-post/peak-140.jpg"/>
-      </div>
-    </a>
   
 </article>
 

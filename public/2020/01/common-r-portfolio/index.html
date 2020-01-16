@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.58.3 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="author" content="Mauro Camara Escudero">
+<meta name="keywords" content="tech">
+<meta name="description" content="Vectorization As a general rule of thumb, we want to avoid writing for-loops as much as possible, and instead vectorize operations to speed up our calculations. For example suppose that we want to calculate \[\sum_{i=1}^n\cos(i) \times \sin(i) \times \tan(i) - \cos(i)^2-\sin(i)^3\]
+At first one could write a function similar to this:
+myfunc &lt;- function(n){ total = 0 for (i in 1:n){ total = total &#43; cos(i)*sin(i)*tan(i) - cos(i)^2 - sin(i)^3 } return(total) } We can see see how long a function takes to run in R by using the system.">
+
+
+<meta property="og:description" content="Vectorization As a general rule of thumb, we want to avoid writing for-loops as much as possible, and instead vectorize operations to speed up our calculations. For example suppose that we want to calculate \[\sum_{i=1}^n\cos(i) \times \sin(i) \times \tan(i) - \cos(i)^2-\sin(i)^3\]
+At first one could write a function similar to this:
+myfunc &lt;- function(n){ total = 0 for (i in 1:n){ total = total &#43; cos(i)*sin(i)*tan(i) - cos(i)^2 - sin(i)^3 } return(total) } We can see see how long a function takes to run in R by using the system.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Common R Portfolio">
+<meta name="twitter:title" content="Common R Portfolio">
+<meta property="og:url" content="/2020/01/common-r-portfolio/">
+<meta property="twitter:url" content="/2020/01/common-r-portfolio/">
+<meta property="og:site_name" content="Statistical Computing Portfolio Website">
+<meta property="og:description" content="Vectorization As a general rule of thumb, we want to avoid writing for-loops as much as possible, and instead vectorize operations to speed up our calculations. For example suppose that we want to calculate \[\sum_{i=1}^n\cos(i) \times \sin(i) \times \tan(i) - \cos(i)^2-\sin(i)^3\]
+At first one could write a function similar to this:
+myfunc &lt;- function(n){ total = 0 for (i in 1:n){ total = total &#43; cos(i)*sin(i)*tan(i) - cos(i)^2 - sin(i)^3 } return(total) } We can see see how long a function takes to run in R by using the system.">
+<meta name="twitter:description" content="Vectorization As a general rule of thumb, we want to avoid writing for-loops as much as possible, and instead vectorize operations to speed up our calculations. For example suppose that we want to calculate \[\sum_{i=1}^n\cos(i) \times \sin(i) \times \tan(i) - \cos(i)^2-\sin(i)^3\]
+At first one could write a function similar to this:
+myfunc &lt;- function(n){ total = 0 for (i in 1:n){ total = total &#43; cos(i)*sin(i)*tan(i) - cos(i)^2 - sin(i)^3 } return(total) } We can see see how long a function takes to run in R by using the system.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2020-01-16T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2020-01-16T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="R">
+    
+      <meta property="article:section" content="Common-R">
+    
+  
+  
+    
+      <meta property="article:tag" content="Common-R">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=640">
+  <meta property="twitter:image" content="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=640">
+
+
+    <title>Common R Portfolio</title>
+
+    <link rel="icon" href="/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="/2020/01/common-r-portfolio/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="/">Statistical Computing Portfolio Website</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=90" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="/#about">
+          <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=110" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Mauro Camara Escudero</h4>
+        
+          <h5 class="sidebar-profile-bio">PhD student in Computational Statistics and Data Science at the University of Bristol</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/MauroCE">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://stackoverflow.com/users/6435921/euler-salter">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+      
+      <span class="sidebar-button-desc">Stack Overflow</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      Common R Portfolio
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2020-01-16T00:00:00Z">
+        
+  January 16, 2020
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="/categories/r">R</a>, 
+    
+      <a class="category-link" href="/categories/common-r">Common-R</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<div id="vectorization" class="section level2">
+<h2>Vectorization</h2>
+<p>As a general rule of thumb, we want to avoid writing for-loops as much as possible, and instead <em>vectorize</em> operations to speed up our calculations. For example suppose that we want to calculate
+<span class="math display">\[\sum_{i=1}^n\cos(i) \times \sin(i) \times \tan(i) - \cos(i)^2-\sin(i)^3\]</span></p>
+<p>At first one could write a function similar to this:</p>
+<pre class="r"><code>myfunc &lt;- function(n){
+  total = 0
+  for (i in 1:n){
+    total = total + cos(i)*sin(i)*tan(i) - cos(i)^2 - sin(i)^3
+  }
+  return(total)
+}</code></pre>
+<p>We can see see how long a function takes to run in R by using the <code>system.time()</code> function and look at the <code>elapsed</code> time:</p>
+<pre class="r"><code>m &lt;- 1000000
+system.time(myfunc(m))</code></pre>
+<pre><code>##    user  system elapsed 
+##    0.44    0.00    0.44</code></pre>
+<p>However this operation can be sped up by doing the same operation on each element of a vector, as follows</p>
+<pre class="r"><code>myfunc2 &lt;- function(n){
+  vector &lt;- 1:n
+  return(cos(vector)*sin(vector)*tan(vector) - cos(vector)^2 - sin(vector)^3)
+}</code></pre>
+<p>then we can see that this function is much faster</p>
+<pre class="r"><code>system.time(myfunc2(m))</code></pre>
+<pre><code>##    user  system elapsed 
+##   0.199   0.028   0.227</code></pre>
+</div>
+<div id="apply-family" class="section level2">
+<h2>Apply family</h2>
+<p>For loops can sometimes be avoided by vectorizing our operations properly. However, this is not always the case and sometimes we need to run our operations iteratively. In R there is an alternative way of writing for loops, which uses a different syntax. We call such a family of “functions” the <strong>apply family</strong>.</p>
+<p>In general, one should use the R apply family for <strong>clarity</strong> not for performance, as this will usually be equivalent to that of an R loop. It is important to notice that these “functions” are actually <strong>functionals</strong>. The difference is that a functional takes a <em>function</em> as an input and outputs a vector. As an example here is an example of a trivial functional that simply takes a vector, a function and applies such function to the vector:</p>
+<pre class="r"><code>myfunctional &lt;- function(x, func){
+  return(func(x))
+}</code></pre>
+<p>Here I summarize the main members of the apply family:</p>
+<ul>
+<li><code>apply(x, margin, fun, ..)</code> Applies the function <code>fun()</code> to the vector <code>x</code> along the dimension(s) <code>margin</code>. Should be used when you want to apply a function to a dimension of a matrix (or dimensions of an array).</li>
+<li><code>lapply(x, fun)</code>: Applies the function <code>fun()</code> to the list <code>x</code>. This should be used when you want to apply <code>fun()</code> to each element of a list and obtain a <strong>list</strong> of the same length as an output.</li>
+<li><code>sapply(x, fun)</code>: Applies <code>fun()</code> to <code>x</code>. Should be used like <code>lapply()</code> but this returns a <strong>vector</strong>. It is basically <code>lapply()</code> followed by <code>unlist()</code>.</li>
+<li><code>vapply(x, fun, fun_value)</code>: This works like <code>sapply()</code> but we can provide <code>fun_value</code> which tells <code>vapply()</code> the output type and output length. This allows a <strong>speed improvement</strong> and improves <strong>consistency</strong> by matching the output with <code>fun_value</code>.</li>
+<li><code>mapply(fun, ..)</code>: Multivariate version of <code>sapply()</code>. Basically, if you have a function <code>fun()</code> that has <span class="math inline">\(n\)</span> inputs, you can write <code>mapply(fun, v1, v2, .., vn)</code> and it will output a list where each element is the output of <code>fun(v1[i], .., vn[i])</code>.</li>
+</ul>
+<div id="side-effects-in-the-apply-family" class="section level3">
+<h3>Side effects in the Apply Family</h3>
+<p>An important property of the <code>apply family</code> is that these functions have <strong>no side effects</strong>. Side effects are changes of variables in the environment you are currently working in. For example consider the following function</p>
+<pre class="r"><code>f &lt;- function(x){
+  x &lt;- 1010
+  return(x)
+}</code></pre>
+<p>If we run it we get exactly what we expect <code>1010</code>:</p>
+<pre class="r"><code>x &lt;- 2
+f(x)</code></pre>
+<pre><code>## [1] 1010</code></pre>
+<p>However, this function does not modify the value of <code>x</code></p>
+<pre class="r"><code>x</code></pre>
+<pre><code>## [1] 2</code></pre>
+<p>This means that our function <code>f</code> has no side effects. This is because the default behavior of R is the so called <strong>copy-on-modify</strong> which means that when we pass <code>x</code> to <code>f</code>, R does a copy of it and then when we assign <code>x &lt;- 1010</code> it assigns <code>1010</code> to such copy, leaving <code>x</code> as it is.</p>
+<p>One way to modify <code>f</code> so that it does have a side effect is to use the <strong>superassignment operator</strong> <code>&lt;&lt;-</code> which starts from the current environment and from there works its way up to the global environemnt to try and find the variable that needs to be “superassigned”. Then, it assigns the value on the right of the superassignment operator to such variable.</p>
+<pre class="r"><code>f2 &lt;- function(){
+  x &lt;&lt;- 1010
+  return(x)
+}
+f2()</code></pre>
+<pre><code>## [1] 1010</code></pre>
+<p>and now the value of <code>x</code> has been changed:</p>
+<pre class="r"><code>x</code></pre>
+<pre><code>## [1] 1010</code></pre>
+</div>
+<div id="a-simple-example-apply" class="section level3">
+<h3>A simple example: Apply</h3>
+<p>This functional should be used with vectors having more than 1 dimension. For instance, suppose we have the following <span class="math inline">\(10\)</span>-by-<span class="math inline">\(3\)</span> matrix</p>
+<pre class="r"><code>m &lt;- matrix(1:30, 10, 3)
+m</code></pre>
+<pre><code>##       [,1] [,2] [,3]
+##  [1,]    1   11   21
+##  [2,]    2   12   22
+##  [3,]    3   13   23
+##  [4,]    4   14   24
+##  [5,]    5   15   25
+##  [6,]    6   16   26
+##  [7,]    7   17   27
+##  [8,]    8   18   28
+##  [9,]    9   19   29
+## [10,]   10   20   30</code></pre>
+<p>Then we might want to obtain a vector with <span class="math inline">\(10\)</span> entries, each corresponding to the sum of sine of the elements of each of the rows of the matrix <code>m</code>. We can use apply to achive this as follows:</p>
+<pre class="r"><code>v1 &lt;- apply(m, 1, function(x) sum(sin(x)))</code></pre>
+<p>By using a for-loop we can achieve the same result</p>
+<pre class="r"><code>v2 &lt;- rep(0, nrow(m))
+for (row in 1:nrow(m)) {
+  v2[row] &lt;- sum(sin(m[row,]))
+}</code></pre>
+<p>these two vectors contain the same elements</p>
+<pre class="r"><code>all.equal(v1, v2)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>The second argument is called <code>margin</code> and tells <code>apply()</code> along which dimension we are using the function given as the third argument. For instance above we’ve used <code>1</code> which corresponds to rows. If one wanted to run the operation along the columns would use <code>2</code>. For higher dimensional arrays one can use a vector of dimensions such as <code>c(1, 2)</code>.</p>
+</div>
+</div>
+<div id="map-reduce-and-filter" class="section level2">
+<h2>Map, Reduce and Filter</h2>
+<ul>
+<li><code>Map(fun, x)</code>: Applies the function <code>fun()</code> to every element of the vector <code>x</code>.</li>
+<li><code>Reduce(fun, x)</code>: Applies a function of <strong>two arguments</strong> to a vector, recursively from left to right. For instance to sum all the elements of the vector <code>1:6</code> we can write <code>Reduce(function(a, b) a+b, 1:6)</code>.</li>
+<li><code>Filter(fun, x)</code>: Applies a function that returns <code>TRUE</code> or <code>FALSE</code> values to every element of a vector <code>x</code>. Basically this function is used to keep only the elements of the vector <code>x</code> that satisfy the condition encoded by the function <code>fun()</code>.</li>
+</ul>
+</div>
+<div id="parallel-computing" class="section level2">
+<h2>Parallel Computing</h2>
+<p>We want to generate points
+<span class="math display">\[y_i = \exp(1.5x_i - 1) + \epsilon_i \qquad \text{where } \epsilon_i \sim N(0, 0.64) \quad \text{for } i = 1, \ldots, 200\]</span>
+Notice that we can sample from a normal distribution using the <code>rnorm()</code> function. We can then generate the <code>x_i</code> uniformly between <code>0</code> and <code>1</code>.</p>
+<pre class="r"><code># Generato 200 samples from a N(0, 0.64)
+e &lt;- rnorm(n=200, mean=0, sd=0.8)
+# Generate uniform x_i in [0, 1]
+xunif &lt;- runif(n=200, min=0, max=1)
+
+phi &lt;- function(xunif, identity=FALSE){
+  xunif &lt;- as.vector(xunif)
+  # this function can transform the input into a polynomial or keep it as it is with an identity function
+  if (identity==TRUE){
+    return(xunif)
+  } else {
+    return(xunif+xunif^2+xunif^3)
+  }
+}
+xunift &lt;- phi(xunif)
+# Calculate y_i
+y &lt;- t(exp(1.5*xunif - 1) + e)
+# we need to generate the correct matrix with 1s at the end
+x &lt;- rbind(t(as.matrix(xunift)), rep(1, length(xunift)))</code></pre>
+<p>Now we re-write the least-squares algorithm so that it uses regularization.</p>
+<pre class="r"><code>reg_ls &lt;- function(X, y, lambda=0){
+  # X has to be (n features, n obs). y has to be (1, n obs)
+  X &lt;- as.matrix(X)
+  y &lt;- as.matrix(y)
+  # Use solve to find the solution, rather than inverting the matrix
+  A &lt;- X%*%t(X) + diag(lambda, nrow=nrow(X), ncol=nrow(X))
+  b &lt;- X%*%t(y)
+  # Notice that it defaults to lambda=0 so this function can also be used for &quot;unregularized ls&quot;.
+  return(solve(A, b))
+}</code></pre>
+<p>Now create a utility function to evaluate the prediction, given a set of parameters</p>
+<pre class="r"><code>linear_ls &lt;- function(x, w){
+  # This function simply implements the linear version of f(x, w) = w^t * x
+  # w will be returned as a column vector from least_squares().
+  x &lt;- as.matrix(x)
+  w &lt;- as.matrix(w)
+  # Want this function to do both matrix multiplication and dot product,
+  # so check for dimension and if necessary transpose
+  if (dim(x)[2] != dim(w)[1]) {
+    x &lt;- t(x)
+  }
+  return(x%*%w)
+}</code></pre>
+<p>At this point we want to re-implement cross-validation in a more general way. Now it uses regularized least squares and takes lambda as a parameter so that cv can now be used to find the optimal regularization parameter.</p>
+<pre class="r"><code>library(parallel)
+library(MASS)
+library(latex2exp)
+
+cv_parallel &lt;- function(X, y, k, lambda=0){
+  # K-fold cross validation. For leave-one-out set k to num of observations.
+  # X should be a (d+1)*n matrix with d = num of features, n = numb of samples.
+  # y should be 1*n target vector.
+  # Create a vector where errors will be stored. Length will be k
+  errors &lt;- rep(0, k)
+  # First stack together X and y. y will be last row of X. Then transpose.
+  xy &lt;- t(rbind(X, y))
+  # shuffle the rows
+  xyshuffled &lt;- xy[sample(nrow(xy)), ]
+  # Create flags for the rows of xyshuffled to be divided into k folds
+  folds &lt;- cut(seq(1, nrow(xyshuffled)), breaks=k, labels=FALSE)
+  # Go through each fold and calculate train and test stuff
+  for(i in 1:k){
+    # Find indeces of rows in the hold-out (test) group
+    test_ind &lt;- which(folds==i, arr.ind=TRUE)
+    # Use such indeces to grab test data
+    test_x &lt;- xyshuffled[test_ind, -dim(xyshuffled)[2]]
+    test_y &lt;- xyshuffled[test_ind, dim(xyshuffled)[2]]
+    # Use the remaining indeces to grab training data
+    train_x &lt;- xyshuffled[-test_ind, -dim(xyshuffled)[2]]
+    train_y &lt;- xyshuffled[-test_ind, dim(xyshuffled)[2]]
+    # Now use train_x and train_y data to find the parameters. Recall that we want them
+    # with num of observations as the second dimension
+    w &lt;- reg_ls(t(train_x), t(train_y), lambda=lambda)
+    # Now use these parameters to find the fitted value for the current test data
+    f &lt;- linear_ls(test_x, w)
+    # Now compare the function value with test_y with a suitable error function.
+    e &lt;- sum((f - test_y)^2)
+    # Add error to error list
+    errors[i] &lt;- e
+  }
+  # Finally return the average error
+  return(mean(errors))
+}</code></pre>
+<p>Now we instantiate a set of lambdas and parallelize the operation to find the best lambda among those.</p>
+<pre class="r"><code># Define a wrapper function with only one input parameter.
+wrapper &lt;- function(lambda){
+  return(cv_parallel(x, y, k=ncol(y), lambda=lambda))
+}
+# Now create a list containing all the lambda configurations
+params = 10^seq(from=-3, to=1.5, by=0.0625)
+# Finally we parallelize everything
+meanerrors &lt;- mclapply(params, wrapper, mc.cores=2)
+# Plot the result (requires install.packages(&quot;latex2exp&quot;))
+plot(log(params, 10), meanerrors, xlab=TeX(&#39;$\\log_{10}(\\lambda)$&#39;), ylab=TeX(&#39;CV Error&#39;), main=TeX(&#39;Change in CV Error due to regularization parameter&#39;))
+# Find the minimum 
+min_index &lt;- which.min(unlist(meanerrors))
+points(log(params, 10)[min_index], meanerrors[min_index], col=&#39;red&#39;, pch=19)
+legend(x=&#39;left&#39;, legend=c(&quot;Minimum CV Error&quot;), col=c(&#39;red&#39;), bg=&#39;white&#39;, lwd=1)</code></pre>
+<p><img src="/post/2020-01-16-common-r-portfolio_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>The minimum CV error is shown as a red point in the plot and corresponds to</p>
+<pre class="r"><code>params[min_index]</code></pre>
+<pre><code>## [1] 13.33521</code></pre>
+<p>By using an optimization routine we can indeed see that this value is very close to the optimal one, which can be found like this</p>
+<pre class="r"><code>sol &lt;- optimize(wrapper, params)
+sol$minimum</code></pre>
+<pre><code>## [1] 13.0817</code></pre>
+<p>At this point we plot the predictive distribution. To do so, we write a wrapper function for the normal distribution, since the mean and the variance are fairly complicated functions</p>
+<pre class="r"><code>predictive &lt;- function(xhat, X, y, sigmasq, lambda=sol$minimum){
+  # First find the mean. This is given by the prediction by the regularized least squares. In our case, we need to find 
+  # W_LS-R with the current optimal value of lambda. To find it, we need to solve a system of linear equations
+  X  &lt;-  as.matrix(X)
+  y &lt;-  as.matrix(y)
+  A &lt;-  X%*%t(X) + diag(lambda, nrow=nrow(X), ncol=nrow(X))
+  b &lt;-  X%*%t(y)
+  w_lsr &lt;- solve(A, b)
+  # notice xhat must be 2x1
+  mean &lt;- t(w_lsr)%*%xhat  
+  # Next, find the variance
+  variance &lt;- sigmasq + sigmasq*((t(xhat)%*%solve(A))%*%xhat)
+  return(c(mean, variance))
+}</code></pre>
+<p>We can plot this normal distribution as follows</p>
+<pre class="r"><code># Choose a sigma squared
+sigmasq &lt;- 0.1
+# Generate a new data point to predict for
+xhat &lt;- matrix(c(0.1, 1), 2, 1)
+# Now find mean and variance of the predictive distribution for this data point.
+meanandvar &lt;- predictive(xhat, x, y, sigmasq)
+# Use the xunif data points to plot the normal distribution with such mean and variance
+xplot &lt;- seq(-0.5, 1.5, 0.025)
+plot(xplot, dnorm(xplot, mean=meanandvar[1], sd=sqrt(meanandvar[2])), main=&quot;Predictive Distribution and True Value&quot;, ylab=TeX(&#39;$p(y)$&#39;), xlab=TeX(&#39;$y$&#39;))
+# Plot the actual value of y
+abline(v=exp(1.5*0.1-1), col=&#39;red&#39;, lty=2)
+legend(x=&#39;topleft&#39;, legend=c(&quot;True Value&quot;), col=c(&#39;red&#39;), bg=&#39;white&#39;, lwd=1, lty=2)</code></pre>
+<p><img src="/post/2020-01-16-common-r-portfolio_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p>and finally we can plot the mean of the predictive distribution as <span class="math inline">\(\widehat{{\bf{x}}}\)</span> changes.</p>
+<pre class="r"><code>library(ggplot2)
+library(reshape2)
+# wrapper function to parallelize
+wrapper2 &lt;- function(xhat){
+  # recall this will be row, but need column
+  xhat &lt;- as.matrix(c(xhat, 1))
+  return(predictive(xhat, x, y, sigmasq))
+}
+# run this parallely
+result &lt;- unlist(mclapply(xunift, wrapper2, mc.cores=2))
+# Get the means and the standard deviations
+means &lt;- result[seq(1, length(result), 2)]
+sds &lt;- sqrt(result[seq(2, length(result), 2)])
+# actually create a data frame with upper and lower bounds
+df &lt;- data.frame(x=xunif, m=means, lwbd=means-sds, upbd=means+sds, real=exp(1.5*xunif-1), pts=t(y))
+# try melting it, might be useful later
+melted &lt;- melt(df[, -c(3, 4, 6)], id.vars=&quot;x&quot;)  # do not include upper and lower bounds, nor the points
+
+# try plotting the melted data frame
+ggplot() + 
+  geom_ribbon(data=df, aes(x=x, ymin=lwbd, ymax=upbd), fill=&quot;grey70&quot;) + 
+  geom_line(data=melted, aes(x=x, y=value, color=variable, group=variable), size=1) + 
+  geom_point(data=df, aes(x=x, y=pts, color=&#39;green&#39;)) + 
+  scale_color_manual(values=c(&#39;darkgreen&#39;, &#39;red&#39;, &#39;black&#39;), labels=c(&#39;data&#39;, &#39;pred&#39;, &#39;true&#39;)) + 
+  scale_size_manual(values=c(2, 3, 3)) + 
+  ggtitle(&quot;Predictions, True values, Confidence Band and Data Points&quot;) +
+  theme(plot.title=element_text(hjust=0.5))</code></pre>
+<p><img src="/post/2020-01-16-common-r-portfolio_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+</div>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="/tags/common-r/">Common-R</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/functional-programming-portfolio/" data-tooltip="Functional Programming Portfolio">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2020/01/common-r-portfolio/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2020/01/common-r-portfolio/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2020/01/common-r-portfolio/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2020 Mauro Camara Escudero. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/functional-programming-portfolio/" data-tooltip="Functional Programming Portfolio">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2020/01/common-r-portfolio/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2020/01/common-r-portfolio/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2020/01/common-r-portfolio/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2020%2F01%2Fcommon-r-portfolio%2F">
+          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2020%2F01%2Fcommon-r-portfolio%2F">
+          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2020%2F01%2Fcommon-r-portfolio%2F">
+          <i class="fa fa-google-plus"></i><span>Share on Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=110" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Mauro Camara Escudero</h4>
+    
+      <div id="about-card-bio">PhD student in Computational Statistics and Data Science at the University of Bristol</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        COMPASS PhD Student
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Bristol, United Kingdom
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = '\/2020\/01\/common-r-portfolio\/';
+          
+            this.page.identifier = '\/2020\/01\/common-r-portfolio\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hugo-tranquilpeak-theme';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+

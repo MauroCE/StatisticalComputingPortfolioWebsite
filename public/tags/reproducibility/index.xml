@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Reproducibility on Statistical Computing Portfolio Website</title>
+    <link>/tags/reproducibility/</link>
+    <description>Recent content in Reproducibility on Statistical Computing Portfolio Website</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 16 Jan 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/reproducibility/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Reproducibility</title>
+      <link>/2020/01/reproducibility/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/01/reproducibility/</guid>
+      <description>Strategies for Reproducibility According to Lee (2019) reproducibility can be implemented by:
+ Organize files logically into modules and packages. Use version control software. Write human-readable documentation.  Why is reproducibility important?
+ If the research is reproducible, then the analysis and the methodology are clear. A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will  Replication crisis Replication crisis refers to the difficulty or impossibility to reproduce scientific studies, which undermines their results since the reproducibility of experiments is an integral part of the scientific method.</description>
+    </item>
+    
+  </channel>
+</rss>

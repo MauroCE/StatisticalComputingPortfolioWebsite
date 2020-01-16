@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>functional-programming on Statistical Computing Portfolio Website</title>
+    <link>/tags/functional-programming/</link>
+    <description>Recent content in functional-programming on Statistical Computing Portfolio Website</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 16 Jan 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/functional-programming/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Functional Programming Portfolio</title>
+      <link>/2020/01/functional-programming-portfolio/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/01/functional-programming-portfolio/</guid>
+      <description>Mathematical Set Up Suppose we have a training matrix \(X\) with \(n\) observations and \(d\) features \[ X = \begin{pmatrix} x_{11} &amp;amp; x_{12} &amp;amp; \ldots &amp;amp; x_{1d}\\ x_{21} &amp;amp; x_{22} &amp;amp; \ldots &amp;amp; x_{2d} \\ \vdots &amp;amp; \vdots &amp;amp; \ddots &amp;amp; \vdots \\ x_{n1} &amp;amp; x_{n2} &amp;amp; \ldots &amp;amp; x_{nd} \end{pmatrix} =\begin{pmatrix} {\bf{x}}_1^\top \\ {\bf{x}}_2^\top \\ \vdots \\ {\bf{x}}_n^\top \end{pmatrix} \in\mathbb{R}^{n\times d} \] and that we want to do a feature transform of this data using the Radial Basis Function.</description>
+    </item>
+    
+  </channel>
+</rss>

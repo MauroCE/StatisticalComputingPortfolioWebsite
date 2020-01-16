@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>tidyverse on Statistical Computing Portfolio Website</title>
+    <link>/categories/tidyverse/</link>
+    <description>Recent content in tidyverse on Statistical Computing Portfolio Website</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 16 Jan 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/tidyverse/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Tidyverse Portfolio</title>
+      <link>/2020/01/tidyverse-portfolio/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/01/tidyverse-portfolio/</guid>
+      <description>library(tidyverse) library(plotly) library(forcats) library(reshape2) library(magrittr) Spotify: Genre Popularity by Artist Import the spotify data an drop index column cause it contains redundant information.
+spotify &amp;lt;- read_csv(&amp;quot;top50.csv&amp;quot;, col_names=c( &amp;quot;index&amp;quot;, &amp;quot;Song&amp;quot;, &amp;quot;Artist&amp;quot;, &amp;quot;Genre&amp;quot;, &amp;quot;BPM&amp;quot;, &amp;quot;Energy&amp;quot;, &amp;quot;Danceability&amp;quot;, &amp;quot;Loudness&amp;quot;, &amp;quot;Liveness&amp;quot;, &amp;quot;Valence&amp;quot;, &amp;quot;Length&amp;quot;, &amp;quot;Acousticness&amp;quot;, &amp;quot;Speechiness&amp;quot;, &amp;quot;Popularity&amp;quot;), col_types=cols( index=col_double(), Song=col_factor(), Artist=col_factor(), Genre=col_factor()), skip=1) # Index column contains row_numbers spotify &amp;lt;- spotify %&amp;gt;% select(-c(&amp;quot;index&amp;quot;)) For brevity, will change the name of the genres and change one of the artists cause it has a non utf-8 name.</description>
+    </item>
+    
+  </channel>
+</rss>

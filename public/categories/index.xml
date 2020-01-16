@@ -12,11 +12,38 @@
     
     
     <item>
+      <title>Common-R</title>
+      <link>/categories/common-r/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/common-r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>functional-programming</title>
+      <link>/categories/functional-programming/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/functional-programming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>integration</title>
       <link>/categories/integration/</link>
       <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/categories/integration/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>matrices</title>
+      <link>/categories/matrices/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/matrices/</guid>
       <description></description>
     </item>
     
@@ -30,11 +57,47 @@
     </item>
     
     <item>
+      <title>Packages</title>
+      <link>/categories/packages/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/packages/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>profiling</title>
+      <link>/categories/profiling/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/profiling/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>R</title>
       <link>/categories/r/</link>
       <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/categories/r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Reproducibility</title>
+      <link>/categories/reproducibility/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/reproducibility/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tidyverse</title>
+      <link>/categories/tidyverse/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/tidyverse/</guid>
       <description></description>
     </item>
     

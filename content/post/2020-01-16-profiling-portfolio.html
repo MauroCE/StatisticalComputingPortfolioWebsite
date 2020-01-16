@@ -1,0 +1,204 @@
+---
+title: Profiling Portfolio
+author: Mauro Camara Escudero
+date: '2020-01-16'
+slug: profiling-portfolio
+categories:
+  - R
+  - profiling
+tags:
+  - profiling
+  - gaussian-processes
+keywords:
+  - tech
+---
+
+<script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/rmarkdown-libs/jquery/jquery.min.js"></script>
+<script src="/rmarkdown-libs/d3/d3.min.js"></script>
+<link href="/rmarkdown-libs/profvis/profvis.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/profvis/profvis.js"></script>
+<link href="/rmarkdown-libs/highlight/textmate.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/highlight/highlight.js"></script>
+<script src="/rmarkdown-libs/profvis-binding/profvis.js"></script>
+
+
+<div id="implementations" class="section level2">
+<h2>Implementations</h2>
+<div id="data-generation-and-problem-settings" class="section level3">
+<h3>Data Generation and Problem Settings</h3>
+<p>Import the necessary packages. The library <code>provfis</code> is a stochastic profiler and can be used to profile our code.</p>
+<pre class="r"><code>library(profvis)
+library(tidyverse)
+library(MASS)
+library(microbenchmark)</code></pre>
+<p>First, let’s decide some parameters and settings such as the amount of training and testing data.</p>
+<pre class="r"><code># Number of data points for plotting &amp; Bandwidth squared of the RBF kernel
+ntest &lt;- 500
+# Characteristic Length-scale for kernel
+sigmasq &lt;- 1.0
+# Number of training points, standard deviation of additive noise
+ntrain &lt;- 10
+sigma_n &lt;- 0.5
+# Define number of samples for prior gp mvn and posterior gp mvn to take
+nprior_samples &lt;- 5
+npost_samples &lt;- 5</code></pre>
+<p>Define some helper functions. In particular, the kernel function is a squared exponential. The bandwidth is computed as the median of all pairwise distances. We also define a matrix that applies the squared exponential to rows of two matrices, i.e. it computes the kernel matrix <span class="math inline">\(K(X, Y)\)</span>. for two matrices <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span>. Finally, we also have a regression function which represents the true structure of the data. This is just a quintic polynomial for simplicity, but can be replaced by more complicated functions.</p>
+<pre class="r"><code>squared_exponential &lt;- function(x, c, sigmasq){
+  return(exp(-0.5*sum((x - c)^2) / sigmasq))
+}
+kernel_matrix &lt;- function(X, Xstar, sigmasq){
+  # compute the kernel matrix
+  K &lt;- apply(
+    X=Xstar,
+    MARGIN=1, 
+    FUN=function(xstar_row) apply(
+      X=X, 
+      MARGIN=1, 
+      FUN=squared_exponential, 
+      xstar_row,
+      sigmasq
+      )
+    )
+  return(K)
+}
+regression_function &lt;- function(x){
+    val &lt;- (x+5)*(x+2)*(x)*(x-4)*(x-3)/10 + 2
+  return(val)
+}</code></pre>
+<p>Now let’s actually generate some data</p>
+<pre class="r"><code># training data
+xtrain &lt;- matrix(runif(ntrain, min=-5, max=5))
+ytrain &lt;- regression_function(xtrain) + matrix(rnorm(ntrain, sd=sigma_n))
+# testing data
+xtest &lt;- matrix(seq(-5,5, len=ntest))</code></pre>
+</div>
+<div id="naive-vectorized-implementation" class="section level3">
+<h3>Naive Vectorized Implementation</h3>
+<p>The firt implementation that we look at is naive in the sense that it basically blindly copies the operations. This means that we invert <span class="math inline">\(K + \sigma_n^2 I\)</span> directly.</p>
+<pre class="r"><code>source(&quot;gp_naive.R&quot;, keep.source = TRUE)
+profvis(result &lt;- gp_naive(xtrain, ytrain, xtest, sigma_n, sigmasq))</code></pre>
+<div id="htmlwidget-1" style="width:100%;height:600px;" class="profvis html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"message":{"prof":{"time":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,5,6,6,6,6,6,7,7,7,7,7,8,8,8,8,8,9,9,9,9,9,9,10,10,10,10,10,11,11,11,11,11,11,12,12,12,12,12,13,13,13,13,13,13,13,14,14,14,14,14,15,15,15,15,15,16,16,16,16,16,17,17,17,17,17,18,18,18,18,18,19,19,19,19,19,19,19,20,20,20,20,20,20,21,21,21,21,21,22,22,22,22,22,22,22,23,23,23,23,23,24,24,24,24,24,25,25,25,25,25,25,26,26,26,26,26,27,27,27,27,27,27,28,28,28,28,28,28,29,29,29,29,29,30,30,30,30,30,31,31,31,31,31,32,32,32,32,32,33,33,33,33,33,33,34,34,34,34,34,35,35,35,35,35,35,36,36,36,36,36,37,37],"depth":[28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,5,4,3,2,1,5,4,3,2,1,6,5,4,3,2,1,6,5,4,3,2,1,5,4,3,2,1,5,4,3,2,1,5,4,3,2,1,6,5,4,3,2,1,5,4,3,2,1,6,5,4,3,2,1,5,4,3,2,1,7,6,5,4,3,2,1,5,4,3,2,1,5,4,3,2,1,5,4,3,2,1,5,4,3,2,1,5,4,3,2,1,7,6,5,4,3,2,1,6,5,4,3,2,1,5,4,3,2,1,7,6,5,4,3,2,1,5,4,3,2,1,5,4,3,2,1,6,5,4,3,2,1,5,4,3,2,1,6,5,4,3,2,1,6,5,4,3,2,1,5,4,3,2,1,5,4,3,2,1,5,4,3,2,1,5,4,3,2,1,6,5,4,3,2,1,5,4,3,2,1,6,5,4,3,2,1,5,4,3,2,1,2,1],"label":["$","findCenvVar","getInlineInfo","tryInline","cmpCall","cmp","cmpBuiltinArgs","h","tryInline","cmpCall","cmp","cmpSymbolAssign","h","tryInline","cmpCall","cmp","h","tryInline","cmpCall","cmp","genCode","cmpfun","doTryCatch","tryCatchOne","tryCatchList","tryCatch","compiler:::tryCmpfun","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","unlist","apply","FUN","apply","kernel_matrix","gp_naive","FUN","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","FUN","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","<GC>","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","sum","FUN","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","sum","FUN","apply","FUN","apply","kernel_matrix","gp_naive","FUN","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","sum","FUN","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","FUN","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","FUN","apply","FUN","apply","kernel_matrix","gp_naive","FUN","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","<GC>","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","FUN","apply","FUN","apply","kernel_matrix","gp_naive","apply","FUN","apply","kernel_matrix","gp_naive","%*%","gp_naive"],"filenum":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,2,null,null,null,null,2,null,null,null,null,null,2,null,null,null,null,null,2,null,null,null,null,2,null,null,null,null,2,null,null,null,null,2,null,null,null,null,null,2,null,null,null,null,2,null,null,null,null,null,2,null,null,null,null,2,null,null,null,null,null,null,2,null,null,null,null,2,null,null,null,null,2,null,null,null,null,2,null,null,null,null,2,null,null,null,null,2,null,null,null,null,null,null,2,null,null,null,null,null,2,null,null,null,null,2,null,null,null,null,null,null,2,null,null,null,null,2,null,null,null,null,2,null,null,null,null,null,2,null,null,null,null,2,null,null,null,null,null,2,null,null,null,null,null,2,null,null,null,null,2,null,null,null,null,2,null,null,null,null,2,null,null,null,null,2,null,null,null,null,null,2,null,null,null,null,2,null,null,null,null,null,2,null,null,null,null,2,null,2,null],"linenum":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,4,null,null,null,null,5,null,null,null,null,null,5,null,null,null,null,null,5,null,null,null,null,5,null,null,null,null,5,null,null,null,null,5,null,null,null,null,null,5,null,null,null,null,5,null,null,null,null,null,5,null,null,null,null,5,null,null,null,null,null,null,5,null,null,null,null,5,null,null,null,null,5,null,null,null,null,5,null,null,null,null,5,null,null,null,null,5,null,null,null,null,null,null,5,null,null,null,null,null,5,null,null,null,null,5,null,null,null,null,null,null,5,null,null,null,null,5,null,null,null,null,5,null,null,null,null,null,5,null,null,null,null,5,null,null,null,null,null,5,null,null,null,null,null,5,null,null,null,null,5,null,null,null,null,5,null,null,null,null,5,null,null,null,null,5,null,null,null,null,null,5,null,null,null,null,5,null,null,null,null,null,5,null,null,null,null,5,null,11,null],"memalloc":[15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.2573089599609,15.5207290649414,15.5207290649414,15.5207290649414,15.5207290649414,15.5207290649414,16.2290954589844,16.2290954589844,16.2290954589844,16.2290954589844,16.2290954589844,16.5142211914062,16.5142211914062,16.5142211914062,16.5142211914062,16.5142211914062,16.5142211914062,17.0299682617188,17.0299682617188,17.0299682617188,17.0299682617188,17.0299682617188,17.0299682617188,17.388557434082,17.388557434082,17.388557434082,17.388557434082,17.388557434082,12.6441192626953,12.6441192626953,12.6441192626953,12.6441192626953,12.6441192626953,13.1336059570312,13.1336059570312,13.1336059570312,13.1336059570312,13.1336059570312,13.888916015625,13.888916015625,13.888916015625,13.888916015625,13.888916015625,13.888916015625,14.3709869384766,14.3709869384766,14.3709869384766,14.3709869384766,14.3709869384766,15.0235977172852,15.0235977172852,15.0235977172852,15.0235977172852,15.0235977172852,15.0235977172852,13.1888427734375,13.1888427734375,13.1888427734375,13.1888427734375,13.1888427734375,13.917106628418,13.917106628418,13.917106628418,13.917106628418,13.917106628418,13.917106628418,13.917106628418,14.3937454223633,14.3937454223633,14.3937454223633,14.3937454223633,14.3937454223633,15.1237640380859,15.1237640380859,15.1237640380859,15.1237640380859,15.1237640380859,13.0409698486328,13.0409698486328,13.0409698486328,13.0409698486328,13.0409698486328,13.8003463745117,13.8003463745117,13.8003463745117,13.8003463745117,13.8003463745117,14.2858963012695,14.2858963012695,14.2858963012695,14.2858963012695,14.2858963012695,15.042106628418,15.042106628418,15.042106628418,15.042106628418,15.042106628418,15.042106628418,15.042106628418,15.5414428710938,15.5414428710938,15.5414428710938,15.5414428710938,15.5414428710938,15.5414428710938,13.863899230957,13.863899230957,13.863899230957,13.863899230957,13.863899230957,14.3653182983398,14.3653182983398,14.3653182983398,14.3653182983398,14.3653182983398,14.3653182983398,14.3653182983398,15.1020355224609,15.1020355224609,15.1020355224609,15.1020355224609,15.1020355224609,15.5957336425781,15.5957336425781,15.5957336425781,15.5957336425781,15.5957336425781,13.9276809692383,13.9276809692383,13.9276809692383,13.9276809692383,13.9276809692383,13.9276809692383,14.4386901855469,14.4386901855469,14.4386901855469,14.4386901855469,14.4386901855469,15.1714096069336,15.1714096069336,15.1714096069336,15.1714096069336,15.1714096069336,15.1714096069336,15.6687240600586,15.6687240600586,15.6687240600586,15.6687240600586,15.6687240600586,15.6687240600586,13.9879760742188,13.9879760742188,13.9879760742188,13.9879760742188,13.9879760742188,14.4918823242188,14.4918823242188,14.4918823242188,14.4918823242188,14.4918823242188,15.2344436645508,15.2344436645508,15.2344436645508,15.2344436645508,15.2344436645508,15.7262420654297,15.7262420654297,15.7262420654297,15.7262420654297,15.7262420654297,16.3164749145508,16.3164749145508,16.3164749145508,16.3164749145508,16.3164749145508,16.3164749145508,14.5264434814453,14.5264434814453,14.5264434814453,14.5264434814453,14.5264434814453,15.2901763916016,15.2901763916016,15.2901763916016,15.2901763916016,15.2901763916016,15.2901763916016,15.766731262207,15.766731262207,15.766731262207,15.766731262207,15.766731262207,22.1817016601562,22.1817016601562],"meminc":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.263420104980469,0,0,0,0,0.708366394042969,0,0,0,0,0.285125732421875,0,0,0,0,0,0,0,0,0,0,0,0.358589172363281,0,0,0,0,-4.74443817138672,0,0,0,0,0.489486694335938,0,0,0,0,0,0,0,0,0,0,0.482070922851562,0,0,0,0,0.652610778808594,0,0,0,0,0,-1.83475494384766,0,0,0,0,0.728263854980469,0,0,0,0,0,0,0.476638793945312,0,0,0,0,0.730018615722656,0,0,0,0,-2.08279418945312,0,0,0,0,0.759376525878906,0,0,0,0,0.485549926757812,0,0,0,0,0.756210327148438,0,0,0,0,0,0,0,0,0,0,0,0,-1.67754364013672,0,0,0,0,0.501419067382812,0,0,0,0,0,0,0.736717224121094,0,0,0,0,0.493698120117188,0,0,0,0,0,0,0,0,0,0,0.511009216308594,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-1.68074798583984,0,0,0,0,0.50390625,0,0,0,0,0.742561340332031,0,0,0,0,0.491798400878906,0,0,0,0,0.590232849121094,0,0,0,0,0,-1.79003143310547,0,0,0,0,0.76373291015625,0,0,0,0,0,0.476554870605469,0,0,0,0,6.41497039794922,0],"filename":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,null,"gp_naive.R",null,null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,null,null,"gp_naive.R",null,null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,null,"gp_naive.R",null,null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,null,null,null,null,"gp_naive.R",null,null,null,null,"gp_naive.R",null,"gp_naive.R",null]},"interval":10,"files":[{"filename":"gp_naive.R","content":"gp_naive <- function(xtrain, ytrain, xtest, sigma_n, sigmasq){\n  # Find kernel matrices in vectorized form\n  K  <-  kernel_matrix(xtrain, xtrain, sigmasq) \n  Ks <-  kernel_matrix(xtest,  xtrain, sigmasq)\n  Kss <- kernel_matrix(xtest,  xtest, sigmasq)\n  # Find the inverse of K + sigma_n^2I directly\n  inverse <- solve(K + sigma_n^2 * diag(ntrain))\n  # GP mean\n  gpmean <- Ks %*% (inverse %*% ytrain)\n  # GP variance-covariance matrix\n  gpvcov <- Kss - Ks %*% inverse %*% t(Ks)\n  return(list(gpmean, gpvcov))\n}\n","normpath":"/home/mauro/Documents/University/StatisticalComputingPortfolioWebsite/content/post/gp_naive.R"}],"prof_output":"/tmp/RtmpbSjaL2/file7df9c73bb6a.prof","highlight":{"output":["^output\\$"],"gc":["^<GC>$"],"stacktrace":["^\\.\\.stacktraceo(n|ff)\\.\\.$"]},"split":"h"}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="smart-implementation" class="section level3">
+<h3>Smart Implementation</h3>
+<p>This implementation can also be used <em>online</em>. It is recommended in the “Gaussian Processes for Machine Learning” book.</p>
+<pre class="r"><code>source(&quot;gp_online.R&quot;, keep.source = TRUE)
+profvis(result_online &lt;- gp_online(xtrain, ytrain, xtest, sigma_n, sigmasq))</code></pre>
+<div id="htmlwidget-2" style="width:100%;height:600px;" class="profvis html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"message":{"prof":{"time":[1,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,5,5,6,6,6,6,6,6,7,7,7,8,8,8,8,8,8,9,9,9,9,9,9],"depth":[7,6,5,4,3,2,1,6,5,4,3,2,1,6,5,4,3,2,1,6,5,4,3,2,1,2,1,6,5,4,3,2,1,3,2,1,6,5,4,3,2,1,6,5,4,3,2,1],"label":["sum","FUN","apply","FUN","apply","kernel_matrix","gp_online","t.default","t","as.matrix","forwardsolve","crossprod","gp_online","aperm","apply","FUN","apply","kernel_matrix","gp_online","prod","apply","FUN","apply","kernel_matrix","gp_online","t","gp_online","match.fun","apply","FUN","apply","kernel_matrix","gp_online","apply","kernel_matrix","gp_online","match.fun","apply","FUN","apply","kernel_matrix","gp_online","aperm","apply","FUN","apply","kernel_matrix","gp_online"],"filenum":[null,null,null,null,null,2,null,null,2,null,2,2,null,null,null,null,null,2,null,null,null,null,null,2,null,2,null,null,null,null,null,2,null,null,2,null,null,null,null,null,2,null,null,null,null,null,2,null],"linenum":[null,null,null,null,null,13,null,null,17,null,17,17,null,null,null,null,null,13,null,null,null,null,null,13,null,15,null,null,null,null,null,13,null,null,13,null,null,null,null,null,13,null,null,null,null,null,13,null],"memalloc":[15.5558166503906,15.5558166503906,15.5558166503906,15.5558166503906,15.5558166503906,15.5558166503906,15.5558166503906,15.9002151489258,15.9002151489258,15.9002151489258,15.9002151489258,15.9002151489258,15.9002151489258,16.4104537963867,16.4104537963867,16.4104537963867,16.4104537963867,16.4104537963867,16.4104537963867,16.7402954101562,16.7402954101562,16.7402954101562,16.7402954101562,16.7402954101562,16.7402954101562,17.2424850463867,17.2424850463867,15.023323059082,15.023323059082,15.023323059082,15.023323059082,15.023323059082,15.023323059082,15.5612106323242,15.5612106323242,15.5612106323242,15.9155883789062,15.9155883789062,15.9155883789062,15.9155883789062,15.9155883789062,15.9155883789062,16.4335479736328,16.4335479736328,16.4335479736328,16.4335479736328,16.4335479736328,16.4335479736328],"meminc":[0,0,0,0,0,0,0,0.344398498535156,0,0,0,0,0,0.510238647460938,0,0,0,0,0,0.329841613769531,0,0,0,0,0,0.502189636230469,0,-2.21916198730469,0,0,0,0,0,0.537887573242188,0,0,0.354377746582031,0,0,0,0,0,0.517959594726562,0,0,0,0,0],"filename":[null,null,null,null,null,"gp_online.R",null,null,"gp_online.R",null,"gp_online.R","gp_online.R",null,null,null,null,null,"gp_online.R",null,null,null,null,null,"gp_online.R",null,"gp_online.R",null,null,null,null,null,"gp_online.R",null,null,"gp_online.R",null,null,null,null,null,"gp_online.R",null,null,null,null,null,"gp_online.R",null]},"interval":10,"files":[{"filename":"gp_online.R","content":"gp_online <- function(xtrain, ytrain, xtest, sigma_n, sigmasq){\n  # Find kernel matrix\n  K <- kernel_matrix(xtrain, xtrain, sigmasq) \n  # Cholesky factor for K + sigma^2 * I\n  L <- chol(K + sigma_n^2*diag(ntrain))  ## Upper triangular\n  alpha <- backsolve(L, forwardsolve(t(L), ytrain))\n  # Allocate memory first\n  gpmean <- rep(0, ntest)\n  gpvar  <- rep(0, ntest)\n  # Loop through all test rows of do online regression\n  for (row_ix in 1:nrow(xtest)){\n    # Find kernel evaluation against all training points\n    kstar <- kernel_matrix(matrix(xtest[row_ix, ]), xtrain, sigmasq)\n    # GP mean for current test point\n    gpmean[row_ix] <- t(kstar) %*% alpha\n    # GP variance for current test point\n    gpvar[row_ix] <- 1.0 - crossprod(forwardsolve(t(L), kstar))  ## as SE(x*, x*) = 1.0\n  }\n  return(list(gpmean, gpvar))\n}","normpath":"/home/mauro/Documents/University/StatisticalComputingPortfolioWebsite/content/post/gp_online.R"}],"prof_output":"/tmp/RtmpbSjaL2/file7df96cb9fd78.prof","highlight":{"output":["^output\\$"],"gc":["^<GC>$"],"stacktrace":["^\\.\\.stacktraceo(n|ff)\\.\\.$"]},"split":"h"}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="implementation-using-a-vectorized-kernel-matrix" class="section level3">
+<h3>Implementation using a vectorized kernel matrix</h3>
+<p>We can see that most of the time is spent computing the kernel matrix. We can therefore find a faster way to compute it as follows</p>
+<pre class="r"><code>kernel_matrix_vectorized &lt;- function(X, sigmasq, Y=NULL){
+  if (is.null(Y)){
+    Y &lt;- X
+  }
+  n &lt;- nrow(X)
+  m &lt;- nrow(Y)
+  # Find three matrices above
+  Xnorm &lt;- matrix(apply(X^2, 1, sum), n, m)
+  Ynorm &lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE)
+  XY &lt;- tcrossprod(X, Y)
+  return(exp(-(Xnorm - 2*XY + Ynorm) / (2*sigmasq)))
+}</code></pre>
+<p>using this, we get</p>
+<pre class="r"><code>source(&quot;gp_online_vect.R&quot;, keep.source = TRUE)
+profvis(gp_online_vect(xtrain, ytrain, xtest, sigma_n, sigmasq))</code></pre>
+<div id="htmlwidget-3" style="width:100%;height:600px;" class="profvis html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3">{"x":{"message":{"prof":{"time":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,4,4,4,4,4],"depth":[27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,6,5,4,3,2,1,5,4,3,2,1,5,4,3,2,1],"label":["putconst","cb$commitlocs","codeBufCode","genCode","cb$putconst","cmpCallArgs","cmpCallSymFun","cmpCall","cmp","cmpSymbolAssign","h","tryInline","cmpCall","cmp","h","tryInline","cmpCall","cmp","genCode","cmpfun","doTryCatch","tryCatchOne","tryCatchList","tryCatch","compiler:::tryCmpfun","kernel_matrix_vectorized","gp_online_vect","aperm.default","aperm","apply","matrix","kernel_matrix_vectorized","gp_online_vect","names","apply","matrix","kernel_matrix_vectorized","gp_online_vect","t","as.matrix","forwardsolve","crossprod","gp_online_vect"],"filenum":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,1,null,null,null,null,null,1,null,null,null,null,1,null,1,null,1,1,null],"linenum":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,4,4,null,null,null,null,null,14,null,null,null,null,14,null,18,null,18,18,null],"memalloc":[15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.3259506225586,15.7924652099609,15.7924652099609,15.7924652099609,15.7924652099609,15.7924652099609,15.7924652099609,16.6165771484375,16.6165771484375,16.6165771484375,16.6165771484375,16.6165771484375,17.1611251831055,17.1611251831055,17.1611251831055,17.1611251831055,17.1611251831055],"meminc":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0.466514587402344,0,0,0,0,0,0.824111938476562,0,0,0,0,0.544548034667969,0,0,0,0],"filename":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"gp_online_vect.R","gp_online_vect.R",null,null,null,null,null,"gp_online_vect.R",null,null,null,null,"gp_online_vect.R",null,"gp_online_vect.R",null,"gp_online_vect.R","gp_online_vect.R",null]},"interval":10,"files":[{"filename":"gp_online_vect.R","content":"# uses vectorized kernel matrix\ngp_online_vect <- function(xtrain, ytrain, xtest, sigma_n, sigmasq){\n  # Find kernel matrix\n  K <- kernel_matrix_vectorized(xtrain, sigmasq) \n  # Cholesky factor for K + sigma^2 * I\n  L <- chol(K + sigma_n^2*diag(ntrain))  ## Upper triangular\n  alpha <- backsolve(L, forwardsolve(t(L), ytrain))\n  # Allocate memory first\n  gpmean <- rep(0, ntest)\n  gpvar  <- rep(0, ntest)\n  # Loop through all test rows of do online regression\n  for (row_ix in 1:nrow(xtest)){\n    # Find kernel evaluation against all training points\n    kstar <- kernel_matrix_vectorized(matrix(xtest[row_ix, ]), sigmasq, xtrain)\n    # GP mean for current test point\n    gpmean[row_ix] <- kstar %*% alpha\n    # GP variance for current test point\n    gpvar[row_ix] <- 1.0 - crossprod(forwardsolve(t(L), t(kstar)))  ## as SE(x*, x*) = 1.0\n  }\n  return(list(gpmean, gpvar))\n}","normpath":"/home/mauro/Documents/University/StatisticalComputingPortfolioWebsite/content/post/gp_online_vect.R"}],"prof_output":"/tmp/RtmpbSjaL2/file7df93ecbfa73.prof","highlight":{"output":["^output\\$"],"gc":["^<GC>$"],"stacktrace":["^\\.\\.stacktraceo(n|ff)\\.\\.$"]},"split":"h"}},"evals":[],"jsHooks":[]}</script>
+<p>We can see that this implementation uses much less memory and it’s much faster.</p>
+</div>
+<div id="completely-vectorized-implementation" class="section level3">
+<h3>Completely vectorized implementation</h3>
+<p>We can combine these ideas to obtain a much faster implementation.</p>
+<pre class="r"><code>source(&quot;gp_completely_vectorized.R&quot;, keep.source = TRUE)
+profvis(gp_completely_vectorized(xtrain, ytrain, xtest, sigma_n, sigmasq), interval=0.005)</code></pre>
+<div id="htmlwidget-4" style="width:100%;height:600px;" class="profvis html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4">{"x":{"message":{"prof":{"time":[1,1,1,1,2,2,3,3],"depth":[4,3,2,1,2,1,2,1],"label":["apply","matrix","kernel_matrix_vectorized","gp_completely_vectorized","kernel_matrix_vectorized","gp_completely_vectorized","%*%","gp_completely_vectorized"],"filenum":[null,null,2,null,2,null,2,null],"linenum":[null,null,5,null,5,null,11,null],"memalloc":[17.3324966430664,17.3324966430664,17.3324966430664,17.3324966430664,24.9778518676758,24.9778518676758,27.0071487426758,27.0071487426758],"meminc":[0,0,0,0,0,0,2.029296875,0],"filename":[null,null,"gp_completely_vectorized.R",null,"gp_completely_vectorized.R",null,"gp_completely_vectorized.R",null]},"interval":5,"files":[{"filename":"gp_completely_vectorized.R","content":"gp_completely_vectorized <- function(xtrain, ytrain, xtest, sigma_n, sigmasq){\n  # Find kernel matrices in vectorized form\n  K  <-  kernel_matrix_vectorized(xtrain, sigmasq) \n  Ks <-  kernel_matrix_vectorized(xtest,  sigmasq, xtrain)\n  Kss <- kernel_matrix_vectorized(xtest, sigmasq)\n  # Cholesky factorization\n  L <- chol(K + sigma_n^2*diag(ntrain))  ## Upper triangular\n  alpha <- backsolve(L, forwardsolve(t(L), ytrain))\n  # Solve by forward and backward substitution\n  gpmean <- Ks %*% alpha\n  gpvcov <- Kss - Ks %*% backsolve(L, forwardsolve(t(L), t(Ks)))\n  return(list(gpmean, gpvcov))\n}\n","normpath":"/home/mauro/Documents/University/StatisticalComputingPortfolioWebsite/content/post/gp_completely_vectorized.R"}],"prof_output":"/tmp/RtmpbSjaL2/file7df918ebc14b.prof","highlight":{"output":["^output\\$"],"gc":["^<GC>$"],"stacktrace":["^\\.\\.stacktraceo(n|ff)\\.\\.$"]},"split":"h"}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div id="visualizations" class="section level2">
+<h2>Visualizations</h2>
+<div id="before-seeing-training-data" class="section level3">
+<h3>Before seeing training data</h3>
+<p>Before seeing the training data we only have the test data. The Gaussian Process will therefore predict random (smooth) functions with mean zero.</p>
+<pre class="r"><code>Kss &lt;- kernel_matrix_vectorized(xtest, sigmasq)
+# Sample nprior_samples Multivariate Normals with mean zero and variance-covariance
+# being the kernel matrix
+data.frame(x=xtest, t(mvrnorm(nprior_samples, rep(0, length=ntest), Kss))) %&gt;% 
+  setNames(c(&quot;x&quot;, sprintf(&quot;Sample %s&quot;, 1:nprior_samples))) %&gt;% 
+  gather(&quot;MVN Samples&quot;, &quot;Value&quot;, -x) %&gt;% 
+  ggplot(aes(x=x, y=Value)) + 
+    # Because diag(Kss) are all 1s. We use mean +\- 2*standard deviation
+    geom_rect(xmin=-Inf, xmax=Inf, ymin=-2, ymax=2, fill=&quot;grey80&quot;) + 
+    geom_line(aes(color=`MVN Samples`)) +
+    geom_abline(slope=0.0, intercept=0.0, lty=2) + 
+    scale_y_continuous(lim=c(-3, 3)) + 
+    labs(title=paste(nprior_samples, &quot;MVN Samples before seeing the data&quot;)) + 
+    theme(plot.title=element_text(hjust=0.5))</code></pre>
+<p><img src="/post/2020-01-16-profiling-portfolio_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="after-seeing-training-data" class="section level3">
+<h3>After seeing training data</h3>
+<p>We only need to find the predicted mean and the predicted variance.</p>
+<pre class="r"><code># Get predicitons. To predict noisy data just add sigma_n^2*diag(ncol(xtest)) 
+# to the covariance matrix as implemented in the script 
+# `gp_completely_vectorized_noisy.R`.
+results &lt;- gp_completely_vectorized(xtrain, ytrain, xtest, sigma_n, sigmasq)
+
+gpmean &lt;- results[[1]]
+gpvcov &lt;- results[[2]]
+# for plotting
+dftrain = data.frame(xtrain=xtrain, ytrain=ytrain)
+# Plot
+data.frame(x=xtest, t(mvrnorm(npost_samples, gpmean, gpvcov))) %&gt;% 
+  setNames(c(&quot;x&quot;, sprintf(&quot;Sample %s&quot;, 1:npost_samples))) %&gt;% 
+  mutate(ymin=gpmean-2*sqrt(diag(gpvcov)), ymax=gpmean+2*sqrt(diag(gpvcov)),
+         gpmean=gpmean, ytrue=regression_function(xtest)) %&gt;% 
+  gather(&quot;MVN Samples&quot;, &quot;Value&quot;, -x, -ymin, -ymax, -gpmean, -ytrue) %&gt;% 
+  ggplot(aes(x=x, y=Value)) + 
+    geom_ribbon(aes(ymin=ymin, ymax=ymax), fill=&quot;grey80&quot;) + 
+    geom_line(aes(color=`MVN Samples`)) +
+    geom_line(aes(y=gpmean), size=1) +
+    geom_line(aes(y=ytrue), color=&quot;darkred&quot;, lty=2) + 
+    geom_point(data=dftrain, aes(x=xtrain, y=ytrain), color=&quot;red&quot;) +
+    ggtitle(paste(npost_samples, &quot;MVN Samples after seeing&quot;, ntrain, &quot;data points&quot;)) + 
+    theme(plot.title=element_text(hjust=0.5))</code></pre>
+<p><img src="/post/2020-01-16-profiling-portfolio_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+</div>
+<div id="note-on-vectorized-kernel-matrix" class="section level1">
+<h1>Note on Vectorized Kernel Matrix</h1>
+<p>One might wonder why in the function <code>kernel_matrix_vectorized()</code> we fill the matrix <code>Ynorm</code> by row. Afterall <code>R</code> works with column-major storage so this should be inefficient. One can compare filling in a matrix by row versus filling it by column and then taking the transpose in different cases:</p>
+<ul>
+<li>Number of rows &lt; Number of columns</li>
+</ul>
+<pre class="r"><code>nrows &lt;- 100
+ncols &lt;- 1000
+microbenchmark(
+  matrix(0, nrows, ncols, byrow=TRUE),
+  t(matrix(0, nrows, ncols))
+  )</code></pre>
+<ul>
+<li>Number of rows = Number of columns</li>
+</ul>
+<pre class="r"><code>nrows &lt;- 1000
+ncols &lt;- 1000
+microbenchmark(
+  matrix(0, nrows, ncols, byrow=TRUE),
+  t(matrix(0, nrows, ncols))
+  )</code></pre>
+<ul>
+<li>Number of rows &gt; Number of columns</li>
+</ul>
+<pre class="r"><code>nrows &lt;- 1000
+ncols &lt;- 100
+microbenchmark(
+  matrix(0, nrows, ncols, byrow=TRUE),
+  t(matrix(0, nrows, ncols))
+  )</code></pre>
+<p>Generally, <code>byrow=TRUE</code> is faster, except when the number of rows is smaller than the number of columns. One could see if implementing an if-statement checking for <code>n&lt;m</code> and then using <code>t()</code> rather than <code>byrow=TRUE</code> would lead to serious performance improvement.</p>
+</div>

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.58.3 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="author" content="Mauro Camara Escudero">
+<meta name="keywords" content="tech">
+<meta name="description" content="library(Matrix) library(tidyverse) library(igraph) We work with the same dataset used for Tidyverse containing data regarding some of the top-voted kaggle kernels.
+kaggle &lt;- read_csv(&quot;kagglekernels.csv&quot;, col_types = cols( Votes=col_double(), Owner=col_factor(), Kernel=col_factor(), Dataset=col_factor(), Output=col_character(), `Code Type`=col_factor(), Language=col_factor(), Comments=col_double(), Views=col_double(), Forks=col_double() )) kaggle # Tibbles automatically print head(tibble) ## # A tibble: 971 x 12 ## Votes Owner Kernel Dataset `Version Histor… Tags Output `Code Type` Language ## &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt; &lt;fct&gt; ## 1 2130 Mega… Explo… Titani… Version 8,2017-… tuto… This … Script markdown ## 2 1395 Guid… Full … Data S… Version 19,2017… tuto… This … Notebook Python ## 3 1363 Pedr… Compr… House … Version 47,2018… begi… This … Notebook Python ## 4 1316 Anis… Intro… Titani… Version 93,2018… tuto… This … Notebook Python ## 5 1078 Kaan… Data … Pokemo… Version 389,201… begi… This … Notebook Python ## 6 1003 Phil… Explo… Zillow… Version 44,2017… begi… This … Script markdown ## 7 946 Mana… Titan… Titani… Version 16,2017… tuto… This … Notebook Python ## 8 826 Omar… A Jou… Titani… Version 6,2016-… begi… This … Notebook Python ## 9 814 anok… Data … Quora … &lt;NA&gt; inte… This … Notebook Python ## 10 726 SRK Simpl… Zillow… Version 19,2017… eda,… This … Notebook Python ## # … with 961 more rows, and 3 more variables: Comments &lt;dbl&gt;, Views &lt;dbl&gt;, ## # Forks &lt;dbl&gt; Again, we can use the Tags to create a number of different new variables, each representing one Tag.">
+
+
+<meta property="og:description" content="library(Matrix) library(tidyverse) library(igraph) We work with the same dataset used for Tidyverse containing data regarding some of the top-voted kaggle kernels.
+kaggle &lt;- read_csv(&quot;kagglekernels.csv&quot;, col_types = cols( Votes=col_double(), Owner=col_factor(), Kernel=col_factor(), Dataset=col_factor(), Output=col_character(), `Code Type`=col_factor(), Language=col_factor(), Comments=col_double(), Views=col_double(), Forks=col_double() )) kaggle # Tibbles automatically print head(tibble) ## # A tibble: 971 x 12 ## Votes Owner Kernel Dataset `Version Histor… Tags Output `Code Type` Language ## &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt; &lt;fct&gt; ## 1 2130 Mega… Explo… Titani… Version 8,2017-… tuto… This … Script markdown ## 2 1395 Guid… Full … Data S… Version 19,2017… tuto… This … Notebook Python ## 3 1363 Pedr… Compr… House … Version 47,2018… begi… This … Notebook Python ## 4 1316 Anis… Intro… Titani… Version 93,2018… tuto… This … Notebook Python ## 5 1078 Kaan… Data … Pokemo… Version 389,201… begi… This … Notebook Python ## 6 1003 Phil… Explo… Zillow… Version 44,2017… begi… This … Script markdown ## 7 946 Mana… Titan… Titani… Version 16,2017… tuto… This … Notebook Python ## 8 826 Omar… A Jou… Titani… Version 6,2016-… begi… This … Notebook Python ## 9 814 anok… Data … Quora … &lt;NA&gt; inte… This … Notebook Python ## 10 726 SRK Simpl… Zillow… Version 19,2017… eda,… This … Notebook Python ## # … with 961 more rows, and 3 more variables: Comments &lt;dbl&gt;, Views &lt;dbl&gt;, ## # Forks &lt;dbl&gt; Again, we can use the Tags to create a number of different new variables, each representing one Tag.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Matrices Portfolio">
+<meta name="twitter:title" content="Matrices Portfolio">
+<meta property="og:url" content="/2020/01/matrices-portfolio/">
+<meta property="twitter:url" content="/2020/01/matrices-portfolio/">
+<meta property="og:site_name" content="Statistical Computing Portfolio Website">
+<meta property="og:description" content="library(Matrix) library(tidyverse) library(igraph) We work with the same dataset used for Tidyverse containing data regarding some of the top-voted kaggle kernels.
+kaggle &lt;- read_csv(&quot;kagglekernels.csv&quot;, col_types = cols( Votes=col_double(), Owner=col_factor(), Kernel=col_factor(), Dataset=col_factor(), Output=col_character(), `Code Type`=col_factor(), Language=col_factor(), Comments=col_double(), Views=col_double(), Forks=col_double() )) kaggle # Tibbles automatically print head(tibble) ## # A tibble: 971 x 12 ## Votes Owner Kernel Dataset `Version Histor… Tags Output `Code Type` Language ## &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt; &lt;fct&gt; ## 1 2130 Mega… Explo… Titani… Version 8,2017-… tuto… This … Script markdown ## 2 1395 Guid… Full … Data S… Version 19,2017… tuto… This … Notebook Python ## 3 1363 Pedr… Compr… House … Version 47,2018… begi… This … Notebook Python ## 4 1316 Anis… Intro… Titani… Version 93,2018… tuto… This … Notebook Python ## 5 1078 Kaan… Data … Pokemo… Version 389,201… begi… This … Notebook Python ## 6 1003 Phil… Explo… Zillow… Version 44,2017… begi… This … Script markdown ## 7 946 Mana… Titan… Titani… Version 16,2017… tuto… This … Notebook Python ## 8 826 Omar… A Jou… Titani… Version 6,2016-… begi… This … Notebook Python ## 9 814 anok… Data … Quora … &lt;NA&gt; inte… This … Notebook Python ## 10 726 SRK Simpl… Zillow… Version 19,2017… eda,… This … Notebook Python ## # … with 961 more rows, and 3 more variables: Comments &lt;dbl&gt;, Views &lt;dbl&gt;, ## # Forks &lt;dbl&gt; Again, we can use the Tags to create a number of different new variables, each representing one Tag.">
+<meta name="twitter:description" content="library(Matrix) library(tidyverse) library(igraph) We work with the same dataset used for Tidyverse containing data regarding some of the top-voted kaggle kernels.
+kaggle &lt;- read_csv(&quot;kagglekernels.csv&quot;, col_types = cols( Votes=col_double(), Owner=col_factor(), Kernel=col_factor(), Dataset=col_factor(), Output=col_character(), `Code Type`=col_factor(), Language=col_factor(), Comments=col_double(), Views=col_double(), Forks=col_double() )) kaggle # Tibbles automatically print head(tibble) ## # A tibble: 971 x 12 ## Votes Owner Kernel Dataset `Version Histor… Tags Output `Code Type` Language ## &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;fct&gt; &lt;fct&gt; ## 1 2130 Mega… Explo… Titani… Version 8,2017-… tuto… This … Script markdown ## 2 1395 Guid… Full … Data S… Version 19,2017… tuto… This … Notebook Python ## 3 1363 Pedr… Compr… House … Version 47,2018… begi… This … Notebook Python ## 4 1316 Anis… Intro… Titani… Version 93,2018… tuto… This … Notebook Python ## 5 1078 Kaan… Data … Pokemo… Version 389,201… begi… This … Notebook Python ## 6 1003 Phil… Explo… Zillow… Version 44,2017… begi… This … Script markdown ## 7 946 Mana… Titan… Titani… Version 16,2017… tuto… This … Notebook Python ## 8 826 Omar… A Jou… Titani… Version 6,2016-… begi… This … Notebook Python ## 9 814 anok… Data … Quora … &lt;NA&gt; inte… This … Notebook Python ## 10 726 SRK Simpl… Zillow… Version 19,2017… eda,… This … Notebook Python ## # … with 961 more rows, and 3 more variables: Comments &lt;dbl&gt;, Views &lt;dbl&gt;, ## # Forks &lt;dbl&gt; Again, we can use the Tags to create a number of different new variables, each representing one Tag.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2020-01-16T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2020-01-16T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="R">
+    
+      <meta property="article:section" content="matrices">
+    
+  
+  
+    
+      <meta property="article:tag" content="matrices">
+    
+      <meta property="article:tag" content="sparse matrices">
+    
+      <meta property="article:tag" content="kaggle">
+    
+      <meta property="article:tag" content="spotify">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=640">
+  <meta property="twitter:image" content="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=640">
+
+
+    <title>Matrices Portfolio</title>
+
+    <link rel="icon" href="/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="/2020/01/matrices-portfolio/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="/">Statistical Computing Portfolio Website</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=90" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="/#about">
+          <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=110" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Mauro Camara Escudero</h4>
+        
+          <h5 class="sidebar-profile-bio">PhD student in Computational Statistics and Data Science at the University of Bristol</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/MauroCE">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://stackoverflow.com/users/6435921/euler-salter">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+      
+      <span class="sidebar-button-desc">Stack Overflow</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      Matrices Portfolio
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2020-01-16T00:00:00Z">
+        
+  January 16, 2020
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="/categories/r">R</a>, 
+    
+      <a class="category-link" href="/categories/matrices">matrices</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+
+<pre class="r"><code>library(Matrix)
+library(tidyverse)
+library(igraph)</code></pre>
+<p>We work with the same dataset used for <code>Tidyverse</code> containing data regarding some of the top-voted kaggle kernels.</p>
+<pre class="r"><code>kaggle &lt;- read_csv(&quot;kagglekernels.csv&quot;, col_types = cols(
+  Votes=col_double(),
+  Owner=col_factor(),
+  Kernel=col_factor(),
+  Dataset=col_factor(),
+  Output=col_character(),
+  `Code Type`=col_factor(),
+  Language=col_factor(),
+  Comments=col_double(),
+  Views=col_double(),
+  Forks=col_double()
+))
+kaggle # Tibbles automatically print head(tibble)</code></pre>
+<pre><code>## # A tibble: 971 x 12
+##    Votes Owner Kernel Dataset `Version Histor… Tags  Output `Code Type` Language
+##    &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;   &lt;chr&gt;            &lt;chr&gt; &lt;chr&gt;  &lt;fct&gt;       &lt;fct&gt;   
+##  1  2130 Mega… Explo… Titani… Version 8,2017-… tuto… This … Script      markdown
+##  2  1395 Guid… Full … Data S… Version 19,2017… tuto… This … Notebook    Python  
+##  3  1363 Pedr… Compr… House … Version 47,2018… begi… This … Notebook    Python  
+##  4  1316 Anis… Intro… Titani… Version 93,2018… tuto… This … Notebook    Python  
+##  5  1078 Kaan… Data … Pokemo… Version 389,201… begi… This … Notebook    Python  
+##  6  1003 Phil… Explo… Zillow… Version 44,2017… begi… This … Script      markdown
+##  7   946 Mana… Titan… Titani… Version 16,2017… tuto… This … Notebook    Python  
+##  8   826 Omar… A Jou… Titani… Version 6,2016-… begi… This … Notebook    Python  
+##  9   814 anok… Data … Quora … &lt;NA&gt;             inte… This … Notebook    Python  
+## 10   726 SRK   Simpl… Zillow… Version 19,2017… eda,… This … Notebook    Python  
+## # … with 961 more rows, and 3 more variables: Comments &lt;dbl&gt;, Views &lt;dbl&gt;,
+## #   Forks &lt;dbl&gt;</code></pre>
+<p>Again, we can use the <code>Tags</code> to create a number of different new variables, each representing one <code>Tag</code>.</p>
+<pre class="r"><code># stop here in order to have the column names
+tagmatrix &lt;- kaggle  %&gt;% 
+    dplyr::select(Tags) %&gt;%  
+    mutate(rn=row_number()) %&gt;%             
+    separate_rows(Tags, sep=&quot;\\s*,\\s*&quot;) %&gt;%  # RegEx comma-separated tags
+    mutate(i1=1) %&gt;%                          # Uniquely identifies rows together with rn
+    mutate_all(~na_if(., &quot;&quot;)) %&gt;%             # remove NA generated by &quot;&lt;tag&gt;,&quot;
+    pivot_wider(names_from = Tags, 
+                values_from = i1,
+                values_fill = list(i1 = 0)) %&gt;% # Wide format
+    dplyr::select(-rn, -&quot;NA&quot;)
+tagmatrix</code></pre>
+<pre><code>## # A tibble: 971 x 101
+##    tutorial beginner `feature engine… preprocessing   eda `data cleaning`
+##       &lt;dbl&gt;    &lt;dbl&gt;            &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;           &lt;dbl&gt;
+##  1        1        1                1             0     0               0
+##  2        1        0                0             1     0               0
+##  3        0        1                0             0     1               1
+##  4        1        0                0             0     0               0
+##  5        0        1                0             0     0               0
+##  6        0        1                0             0     1               0
+##  7        1        0                1             0     0               0
+##  8        0        1                0             0     1               0
+##  9        0        0                0             0     1               0
+## 10        0        0                0             0     1               0
+## # … with 961 more rows, and 95 more variables: ensembling &lt;dbl&gt;, xgboost &lt;dbl&gt;,
+## #   `data visualization` &lt;dbl&gt;, `model comparison` &lt;dbl&gt;, `random
+## #   forest` &lt;dbl&gt;, `logistic regression` &lt;dbl&gt;, intermediate &lt;dbl&gt;, nlp &lt;dbl&gt;,
+## #   `regression analysis` &lt;dbl&gt;, `time series` &lt;dbl&gt;, `geospatial
+## #   analysis` &lt;dbl&gt;, `linear regression` &lt;dbl&gt;, advanced &lt;dbl&gt;, cnn &lt;dbl&gt;,
+## #   classification &lt;dbl&gt;, `neural networks` &lt;dbl&gt;, linguistics &lt;dbl&gt;, `survey
+## #   analysis` &lt;dbl&gt;, `dimensionality reduction` &lt;dbl&gt;, pca &lt;dbl&gt;, `image
+## #   processing` &lt;dbl&gt;, `deep learning` &lt;dbl&gt;, storytelling &lt;dbl&gt;,
+## #   databases &lt;dbl&gt;, bigquery &lt;dbl&gt;, learning &lt;dbl&gt;, crime &lt;dbl&gt;,
+## #   finance &lt;dbl&gt;, forecasting &lt;dbl&gt;, healthcare &lt;dbl&gt;, `gradient
+## #   boosting` &lt;dbl&gt;, rnn &lt;dbl&gt;, animation &lt;dbl&gt;, geography &lt;dbl&gt;,
+## #   terrorism &lt;dbl&gt;, `model diagnosis` &lt;dbl&gt;, `k-means` &lt;dbl&gt;, `food and
+## #   drink` &lt;dbl&gt;, `decision tree` &lt;dbl&gt;, animals &lt;dbl&gt;, `recommender
+## #   systems` &lt;dbl&gt;, `video games` &lt;dbl&gt;, demographics &lt;dbl&gt;, internet &lt;dbl&gt;,
+## #   basketball &lt;dbl&gt;, sports &lt;dbl&gt;, optimization &lt;dbl&gt;, `marketing
+## #   analytics` &lt;dbl&gt;, cricket &lt;dbl&gt;, politics &lt;dbl&gt;, biology &lt;dbl&gt;, `network
+## #   analysis` &lt;dbl&gt;, `pipeline code` &lt;dbl&gt;, languages &lt;dbl&gt;, education &lt;dbl&gt;,
+## #   `machine learning` &lt;dbl&gt;, gan &lt;dbl&gt;, regression &lt;dbl&gt;, business &lt;dbl&gt;,
+## #   marketing &lt;dbl&gt;, clustering &lt;dbl&gt;, `5daychallenge` &lt;dbl&gt;, svm &lt;dbl&gt;,
+## #   lstm &lt;dbl&gt;, `image data` &lt;dbl&gt;, `object segmentation` &lt;dbl&gt;,
+## #   statistics &lt;dbl&gt;, housing &lt;dbl&gt;, economics &lt;dbl&gt;, `text mining` &lt;dbl&gt;,
+## #   banking &lt;dbl&gt;, memory &lt;dbl&gt;, `association football` &lt;dbl&gt;, violence &lt;dbl&gt;,
+## #   `visual arts` &lt;dbl&gt;, history &lt;dbl&gt;, `bayesian statistics` &lt;dbl&gt;,
+## #   cities &lt;dbl&gt;, `united states` &lt;dbl&gt;, `occupational safety` &lt;dbl&gt;,
+## #   programming &lt;dbl&gt;, countries &lt;dbl&gt;, immigration &lt;dbl&gt;, `universities and
+## #   colleges` &lt;dbl&gt;, `auto racing` &lt;dbl&gt;, probability &lt;dbl&gt;, `programming
+## #   languages` &lt;dbl&gt;, plants &lt;dbl&gt;, firefighting &lt;dbl&gt;, `stochastic
+## #   processes` &lt;dbl&gt;, safety &lt;dbl&gt;, `outlier analysis` &lt;dbl&gt;, weather &lt;dbl&gt;,
+## #   `signal processing` &lt;dbl&gt;, `reinforcement learning` &lt;dbl&gt;</code></pre>
+<p>Each column now has <code>1</code>s where the Kernels were tagged with that specific tag, and <code>0</code> otherwise. Data in this form is not very useful for a graph representation. Instead, we can create an adjecency matrix having tags on columns and on rows and where the entries correspond to the number of times the pair of tags was used together in the same kernel. In order to count this metric, we can leverage the <code>crossprod</code> function. We also transform <code>tagmatrix</code>, which is a <code>tibble</code>, into a sparseMatrix.</p>
+<pre class="r"><code>tagmatrix %&lt;&gt;%
+  as.matrix %&gt;% 
+  Matrix::Matrix(sparse=TRUE) %&gt;% 
+  Matrix::crossprod() %&gt;%         # Preserves sparsity
+  `diag&lt;-`(0) %&gt;%         # A Tag is not related with itself
+  Matrix::drop0()</code></pre>
+<p>We can look at the sparsity pattern with the function <code>Matrix::image()</code> to get an idea of what this matrix looks like.</p>
+<pre class="r"><code>Matrix::image(tagmatrix, main=&quot;Sparsity Patter of Tag Pairings&quot;)</code></pre>
+<p><img src="/post/2020-01-16-matrices-portfolio_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Alternatively, we can look at the percentage of sparsity.</p>
+<pre class="r"><code>nnzero(tagmatrix) / length(tagmatrix)</code></pre>
+<pre><code>## [1] 0.08214881</code></pre>
+<p>We now proceed to use the <code>igraph</code> package to plot a network using <code>tagmatrix</code> as a weighted adjecency matrix. Since the matrix is very large, we restrict ourselves to the most “social” tags, i.e. tags that have been paired with other tags more than a given number of times, in this case <code>5</code>. To do this, we set those values to zero and then drop the corresponding column and rows (since <code>tagmatrix</code> is symmetric).</p>
+<pre class="r"><code># set values below a threshold to 0
+tagmatrix[tagmatrix&lt;=5] &lt;- 0
+# drop empty rows and columns for graphing purposes
+flag &lt;- apply(tagmatrix, 1, function(x) any(x != 0))
+tagmatrix &lt;- tagmatrix[flag, flag]
+# value corresponds to how &quot;social&quot; those tags are
+graph &lt;- graph_from_adjacency_matrix(tagmatrix, weighted = TRUE)</code></pre>
+<p>We first choose to plot the network using a standard circle layout.</p>
+<pre class="r"><code>plot(graph, layout=layout_in_circle(graph), vertex.label.cex=1.0,
+     edge.arrow.size=1.0, vertex.label.color=&quot;black&quot;, vertex.size=24)</code></pre>
+<p><img src="/post/2020-01-16-matrices-portfolio_files/figure-html/unnamed-chunk-8-1.png" width="1440" /></p>
+<p>While at first this graph looks insightful, it’s hard to see some structure. Rather, we can specify a layout by choosing ourselves the coordinates of each node. After some trail and error, it’s possible to come up with a layout similar to this one.</p>
+<pre class="r"><code># graph
+layout &lt;- matrix(c(0, 1, 1, 0, -1, 2, 3, -1, 3, 4, 4, 1, 1, -1, 2, 0, 3, 4, 4,
+                   0, 1, 2, 2,  2, 1, 2,  1, 0, 0, 2, 3, 0,  0, 0, 3, 3, 3, 1), nrow=19, ncol=2)
+plot(graph, layout=layout, vertex.label.cex=1.0, edge.arrow.size=1.0, 
+     vertex.label.color=&quot;black&quot;, vertex.size=24)</code></pre>
+<p><img src="/post/2020-01-16-matrices-portfolio_files/figure-html/unnamed-chunk-9-1.png" width="1440" /></p>
+<p>We can see a few important features. First of all it looks like there are three main clusters. One is about <em>deep learning</em>, one is about <em>finance and crime</em> data and the other cluster gathers together most other variables. In this latter cluster, we can see that <code>data visualization</code> dominates.</p>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="/tags/matrices/">matrices</a>
+
+  <a class="tag tag--primary tag--small" href="/tags/sparse-matrices/">sparse matrices</a>
+
+  <a class="tag tag--primary tag--small" href="/tags/kaggle/">kaggle</a>
+
+  <a class="tag tag--primary tag--small" href="/tags/spotify/">spotify</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/integration-portfolio/" data-tooltip="Integration Portfolio">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/optimization-portfolio/" data-tooltip="Optimization Portfolio">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2020/01/matrices-portfolio/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2020/01/matrices-portfolio/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2020/01/matrices-portfolio/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2020 Mauro Camara Escudero. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/integration-portfolio/" data-tooltip="Integration Portfolio">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/optimization-portfolio/" data-tooltip="Optimization Portfolio">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2020/01/matrices-portfolio/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2020/01/matrices-portfolio/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2020/01/matrices-portfolio/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2020%2F01%2Fmatrices-portfolio%2F">
+          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2020%2F01%2Fmatrices-portfolio%2F">
+          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2020%2F01%2Fmatrices-portfolio%2F">
+          <i class="fa fa-google-plus"></i><span>Share on Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=110" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Mauro Camara Escudero</h4>
+    
+      <div id="about-card-bio">PhD student in Computational Statistics and Data Science at the University of Bristol</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        COMPASS PhD Student
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Bristol, United Kingdom
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = '\/2020\/01\/matrices-portfolio\/';
+          
+            this.page.identifier = '\/2020\/01\/matrices-portfolio\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hugo-tranquilpeak-theme';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
