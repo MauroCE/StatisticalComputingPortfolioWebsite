@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.58.3 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="author" content="Mauro Camara Escudero">
+<meta name="keywords" content="">
+<meta name="description" content="Metropolis-Hastings library(ggplot2) library(tidyverse) library(gridExtra) library(MASS) Random Walk Metropolis Hastings Let’s implement a Random Walk Metropolis-Hastings algorithm with a symmetric proposal density.
+rwmh &lt;- function(start, niter, proposal, target){ # Store accepted, rejected and all samples accepted &lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &quot;accepted&quot;)) rejected &lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &quot;rejected&quot;)) samples &lt;- matrix(NA, nrow=niter) # Set first sample to start and sample uniform random numbers for efficiency z &lt;- start accepted[1] &lt;- z; rejected[1] &lt;- z; samples[1] &lt;- z u &lt;- runif(niter) # Draw candidate, calculate acceptance prob for niter-1 times for (i in 2:niter){ cand &lt;- proposal$sample(z) prob &lt;- min(1, target$density(cand)/target$density(z)) if (u[i] &lt;= prob) {accepted[i] &lt;- cand; z &lt;- cand} else {rejected[i] &lt;- cand} samples[i] &lt;- z } result &lt;- list(&quot;samples&quot;=samples, &quot;accepted&quot;=accepted, &quot;rejected&quot;=rejected, &quot;proposal&quot;=proposal, &quot;target&quot;=target) return(result) }  Plotting Function The following function takes the output of the Random-Walk Metropolis-Hastings algorithm and it produces two plots:">
+
+
+<meta property="og:description" content="Metropolis-Hastings library(ggplot2) library(tidyverse) library(gridExtra) library(MASS) Random Walk Metropolis Hastings Let’s implement a Random Walk Metropolis-Hastings algorithm with a symmetric proposal density.
+rwmh &lt;- function(start, niter, proposal, target){ # Store accepted, rejected and all samples accepted &lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &quot;accepted&quot;)) rejected &lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &quot;rejected&quot;)) samples &lt;- matrix(NA, nrow=niter) # Set first sample to start and sample uniform random numbers for efficiency z &lt;- start accepted[1] &lt;- z; rejected[1] &lt;- z; samples[1] &lt;- z u &lt;- runif(niter) # Draw candidate, calculate acceptance prob for niter-1 times for (i in 2:niter){ cand &lt;- proposal$sample(z) prob &lt;- min(1, target$density(cand)/target$density(z)) if (u[i] &lt;= prob) {accepted[i] &lt;- cand; z &lt;- cand} else {rejected[i] &lt;- cand} samples[i] &lt;- z } result &lt;- list(&quot;samples&quot;=samples, &quot;accepted&quot;=accepted, &quot;rejected&quot;=rejected, &quot;proposal&quot;=proposal, &quot;target&quot;=target) return(result) }  Plotting Function The following function takes the output of the Random-Walk Metropolis-Hastings algorithm and it produces two plots:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Integration Portfolio">
+<meta name="twitter:title" content="Integration Portfolio">
+<meta property="og:url" content="/2015/07/integration-portfolio/">
+<meta property="twitter:url" content="/2015/07/integration-portfolio/">
+<meta property="og:site_name" content="Statistical Computing Portfolio Website">
+<meta property="og:description" content="Metropolis-Hastings library(ggplot2) library(tidyverse) library(gridExtra) library(MASS) Random Walk Metropolis Hastings Let’s implement a Random Walk Metropolis-Hastings algorithm with a symmetric proposal density.
+rwmh &lt;- function(start, niter, proposal, target){ # Store accepted, rejected and all samples accepted &lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &quot;accepted&quot;)) rejected &lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &quot;rejected&quot;)) samples &lt;- matrix(NA, nrow=niter) # Set first sample to start and sample uniform random numbers for efficiency z &lt;- start accepted[1] &lt;- z; rejected[1] &lt;- z; samples[1] &lt;- z u &lt;- runif(niter) # Draw candidate, calculate acceptance prob for niter-1 times for (i in 2:niter){ cand &lt;- proposal$sample(z) prob &lt;- min(1, target$density(cand)/target$density(z)) if (u[i] &lt;= prob) {accepted[i] &lt;- cand; z &lt;- cand} else {rejected[i] &lt;- cand} samples[i] &lt;- z } result &lt;- list(&quot;samples&quot;=samples, &quot;accepted&quot;=accepted, &quot;rejected&quot;=rejected, &quot;proposal&quot;=proposal, &quot;target&quot;=target) return(result) }  Plotting Function The following function takes the output of the Random-Walk Metropolis-Hastings algorithm and it produces two plots:">
+<meta name="twitter:description" content="Metropolis-Hastings library(ggplot2) library(tidyverse) library(gridExtra) library(MASS) Random Walk Metropolis Hastings Let’s implement a Random Walk Metropolis-Hastings algorithm with a symmetric proposal density.
+rwmh &lt;- function(start, niter, proposal, target){ # Store accepted, rejected and all samples accepted &lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &quot;accepted&quot;)) rejected &lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &quot;rejected&quot;)) samples &lt;- matrix(NA, nrow=niter) # Set first sample to start and sample uniform random numbers for efficiency z &lt;- start accepted[1] &lt;- z; rejected[1] &lt;- z; samples[1] &lt;- z u &lt;- runif(niter) # Draw candidate, calculate acceptance prob for niter-1 times for (i in 2:niter){ cand &lt;- proposal$sample(z) prob &lt;- min(1, target$density(cand)/target$density(z)) if (u[i] &lt;= prob) {accepted[i] &lt;- cand; z &lt;- cand} else {rejected[i] &lt;- cand} samples[i] &lt;- z } result &lt;- list(&quot;samples&quot;=samples, &quot;accepted&quot;=accepted, &quot;rejected&quot;=rejected, &quot;proposal&quot;=proposal, &quot;target&quot;=target) return(result) }  Plotting Function The following function takes the output of the Random-Walk Metropolis-Hastings algorithm and it produces two plots:">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2015-07-23T21:13:14">
+  
+  
+    <meta property="article:modified_time" content="2015-07-23T21:13:14">
+  
+  
+  
+    
+      <meta property="article:section" content="R">
+    
+  
+  
+    
+      <meta property="article:tag" content="R Markdown">
+    
+      <meta property="article:tag" content="plot">
+    
+      <meta property="article:tag" content="regression">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=640">
+  <meta property="twitter:image" content="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=640">
+
+
+    <title>Integration Portfolio</title>
+
+    <link rel="icon" href="/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="/2015/07/integration-portfolio/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="/">Statistical Computing Portfolio Website</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=90" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="/#about">
+          <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=110" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Mauro Camara Escudero</h4>
+        
+          <h5 class="sidebar-profile-bio">PhD student in Computational Statistics and Data Science at the University of Bristol</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/MauroCE">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://stackoverflow.com/users/6435921/euler-salter">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
+      
+      <span class="sidebar-button-desc">Stack Overflow</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      Integration Portfolio
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2015-07-23T21:13:14-05:00">
+        
+  July 23, 2015
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="/categories/r">R</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              
+
+
+
+<div id="metropolis-hastings" class="section level1">
+<h1>Metropolis-Hastings</h1>
+<pre class="r"><code>library(ggplot2)
+library(tidyverse)
+library(gridExtra)
+library(MASS)</code></pre>
+<div id="random-walk-metropolis-hastings" class="section level3">
+<h3>Random Walk Metropolis Hastings</h3>
+<p>Let’s implement a <strong>Random Walk Metropolis-Hastings</strong> algorithm with a symmetric proposal density.</p>
+<pre class="r"><code>rwmh &lt;- function(start, niter, proposal, target){
+  # Store accepted, rejected and all samples
+  accepted &lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &quot;accepted&quot;))
+  rejected &lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &quot;rejected&quot;))
+  samples  &lt;- matrix(NA, nrow=niter)
+  # Set first sample to start and sample uniform random numbers for efficiency
+  z &lt;- start
+  accepted[1] &lt;- z;    rejected[1] &lt;- z;    samples[1] &lt;- z
+  u &lt;- runif(niter)
+  # Draw candidate, calculate acceptance prob for niter-1 times
+  for (i in 2:niter){
+    cand &lt;- proposal$sample(z)
+    prob &lt;- min(1, target$density(cand)/target$density(z))
+    if (u[i] &lt;= prob) {accepted[i] &lt;- cand;    z &lt;- cand}
+    else              {rejected[i] &lt;- cand}
+    samples[i] &lt;- z
+  }
+  result &lt;- list(&quot;samples&quot;=samples, &quot;accepted&quot;=accepted, &quot;rejected&quot;=rejected,
+                 &quot;proposal&quot;=proposal, &quot;target&quot;=target)
+  return(result)
+}</code></pre>
+</div>
+<div id="plotting-function" class="section level3">
+<h3>Plotting Function</h3>
+<p>The following function takes the output of the Random-Walk Metropolis-Hastings algorithm and it produces two plots:</p>
+<ol style="list-style-type: decimal">
+<li>A density of the target distribution and a histogram of the samples generated by the algorithm.</li>
+<li>A trace plot showing the candidates that have been proposed or accepted.</li>
+</ol>
+<pre class="r"><code>histogram_and_trace_plot &lt;- function(out){
+  # Create dataframe for target line plot and for samples histogram
+  x_values  &lt;- seq(from=out$target$range[1], to=out$target$range[2], length.out=100)
+  lineplot  &lt;- data.frame(x=x_values, y=out$target$density(x_values))
+  histogram &lt;- data.frame(x=out$samples)
+  # Line plot + histogram
+  bindwidth &lt;- (out$target$range[2]-out$target$range[1]) / 50
+  p &lt;- ggplot() +
+    geom_histogram(data=histogram, aes(x=x, stat(density)), binwidth = bindwidth, 
+                   alpha=0.5, fill=&quot;turquoise1&quot;, color=&quot;turquoise4&quot;) +
+    geom_line(data=lineplot, aes(x=x, y=y), size=1) + 
+    ggtitle(paste(&quot;Target: &quot;, out$target$name, &quot; Proposal: &quot;, out$proposal$name)) + 
+    theme_minimal() + 
+    theme(plot.title=element_text(hjust=0.5, size=15))
+  # Trace plot color-coded by acceptance/rejection
+  pair &lt;- data.frame(cbind(out$accepted, out$rejected)) %&gt;%
+    transmute(sample    = coalesce(.$accepted, .$rejected), 
+              flag      = as.factor((!is.na(.$accepted))), 
+              iteration = row_number())
+  q &lt;- ggplot(data=pair) + 
+    geom_point(aes(x=iteration, y=sample, color=flag), alpha=0.5) + 
+    labs(color=&quot;Legend&quot;, size=15) + 
+    scale_color_hue(labels=c(&quot;rejected&quot;, &quot;accepted&quot;)) + 
+    ggtitle(&quot;Trace Plot&quot;) + 
+    theme_minimal() +
+    theme(plot.title=element_text(hjust=0.5, size=15))
+  grid.arrange(p, q, ncol=1)
+}</code></pre>
+</div>
+<div id="generate-functions-and-data" class="section level3">
+<h3>Generate Functions and Data</h3>
+<p>Below we specify some density functions and some functions for sampling from specific densities.</p>
+<pre class="r"><code># Targets
+gamma_density &lt;- function(x) dgamma(x, shape=2.0, scale=2.0)
+beta_density &lt;- function(x) dbeta(x, shape1=2.0, shape2=5.0)
+chisq_density &lt;- function(x) dchisq(x, df=3.0)
+normal_density &lt;- function(x) dnorm(x, mean=3)
+# Proposals
+normal_sample &lt;- function(x) rnorm(1, mean=x)
+beta_sample &lt;- function(x) rbeta(1, shape1=2.0, shape2=5.0)
+gamma_sample &lt;- function(x) rgamma(1, shape=2.0, scale=2.0)
+exponential_sample &lt;- function(x) rexp(1)
+# named lists
+gamma &lt;- list(&quot;density&quot;=gamma_density, &quot;sample&quot;=gamma_sample, 
+              &quot;name&quot;=&quot;Gamma&quot;, &quot;range&quot;=c(0.0, 20.0))
+beta &lt;- list(&quot;density&quot;=beta_density, &quot;sample&quot;=beta_sample, 
+             &quot;name&quot;=&quot;Beta&quot;, &quot;range&quot;=c(0.0, 1.0))
+normal &lt;- list(&quot;density&quot;=normal_density, &quot;sample&quot;=normal_sample, &quot;name&quot;=&quot;Normal&quot;)
+chisq &lt;- list(&quot;density&quot;=chisq_density, &quot;sample&quot;=NULL, 
+              &quot;name&quot;=&quot;Chi-Squared&quot;, &quot;range&quot;=c(0.0, 20.0))
+exponential &lt;- list(&quot;density&quot;=dexp, &quot;sample&quot;=exponential_sample, 
+                    &quot;name&quot;=&quot;Exponential&quot;, &quot;range&quot;=c(0.0, 6.0))</code></pre>
+</div>
+<div id="results" class="section level3">
+<h3>Results</h3>
+<p>In the following plots we can see that the Random-Walk Metropolis-Hastings algorithm is indeed sampling correcly.</p>
+<pre class="r"><code>histogram_and_trace_plot(rwmh(0.5, 100000, normal, beta))</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>histogram_and_trace_plot(rwmh(15, 100000, normal, gamma))</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>histogram_and_trace_plot(rwmh(6, 100000, normal, exponential))</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="r"><code>histogram_and_trace_plot(rwmh(15, 100000, normal, chisq))</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="logistic-regression-setup" class="section level3">
+<h3>Logistic Regression Setup</h3>
+<p>Recall from the Optimization portfolio we worked with Logistic Regression.
+Using an isotropic Gaussian prior on our parameters the log posterior looks like this
+<span class="math display">\[
+\ln p(\boldsymbol{\mathbf{\beta}}\mid \boldsymbol{\mathbf{y}}) \propto  -\sigma^2_{\boldsymbol{\mathbf{\beta}}}\sum_{i=1}^n\ln\left(1 + \exp((1 - 2y_i)\boldsymbol{\mathbf{x}}_i^\top\boldsymbol{\mathbf{\beta}})\right) - \frac{1}{2}\boldsymbol{\mathbf{\beta}}^\top\boldsymbol{\mathbf{\beta}}
+\]</span></p>
+<p>Now notice that this distribution is on the <span class="math inline">\(\boldsymbol{\mathbf{\beta}}\)</span>, which means that our samples are samples of parameters.</p>
+</div>
+<div id="data-generation" class="section level3">
+<h3>Data Generation</h3>
+<p>Create data from two multivariate normal distributions.</p>
+<pre class="r"><code>n1 &lt;- 100
+n2 &lt;- 100
+m1 &lt;- c(6, 6)
+m2 &lt;- c(-1, 1)
+s1 &lt;- matrix(c(1, 0, 0, 10), nrow=2, ncol=2)
+s2 &lt;- matrix(c(1, 0, 0, 10), nrow=2, ncol=2)
+generate_binary_data &lt;- function(n1, n2, m1, s1, m2, s2){
+  # x1, x2 and y for both classes (both 0,1 and -1,1 will be created for convenience)
+  class1 &lt;- mvrnorm(n1, m1, s1)
+  class2 &lt;- mvrnorm(n2, m2, s2)
+  y      &lt;- c(rep(0, n1), rep(1, n2))   # {0 , 1}
+  y2     &lt;- c(rep(-1, n1), rep(1, n2))  # {-1, 1}
+  # Generate dataframe
+  data &lt;- data.frame(rbind(class1, class2), y, y2)
+  return(data)
+}
+# Generate reproducible data
+set.seed(123)
+data &lt;- generate_binary_data(n1, n2, m1, s1, m2, s2)
+X &lt;- data %&gt;% dplyr::select(-y, -y2) %&gt;% as.matrix
+y &lt;- data %&gt;% dplyr::select(y) %&gt;% as.matrix
+# need to add another colum to x to account for the bias
+X &lt;- cbind(1, X)</code></pre>
+</div>
+<div id="multivariate-random-walk-metropolis-hastings-algorithm-on-log-posterior" class="section level3">
+<h3>Multivariate Random-Walk Metropolis-Hastings Algorithm on Log Posterior</h3>
+<p>Below is a multivariate version of the Random-Walk Metropolis-Hastings algorithm defined above. This version has also been improved with the following observations:</p>
+<ul>
+<li>At the beginning samples are gonna be very much dependent on the value of <code>start</code>. For this reason we introduce
+a number of <code>burnin</code> iterations that are going to be thrown away. Burn-in essentially represents the “warm up” that we want to have for our algorithm.</li>
+<li>To remove independence we can retain every <span class="math inline">\(m^{th}\)</span> sample. To do this, we introduce a new parameter called <code>thinning</code> that decides <code>m</code>.</li>
+<li>We generate all uniform samples at the start and then access them when needed.</li>
+<li>We use linearity of the normal distribution and thus sample <code>niter</code> samples from a multivariate normal distribution and then sum them to the current value.</li>
+<li>We also change the decision rule in a logarithm form as follows
+<span class="math display">\[
+\alpha=\min\left\{1, \frac{p(\text{candidate})}{p(\text{current})}\right\} = \min\left\{e^0, e^{\ln\left(p(\text{candidate}\right) - \ln\left(p(\text{current})\right)}\right\}= \min\left\{0, \ln\left(p(\text{candidate}\right) - \ln\left(p(\text{current})\right)\right\}
+\]</span>
+so that sampling <span class="math inline">\(u\sim \mathcal{U}(0, 1)\)</span> and the accepting if <span class="math inline">\(u\leq \alpha\)</span> is equivalent to sampling <span class="math inline">\(u\sim\mathcal{U}(0, 1)\)</span> and then accepting if
+<span class="math display">\[
+\log(u)\leq \ln\left(p(\text{candidate}\right) - \ln\left(p(\text{current})\right)
+\]</span>
+because for <span class="math inline">\(u\in[0, 1]\)</span> we have <span class="math inline">\(\log(u)\in(-\infty, 0]\)</span>.</li>
+<li>Finally, we keep track of the evaluations of the log target and recycle them. This is helpful when evaluation of the log likelihood is expensive.</li>
+</ul>
+<pre class="r"><code>rwmh_multivariate_log &lt;- function(start, niter, logtarget, vcov, thinning, burnin){
+    # Set current z to the initial point and calculate its log target to save computations
+    z  &lt;- start    # It&#39;s a column vector
+    pz &lt;- logtarget(start)
+    # create vector deciding iterations where we record the samples
+    store &lt;- seq(from=(1+burnin), to=niter, by=thinning)
+    # Generate matrix containing samples. Initialize with the starting value
+    samples &lt;- matrix(0, nrow=length(store), ncol=nrow(start))
+    samples[1, ] &lt;- start
+    # Generate uniform random numbers in advance, to save computation. Take logarithm
+    log_u &lt;- log(runif(niter))
+    # Proposal is a multivariate standard normal distribution. Generate samples and
+    # later on use linearity property of Gaussian distribution
+    vcov &lt;- diag(nrow(start)) %*% vcov
+    normal_shift &lt;- mvrnorm(n=niter, mu=c(0,0,0), Sigma=vcov)
+    for (i in 2:niter){
+        # Sample a candidate
+        candidate &lt;- z + normal_shift[i, ]
+        # calculate log target of candidate and store it in case it gets accepted
+        p_candidate &lt;- logtarget(candidate)
+        # use decision rule explained in blog posts
+        if (log_u[i] &lt;= p_candidate - pz){
+            # Accept!
+            z  &lt;- candidate
+            pz &lt;- p_candidate
+        }
+        # Finally add the sample to our matrix of samples
+        if (i %in% store) samples[which(store==i), ] &lt;- z
+    }
+    return(samples)
+}</code></pre>
+</div>
+<div id="define-function-proportional-to-log-posterior-and-run-rwmh" class="section level3">
+<h3>Define Function Proportional to Log Posterior and Run RWMH</h3>
+<pre class="r"><code># Up to normalization constant
+log_posterior_unnormalized &lt;- function(beta){
+    log_prior      &lt;- -0.5*sum(beta^2)
+    log_likelihood &lt;- -sum(log(1 + exp((1 - 2*y) * (X %*% beta))))
+    return(log_prior + log_likelihood)
+}
+# To start the algorithm more efficiently, start from MAP estimate
+optim_results &lt;- optim(c(0,0,0), 
+                       function(x) - log_posterior_unnormalized(x), 
+                       method=&quot;BFGS&quot;, hessian=TRUE)
+start &lt;- matrix(optim_results$par)
+# Use inverse of approximate hessian matrix as vcov of normal proposal
+vcov  &lt;- solve(optim_results$hessian)
+# Run algorithm without burnin, with no thinning
+niter &lt;- 100000
+thinning &lt;- 1
+burnin &lt;- 0
+samples &lt;- rwmh_multivariate_log(start, niter, log_posterior_unnormalized, 
+                                 vcov, thinning, burnin)</code></pre>
+</div>
+<div id="trace-plots" class="section level3">
+<h3>Trace Plots</h3>
+<pre class="r"><code>samplesdf &lt;- data.frame(samples) %&gt;% mutate(iterations=row_number())
+trace1 &lt;- ggplot(data=samplesdf, aes(x=iterations, y=X1)) + geom_line()
+trace2 &lt;- ggplot(data=samplesdf, aes(x=iterations, y=X2)) + geom_line()
+trace3 &lt;- ggplot(data=samplesdf, aes(x=iterations, y=X3)) + geom_line()
+grid.arrange(trace1, trace2, trace3, ncol=1)</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div id="histograms-of-samples" class="section level3">
+<h3>Histograms of Samples</h3>
+<pre class="r"><code>hist1 &lt;- ggplot(data=samplesdf, aes(x=X1, stat(density))) + 
+  geom_histogram(binwidth=0.05, alpha=0.5, fill=&quot;turquoise1&quot;, color=&quot;turquoise4&quot;)
+hist2 &lt;- ggplot(data=samplesdf, aes(x=X2, stat(density))) + 
+  geom_histogram(binwidth=0.05, alpha=0.5, fill=&quot;turquoise1&quot;, color=&quot;turquoise4&quot;)
+hist3 &lt;- ggplot(data=samplesdf, aes(x=X3, stat(density))) + 
+  geom_histogram(binwidth=0.05, alpha=0.5, fill=&quot;turquoise1&quot;, color=&quot;turquoise4&quot;)
+grid.arrange(hist1, hist2, hist3, ncol=1)</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+<div id="plot-decision-boundary-for-some-samples" class="section level3">
+<h3>Plot decision boundary for some samples</h3>
+<p>The formula for the decision boundary is given by
+<span class="math display">\[
+x_2 = -\frac{\beta_1}{\beta_2}x_1 -\frac{\beta_0}{\beta_2}
+\]</span></p>
+<p>Now we use this formula to obtain the sample decision boundaries.</p>
+<pre class="r"><code># Select only some samples
+samples_to_select &lt;- 200
+samples_subset &lt;- samples[sample(1:nrow(samples), samples_to_select), ]
+# Calculate slope and intercept for those samples. Then calculate x2 from x1
+linecoefs &lt;- cbind(- samples_subset[, 2] / samples_subset[, 3], 
+                   - samples_subset[, 1] / samples_subset[, 3])
+x2_vals &lt;- apply(linecoefs, 1, function(row) X[, 2]*row[1] + row[2])
+# Store x2 values together with x1 values from X. Then melt to plot all lines 
+dfsample_lines &lt;- data.frame(x1=X[, 2], x2_vals) %&gt;% 
+  gather(&quot;key&quot;, &quot;value&quot;, -x1)
+# Create dataframe containing values for the MAP line
+dfmap &lt;- data.frame(x1=X[, 2], 
+                    y=(-start[2, ]/start[3, ])*X[, 2] + (-start[1, ]/start[3, ]))
+ggplot() +
+  geom_point(data=data, aes(x=X1, y=X2, color=as_factor(y))) +    # Dataset scatter plot
+  coord_cartesian(xlim=c(-4, 9), ylim=c(-5, 13)) + 
+  geom_line(data=dfsample_lines, aes(x=x1, y=value, group=key), 
+            alpha=0.1, color=&quot;grey50&quot;) +                          # Sample Lines
+  geom_line(data=dfmap, aes(x=x1, y=y), color=&quot;black&quot;, size=1) +  # MAP line
+  labs(color=&quot;Class&quot;, title=&quot;Sample Decision Boundaries&quot;) + 
+  theme(plot.title=element_text(hjust=0.5, size=20))</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+</div>
+</div>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="/tags/r-markdown/">R Markdown</a>
+
+  <a class="tag tag--primary tag--small" href="/tags/plot/">plot</a>
+
+  <a class="tag tag--primary tag--small" href="/tags/regression/">regression</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/integration-portolio/" data-tooltip="Integration Portolio">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2015/07/integration-portfolio/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2015/07/integration-portfolio/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2015/07/integration-portfolio/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2020 Mauro Camara Escudero. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="/2020/01/integration-portolio/" data-tooltip="Integration Portolio">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=/2015/07/integration-portfolio/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=/2015/07/integration-portfolio/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=/2015/07/integration-portfolio/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=%2F2015%2F07%2Fintegration-portfolio%2F">
+          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=%2F2015%2F07%2Fintegration-portfolio%2F">
+          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=%2F2015%2F07%2Fintegration-portfolio%2F">
+          <i class="fa fa-google-plus"></i><span>Share on Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://www.gravatar.com/avatar/80365673cd69143489ee51facc5a6449?s=110" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Mauro Camara Escudero</h4>
+    
+      <div id="about-card-bio">PhD student in Computational Statistics and Data Science at the University of Bristol</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        COMPASS PhD Student
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Bristol, United Kingdom
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = '\/2015\/07\/integration-portfolio\/';
+          
+            this.page.identifier = '\/2015\/07\/integration-portfolio\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hugo-tranquilpeak-theme';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+

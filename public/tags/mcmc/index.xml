@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>mcmc on Statistical Computing Portfolio Website</title>
+    <link>/tags/mcmc/</link>
+    <description>Recent content in mcmc on Statistical Computing Portfolio Website</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 16 Jan 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/mcmc/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Integration Portolio</title>
+      <link>/2020/01/integration-portolio/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/01/integration-portolio/</guid>
+      <description>Metropolis-Hastings library(ggplot2) library(tidyverse) library(gridExtra) library(MASS) Random Walk Metropolis Hastings Let’s implement a Random Walk Metropolis-Hastings algorithm with a symmetric proposal density.
+rwmh &amp;lt;- function(start, niter, proposal, target){ # Store accepted, rejected and all samples accepted &amp;lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &amp;quot;accepted&amp;quot;)) rejected &amp;lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &amp;quot;rejected&amp;quot;)) samples &amp;lt;- matrix(NA, nrow=niter) # Set first sample to start and sample uniform random numbers for efficiency z &amp;lt;- start accepted[1] &amp;lt;- z; rejected[1] &amp;lt;- z; samples[1] &amp;lt;- z u &amp;lt;- runif(niter) # Draw candidate, calculate acceptance prob for niter-1 times for (i in 2:niter){ cand &amp;lt;- proposal$sample(z) prob &amp;lt;- min(1, target$density(cand)/target$density(z)) if (u[i] &amp;lt;= prob) {accepted[i] &amp;lt;- cand; z &amp;lt;- cand} else {rejected[i] &amp;lt;- cand} samples[i] &amp;lt;- z } result &amp;lt;- list(&amp;quot;samples&amp;quot;=samples, &amp;quot;accepted&amp;quot;=accepted, &amp;quot;rejected&amp;quot;=rejected, &amp;quot;proposal&amp;quot;=proposal, &amp;quot;target&amp;quot;=target) return(result) }  Plotting Function The following function takes the output of the Random-Walk Metropolis-Hastings algorithm and it produces two plots:</description>
+    </item>
+    
+  </channel>
+</rss>

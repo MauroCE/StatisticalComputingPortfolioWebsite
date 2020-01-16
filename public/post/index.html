@@ -159,7 +159,7 @@
       
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://github.com/kakawait">
+      <a class="sidebar-button-link " href="https://github.com/MauroCE">
     
       <i class="sidebar-button-icon fa fa-lg fa-github"></i>
       
@@ -169,7 +169,7 @@
 
   <li class="sidebar-button">
     
-      <a class="sidebar-button-link " href="https://stackoverflow.com/users/636472/kakawait">
+      <a class="sidebar-button-link " href="https://stackoverflow.com/users/6435921/euler-salter">
     
       <i class="sidebar-button-icon fa fa-lg fa-stack-overflow"></i>
       
@@ -205,6 +205,65 @@
         <section class="postShorten-group main-content-wrap">
           
           
+          
+            
+  
+    
+      
+        
+      
+    
+  
+
+
+  
+
+<article class="postShorten postShorten--thumbnailimg-bottom" itemscope itemType="http://schema.org/BlogPosting">
+  <div class="postShorten-wrap">
+    
+    <div class="postShorten-header">
+      <h1 class="postShorten-title" itemprop="headline">
+        <a class="link-unstyled" href="/2020/01/integration-portolio/">
+          Integration Portolio
+        </a>
+      </h1>
+      
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2020-01-16T00:00:00Z">
+        
+  January 16, 2020
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="/categories/r">R</a>, 
+    
+      <a class="category-link" href="/categories/integration">integration</a>
+    
+  
+
+  </div>
+
+    </div>
+    <div class="postShorten-excerpt" itemprop="articleBody">
+      
+        Metropolis-Hastings library(ggplot2) library(tidyverse) library(gridExtra) library(MASS) Random Walk Metropolis Hastings Let’s implement a Random Walk Metropolis-Hastings algorithm with a symmetric proposal density.
+rwmh &lt;- function(start, niter, proposal, target){ # Store accepted, rejected and all samples accepted &lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &quot;accepted&quot;)) rejected &lt;- matrix(NA, nrow=niter, dimnames=list(NULL, &quot;rejected&quot;)) samples &lt;- matrix(NA, nrow=niter) # Set first sample to start and sample uniform random numbers for efficiency z &lt;- start accepted[1] &lt;- z; rejected[1] &lt;- z; samples[1] &lt;- z u &lt;- runif(niter) # Draw candidate, calculate acceptance prob for niter-1 times for (i in 2:niter){ cand &lt;- proposal$sample(z) prob &lt;- min(1, target$density(cand)/target$density(z)) if (u[i] &lt;= prob) {accepted[i] &lt;- cand; z &lt;- cand} else {rejected[i] &lt;- cand} samples[i] &lt;- z } result &lt;- list(&quot;samples&quot;=samples, &quot;accepted&quot;=accepted, &quot;rejected&quot;=rejected, &quot;proposal&quot;=proposal, &quot;target&quot;=target) return(result) }  Plotting Function The following function takes the output of the Random-Walk Metropolis-Hastings algorithm and it produces two plots:
+      
+      <p>
+        <a href="/2020/01/integration-portolio/" class="postShorten-excerpt_link link">Continue reading</a>
+        
+      </p>
+    </div>
+  </div>
+  
+</article>
+
           
             
   
