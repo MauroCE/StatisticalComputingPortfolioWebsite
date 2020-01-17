@@ -477,7 +477,7 @@ linear_ls(1:dim(X)[1], least_squares(X, y))</code></pre>
 }</code></pre>
 <p>We can try this function using <span class="math inline">\(10\)</span> fold cross validation</p>
 <pre class="r"><code>cv(X, y, 10)</code></pre>
-<pre><code>## [1] 4.957559</code></pre>
+<pre><code>## [1] 5.261997</code></pre>
 <p>and even <strong>leave-one-out</strong> cross validation</p>
 <pre class="r"><code>cv(X, y, dim(X)[2])</code></pre>
 <pre><code>## [1] 0.5413291</code></pre>
