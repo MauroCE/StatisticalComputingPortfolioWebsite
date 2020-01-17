@@ -12,14 +12,14 @@
     
     
     <item>
-      <title>Reproducibility</title>
+      <title>Reproducibility Portfolio</title>
       <link>/2020/01/reproducibility/</link>
       <pubDate>Wed, 08 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/2020/01/reproducibility/</guid>
       <description>Strategies for Reproducibility According to Lee (2019) reproducibility can be implemented by:
- Organize files logically into modules and packages. Use version control software. Write human-readable documentation.  Why is reproducibility important?
- If the research is reproducible, then the analysis and the methodology are clear. A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will  Replication crisis Replication crisis refers to the difficulty or impossibility to reproduce scientific studies, which undermines their results since the reproducibility of experiments is an integral part of the scientific method.</description>
+ Organizing files logically into modules and packages. Using version control software. Writing human-readable documentation.  Why is reproducibility important?
+ If the research is reproducible, then the analysis and the methodology are clear. A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will validate much coding-based research.</description>
     </item>
     
   </channel>

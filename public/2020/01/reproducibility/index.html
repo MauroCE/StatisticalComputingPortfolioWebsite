@@ -9,25 +9,25 @@
 <meta name="author" content="Mauro Camara Escudero">
 <meta name="keywords" content="tech">
 <meta name="description" content="Strategies for Reproducibility According to Lee (2019) reproducibility can be implemented by:
- Organize files logically into modules and packages. Use version control software. Write human-readable documentation.  Why is reproducibility important?
- If the research is reproducible, then the analysis and the methodology are clear. A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will  Replication crisis Replication crisis refers to the difficulty or impossibility to reproduce scientific studies, which undermines their results since the reproducibility of experiments is an integral part of the scientific method.">
+ Organizing files logically into modules and packages. Using version control software. Writing human-readable documentation.  Why is reproducibility important?
+ If the research is reproducible, then the analysis and the methodology are clear. A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will validate much coding-based research.">
 
 
 <meta property="og:description" content="Strategies for Reproducibility According to Lee (2019) reproducibility can be implemented by:
- Organize files logically into modules and packages. Use version control software. Write human-readable documentation.  Why is reproducibility important?
- If the research is reproducible, then the analysis and the methodology are clear. A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will  Replication crisis Replication crisis refers to the difficulty or impossibility to reproduce scientific studies, which undermines their results since the reproducibility of experiments is an integral part of the scientific method.">
+ Organizing files logically into modules and packages. Using version control software. Writing human-readable documentation.  Why is reproducibility important?
+ If the research is reproducible, then the analysis and the methodology are clear. A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will validate much coding-based research.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Reproducibility">
-<meta name="twitter:title" content="Reproducibility">
+<meta property="og:title" content="Reproducibility Portfolio">
+<meta name="twitter:title" content="Reproducibility Portfolio">
 <meta property="og:url" content="/2020/01/reproducibility/">
 <meta property="twitter:url" content="/2020/01/reproducibility/">
 <meta property="og:site_name" content="Statistical Computing Portfolio Website">
 <meta property="og:description" content="Strategies for Reproducibility According to Lee (2019) reproducibility can be implemented by:
- Organize files logically into modules and packages. Use version control software. Write human-readable documentation.  Why is reproducibility important?
- If the research is reproducible, then the analysis and the methodology are clear. A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will  Replication crisis Replication crisis refers to the difficulty or impossibility to reproduce scientific studies, which undermines their results since the reproducibility of experiments is an integral part of the scientific method.">
+ Organizing files logically into modules and packages. Using version control software. Writing human-readable documentation.  Why is reproducibility important?
+ If the research is reproducible, then the analysis and the methodology are clear. A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will validate much coding-based research.">
 <meta name="twitter:description" content="Strategies for Reproducibility According to Lee (2019) reproducibility can be implemented by:
- Organize files logically into modules and packages. Use version control software. Write human-readable documentation.  Why is reproducibility important?
- If the research is reproducible, then the analysis and the methodology are clear. A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will  Replication crisis Replication crisis refers to the difficulty or impossibility to reproduce scientific studies, which undermines their results since the reproducibility of experiments is an integral part of the scientific method.">
+ Organizing files logically into modules and packages. Using version control software. Writing human-readable documentation.  Why is reproducibility important?
+ If the research is reproducible, then the analysis and the methodology are clear. A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will validate much coding-based research.">
 <meta property="og:locale" content="en-us">
 
   
@@ -67,7 +67,7 @@
   <meta property="twitter:image" content="/images/mace2.jpg">
 
 
-    <title>Reproducibility</title>
+    <title>Reproducibility Portfolio</title>
 
     <link rel="icon" href="/images/favicon.png">
     
@@ -247,7 +247,7 @@ if (!doNotTrack) {
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Reproducibility
+      Reproducibility Portfolio
     </h1>
   
   
@@ -285,14 +285,14 @@ if (!doNotTrack) {
 <h2>Strategies for Reproducibility</h2>
 <p>According to <span class="citation">Lee (2019)</span> reproducibility can be implemented by:</p>
 <ul>
-<li>Organize files logically into <em>modules</em> and <em>packages</em>.</li>
-<li>Use <em>version control</em> software.</li>
-<li>Write human-readable <em>documentation</em>.</li>
+<li>Organizing files logically into <em>modules</em> and <em>packages</em>.</li>
+<li>Using <em>version control</em> software.</li>
+<li>Writing human-readable <em>documentation</em>.</li>
 </ul>
 <p>Why is reproducibility important?</p>
 <ul>
 <li>If the research is reproducible, then the analysis and the methodology are clear.</li>
-<li>A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will</li>
+<li>A major building block of the scientific method is the reproducibility of experiements. If independent researchers are able to reproduce our results, this will validate much coding-based research.</li>
 </ul>
 <div id="replication-crisis" class="section level4">
 <h4>Replication crisis</h4>
@@ -325,9 +325,8 @@ html_document:
   toc_float: true
   toc_depth: 4
 bibliography: bibliography.bib
-runtime: shiny
 nocite: |
-@shiny, @turingway
+@turingway
 ---</code></pre>
 the <code>output</code> field defines what type of document we want at the end (HTML, PDF, etc), <code>toc</code> stands for “table of contents” and in the YAML above we’ve allowed it to show headers up to 4 levels and to “float”, i.e. to be always present at the side of the file, even when scrolling down through the document.</li>
 <li><p>Chunks of code and (optional) their output, such as the following:</p>
@@ -444,21 +443,18 @@ linear_ls(1:dim(X)[1], least_squares(X, y))</code></pre>
 <h2>Cross Validation</h2>
 <p>The following function <code>cv</code> implements k-fold Cross Validation. It works by first stacking together <code>X</code> and <code>y</code> to create a new dataframe called <code>xy</code> that has dimension <code>n</code> times <code>d+2</code> (it is <code>d+2</code> rather than <code>d+1</code> because of the extra <code>y</code> column.). Next, the function shuffles the rows of the dataframe using the <code>sample()</code> function.</p>
 <p>At this point, we can use the <code>cut()</code> function to create flags that signal to which of the <code>k</code> groups each row of the dataframe belongs to. After this, we go through a loop where we perform least squares on all the data except the current group of rows, and we test the result exactly on that hold-out group.</p>
-<pre class="r"><code># for testing purposes let&#39;s set a seed
-cv &lt;- function(X, y, k){
+<pre class="r"><code>cv &lt;- function(X, y, k){
   # K-fold cross validation. For leave-one-out set k to num of observations.
   # X should be a (d+1)*n matrix with d = num of features, n = numb of samples.
   # y should be 1*n target vector.
-  # Create a vector where errors will be stored. Length will be k
-  errors &lt;- rep(0, k)
+  errors &lt;- rep(0, k)  # errors will be stored here
   # First stack together X and y. y will be last row of X. Then transpose.
   xy &lt;- t(rbind(X, y))
   # shuffle the rows
   xyshuffled &lt;- xy[sample(nrow(xy)), ]
   # Create flags for the rows of xyshuffled to be divided into k folds
   folds &lt;- cut(seq(1, nrow(xyshuffled)), breaks=k, labels=FALSE)
-  # Go through each fold and calculate train and test stuff
-  for(i in 1:k){
+  for(i in 1:k){ # Go through each fold
     # Find indeces of rows in the hold-out (test) group
     test_ind &lt;- which(folds==i, arr.ind=TRUE)
     # Use such indeces to grab test data
@@ -477,23 +473,20 @@ cv &lt;- function(X, y, k){
     # Add error to error list
     errors[i] &lt;- e
   }
-  # Finally return the average error
-  return(mean(errors))
+  return(mean(errors)) # Finally return the average error
 }</code></pre>
 <p>We can try this function using <span class="math inline">\(10\)</span> fold cross validation</p>
 <pre class="r"><code>cv(X, y, 10)</code></pre>
-<pre><code>## [1] 5.392343</code></pre>
+<pre><code>## [1] 4.957559</code></pre>
 <p>and even <strong>leave-one-out</strong> cross validation</p>
 <pre class="r"><code>cv(X, y, dim(X)[2])</code></pre>
 <pre><code>## [1] 0.5413291</code></pre>
 </div>
 <div id="removing-features" class="section level2">
 <h2>Removing Features</h2>
-<p>We can evaluate leave-one-out cross validation on the dataset where one feature has been removed each time. The code would look similar to</p>
-<pre class="r"><code># There&#39;s dim(X)[1] features if we count also the bias feature
-errors &lt;- rep(0, dim(X)[1])
-# Remove one feature at a time
-for (i in 1:dim(X)[1]){
+<p>Evaluate leave-one-out CV on the dataset where one feature has been removed each time.</p>
+<pre class="r"><code>errors &lt;- rep(0, dim(X)[1]) # There&#39;s dim(X)[1] features (with bias)
+for (i in 1:dim(X)[1]){     # Remove one feature at a time
   X &lt;- X[-i, ]
   errors[i] &lt;- cv(X, y, dim(X)[2])
 }
@@ -501,14 +494,15 @@ errors</code></pre>
 <pre><code>## [1] 0.7780061 0.7710748 0.8526117 0.8407295 0.8322292 0.8322292 0.8322292
 ## [8] 0.8322292 0.8322292</code></pre>
 <p>The error increases because we are missing information about one of the features. We can plot the errors as follows</p>
-<pre class="r"><code>plot(1:length(errors), errors, xlab=&quot;Features&quot;, xaxt = &quot;n&quot;, main=&quot;CV errors with feature dropping&quot;, ylab=&quot;CV errors&quot;)
+<pre class="r"><code>plot(1:length(errors), errors, xlab=&quot;Features&quot;, xaxt = &quot;n&quot;, 
+     main=&quot;CV errors with feature dropping&quot;, ylab=&quot;CV errors&quot;)
 labels &lt;- names(df[1:8])
 labels[9] &lt;- &quot;bias&quot;
 axis(1, at=1:length(errors), labels=labels)</code></pre>
-<p><img src="/post/2020-01-08-reproducibility_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="/post/2020-01-08-reproducibility_files/figure-html/unnamed-chunk-15-1.png" width="768" /></p>
 </div>
-<div id="bibliography" class="section level1 unnumbered">
-<h1>Bibliography</h1>
+<div id="bibliography" class="section level2 unnumbered">
+<h2>Bibliography</h2>
 <div id="refs" class="references">
 <div id="ref-sc1">
 <p>Lee, Anthony. 2019. “Reproducibility.” <a href="https://awllee.github.io/sc1-2019/reproducibility/">https://awllee.github.io/sc1-2019/reproducibility/</a>.</p>

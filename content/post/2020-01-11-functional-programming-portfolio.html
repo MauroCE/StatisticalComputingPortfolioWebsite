@@ -178,8 +178,8 @@ yhat_pseudo &lt;- pseudo_predict(Xtest)</code></pre>
 values.</p>
 <pre class="r"><code>library(ggplot2)
 # Put data into a dataframe for ggplot2
-df &lt;- data.frame(real=ytest, pred=yhat, pseudo_pred=yhat_pseudo)
-ggplot(data=df) + 
+df &lt;- data.frame(real=ytest, pred=yhat, pseudo_pred=yhat_pseudo)</code></pre>
+<pre class="r"><code>ggplot(data=df) + 
   geom_point(aes(x=real, y=pred), color=&quot;darkblue&quot;) + 
   geom_abline(intercept=0, slope=1) + 
   ggtitle(paste(&quot;Predictions vs Actual with b =&quot;, b)) + 
@@ -191,7 +191,7 @@ ggplot(data=df) +
   xlab(expression(y)) + 
   ylab(expression(hat(y))) + 
   coord_fixed()</code></pre>
-<p><img src="/post/2020-01-11-functional-programming-portfolio_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="/post/2020-01-11-functional-programming-portfolio_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>Similarly, we can see the performance of our prediction using the pseudoinverse</p>
 <pre class="r"><code>ggplot(data=df) + 
   geom_point(aes(x=real, y=pseudo_pred), color=&quot;darkblue&quot;) + 
@@ -205,7 +205,7 @@ ggplot(data=df) +
   xlab(expression(y)) + 
   ylab(expression(hat(y))) + 
   coord_fixed()</code></pre>
-<p><img src="/post/2020-01-11-functional-programming-portfolio_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="/post/2020-01-11-functional-programming-portfolio_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
 <div id="technical-note-on-calculating-the-bandwidth" class="section level2">
 <h2>Technical Note on Calculating the Bandwidth</h2>

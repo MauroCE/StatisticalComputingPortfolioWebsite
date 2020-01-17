@@ -303,6 +303,8 @@ values.
 library(ggplot2)
 # Put data into a dataframe for ggplot2
 df <- data.frame(real=ytest, pred=yhat, pseudo_pred=yhat_pseudo)
+```
+```{r}
 ggplot(data=df) + 
   geom_point(aes(x=real, y=pred), color="darkblue") + 
   geom_abline(intercept=0, slope=1) + 

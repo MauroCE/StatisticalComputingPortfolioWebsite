@@ -8,18 +8,22 @@
 <meta name="generator" content="Hugo 0.58.3 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Mauro Camara Escudero">
 <meta name="keywords" content="tech">
-<meta name="description" content="library(MASS) library(microbenchmark) library(tidyverse) Utility functions kernel_matrix &lt;- function(X, sigmasq, Y=NULL){ if (is.null(Y)){ Y &lt;- X } n &lt;- nrow(X) m &lt;- nrow(Y) # Find three matrices above Xnorm &lt;- matrix(apply(X^2, 1, sum), n, m) Ynorm &lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE) XY &lt;- tcrossprod(X, Y) return(exp(-(Xnorm - 2*XY &#43; Ynorm) / (2*sigmasq))) } # Creates a logical one-hot encoding, assumes classes 0, .. , K-1 make_flags &lt;- function(y){ classes &lt;- unique(y) flags &lt;- data.">
+<meta name="description" content="library(MASS) library(microbenchmark) library(tidyverse) Utility functions The kernel_matrix function calculates the kernel matrix with squared exponential in a vectorized way. This function is borrowed from the profiling portfolio.
+kernel_matrix &lt;- function(X, sigmasq, Y=NULL){ if (is.null(Y)){ Y &lt;- X } n &lt;- nrow(X) m &lt;- nrow(Y) # Find three matrices above Xnorm &lt;- matrix(apply(X^2, 1, sum), n, m) Ynorm &lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE) XY &lt;- tcrossprod(X, Y) return(exp(-(Xnorm - 2*XY &#43; Ynorm) / (2*sigmasq))) } The function make_flags takes a y vector of length n and containing K class labels 0, 1, , K-1 and returns a matrix with n rows and K columns, where each row is a one-hot encoding for the class corresponding to that observation.">
 
 
-<meta property="og:description" content="library(MASS) library(microbenchmark) library(tidyverse) Utility functions kernel_matrix &lt;- function(X, sigmasq, Y=NULL){ if (is.null(Y)){ Y &lt;- X } n &lt;- nrow(X) m &lt;- nrow(Y) # Find three matrices above Xnorm &lt;- matrix(apply(X^2, 1, sum), n, m) Ynorm &lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE) XY &lt;- tcrossprod(X, Y) return(exp(-(Xnorm - 2*XY &#43; Ynorm) / (2*sigmasq))) } # Creates a logical one-hot encoding, assumes classes 0, .. , K-1 make_flags &lt;- function(y){ classes &lt;- unique(y) flags &lt;- data.">
+<meta property="og:description" content="library(MASS) library(microbenchmark) library(tidyverse) Utility functions The kernel_matrix function calculates the kernel matrix with squared exponential in a vectorized way. This function is borrowed from the profiling portfolio.
+kernel_matrix &lt;- function(X, sigmasq, Y=NULL){ if (is.null(Y)){ Y &lt;- X } n &lt;- nrow(X) m &lt;- nrow(Y) # Find three matrices above Xnorm &lt;- matrix(apply(X^2, 1, sum), n, m) Ynorm &lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE) XY &lt;- tcrossprod(X, Y) return(exp(-(Xnorm - 2*XY &#43; Ynorm) / (2*sigmasq))) } The function make_flags takes a y vector of length n and containing K class labels 0, 1, , K-1 and returns a matrix with n rows and K columns, where each row is a one-hot encoding for the class corresponding to that observation.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Optimization Portfolio">
 <meta name="twitter:title" content="Optimization Portfolio">
 <meta property="og:url" content="/2020/01/optimization-portfolio/">
 <meta property="twitter:url" content="/2020/01/optimization-portfolio/">
 <meta property="og:site_name" content="Statistical Computing Portfolio Website">
-<meta property="og:description" content="library(MASS) library(microbenchmark) library(tidyverse) Utility functions kernel_matrix &lt;- function(X, sigmasq, Y=NULL){ if (is.null(Y)){ Y &lt;- X } n &lt;- nrow(X) m &lt;- nrow(Y) # Find three matrices above Xnorm &lt;- matrix(apply(X^2, 1, sum), n, m) Ynorm &lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE) XY &lt;- tcrossprod(X, Y) return(exp(-(Xnorm - 2*XY &#43; Ynorm) / (2*sigmasq))) } # Creates a logical one-hot encoding, assumes classes 0, .. , K-1 make_flags &lt;- function(y){ classes &lt;- unique(y) flags &lt;- data.">
-<meta name="twitter:description" content="library(MASS) library(microbenchmark) library(tidyverse) Utility functions kernel_matrix &lt;- function(X, sigmasq, Y=NULL){ if (is.null(Y)){ Y &lt;- X } n &lt;- nrow(X) m &lt;- nrow(Y) # Find three matrices above Xnorm &lt;- matrix(apply(X^2, 1, sum), n, m) Ynorm &lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE) XY &lt;- tcrossprod(X, Y) return(exp(-(Xnorm - 2*XY &#43; Ynorm) / (2*sigmasq))) } # Creates a logical one-hot encoding, assumes classes 0, .. , K-1 make_flags &lt;- function(y){ classes &lt;- unique(y) flags &lt;- data.">
+<meta property="og:description" content="library(MASS) library(microbenchmark) library(tidyverse) Utility functions The kernel_matrix function calculates the kernel matrix with squared exponential in a vectorized way. This function is borrowed from the profiling portfolio.
+kernel_matrix &lt;- function(X, sigmasq, Y=NULL){ if (is.null(Y)){ Y &lt;- X } n &lt;- nrow(X) m &lt;- nrow(Y) # Find three matrices above Xnorm &lt;- matrix(apply(X^2, 1, sum), n, m) Ynorm &lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE) XY &lt;- tcrossprod(X, Y) return(exp(-(Xnorm - 2*XY &#43; Ynorm) / (2*sigmasq))) } The function make_flags takes a y vector of length n and containing K class labels 0, 1, , K-1 and returns a matrix with n rows and K columns, where each row is a one-hot encoding for the class corresponding to that observation.">
+<meta name="twitter:description" content="library(MASS) library(microbenchmark) library(tidyverse) Utility functions The kernel_matrix function calculates the kernel matrix with squared exponential in a vectorized way. This function is borrowed from the profiling portfolio.
+kernel_matrix &lt;- function(X, sigmasq, Y=NULL){ if (is.null(Y)){ Y &lt;- X } n &lt;- nrow(X) m &lt;- nrow(Y) # Find three matrices above Xnorm &lt;- matrix(apply(X^2, 1, sum), n, m) Ynorm &lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE) XY &lt;- tcrossprod(X, Y) return(exp(-(Xnorm - 2*XY &#43; Ynorm) / (2*sigmasq))) } The function make_flags takes a y vector of length n and containing K class labels 0, 1, , K-1 and returns a matrix with n rows and K columns, where each row is a one-hot encoding for the class corresponding to that observation.">
 <meta property="og:locale" content="en-us">
 
   
@@ -281,6 +285,7 @@ library(microbenchmark)
 library(tidyverse)</code></pre>
 <div id="utility-functions" class="section level1">
 <h1>Utility functions</h1>
+<p>The <code>kernel_matrix</code> function calculates the kernel matrix with squared exponential in a vectorized way. This function is borrowed from the <code>profiling</code> portfolio.</p>
 <pre class="r"><code>kernel_matrix &lt;- function(X, sigmasq, Y=NULL){
   if (is.null(Y)){
     Y &lt;- X
@@ -292,9 +297,9 @@ library(tidyverse)</code></pre>
   Ynorm &lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE)
   XY &lt;- tcrossprod(X, Y)
   return(exp(-(Xnorm - 2*XY + Ynorm) / (2*sigmasq)))
-}
-
-# Creates a logical one-hot encoding, assumes classes 0, .. , K-1
+}</code></pre>
+<p>The function <code>make_flags</code> takes a <code>y</code> vector of length <code>n</code> and containing <code>K</code> class labels <code>0</code>, <code>1</code>, , <code>K-1</code> and returns a matrix with <code>n</code> rows and <code>K</code> columns, where each row is a one-hot encoding for the class corresponding to that observation.</p>
+<pre class="r"><code># Creates a logical one-hot encoding, assumes classes 0, .. , K-1
 make_flags &lt;- function(y){
   classes &lt;- unique(y)
   flags &lt;- data.frame(y=y) %&gt;% 
@@ -303,13 +308,15 @@ make_flags &lt;- function(y){
             dplyr::select(-rn) %&gt;% as.matrix %&gt;% as.logical %&gt;%
             matrix(nrow=nrow(y)) 
   return(flags)
-}
-# Calculates a function (usually mean or sd) for all classes
+}</code></pre>
+<p>The function <code>calc_func_per_class</code> generate <code>flags</code> from the vector <code>y</code> and then uses each column to perform an operation on <code>X</code> for every element in the corresponding class.</p>
+<pre class="r"><code># Calculates a function (usually mean or sd) for all classes
 calc_func_per_class &lt;- function(X, y, func){
   flags &lt;- make_flags(y)
   return(t(apply(flags, 2, function(f) apply(X[f, ], 2, func))))
-}
-# Calculates density of a gaussian
+}</code></pre>
+<p>This is a faster version of the classic <code>dmvnorm</code> leveraging cholesky decomposition and computations in the log scale.</p>
+<pre class="r"><code># Calculates density of a gaussian
 gaussian_density &lt;- function(x, mu, sigma, log=FALSE, precision=FALSE){
   # If precision=TRUE, we&#39;re provided with precision matrix, which is the inverse
   # of the variance-covariance matrix
@@ -326,26 +333,19 @@ gaussian_density &lt;- function(x, mu, sigma, log=FALSE, precision=FALSE){
     value &lt;- exp(value)
   }
   return(value[[1]])
-}
-# Fastest known pure-R way to compute means across dimensions.
-center_matrix &lt;- function(A){
+}</code></pre>
+<p>Fastest known pure-R way to compute means across dimensions.</p>
+<pre class="r"><code>center_matrix &lt;- function(A){
   return(A - rep(1, nrow(A)) %*% t(colMeans(A)))
 }</code></pre>
 </div>
 <div id="binary-dataset-generation" class="section level1">
 <h1>Binary Dataset Generation</h1>
-<div id="settings-for-data-creation" class="section level3">
-<h3>Settings for Data Creation</h3>
-<pre class="r"><code># Settings
-n1 &lt;- 100
-n2 &lt;- 100
-m1 &lt;- c(6, 6)
-m2 &lt;- c(-1, 1)
-s1 &lt;- matrix(c(1, 0, 0, 10), nrow=2, ncol=2)
-s2 &lt;- matrix(c(1, 0, 0, 10), nrow=2, ncol=2)</code></pre>
-</div>
-<div id="data-generating-function" class="section level3">
-<h3>Data Generating Function</h3>
+<p>Generate data from two multivariate gaussian distributions with similar means and same variance-covariance.
+Decide the number of data points for each class, the mean and the variance-covariance matrix.</p>
+<pre class="r"><code>n1 &lt;- 100; m1 &lt;- c(6, 6);  s1 &lt;- matrix(c(1, 0, 0, 10), nrow=2, ncol=2)
+n2 &lt;- 100; m2 &lt;- c(-1, 1); s2 &lt;- matrix(c(1, 0, 0, 10), nrow=2, ncol=2)</code></pre>
+<p>Then define the data-generating function.</p>
 <pre class="r"><code>generate_binary_data &lt;- function(n1, n2, m1, s1, m2, s2){
   # x1, x2 and y for both classes (both 0,1 and -1,1 will be created for convenience)
   class1 &lt;- mvrnorm(n1, m1, s1)
@@ -355,13 +355,12 @@ s2 &lt;- matrix(c(1, 0, 0, 10), nrow=2, ncol=2)</code></pre>
   # Generate dataframe
   data &lt;- data.frame(rbind(class1, class2), y, y2)
   return(data)
-}
-# Generate reproducible data
-set.seed(123)
+}</code></pre>
+<p>Finally, we generate data with a random seed for reproducibility.</p>
+<pre class="r"><code>set.seed(123)
 data &lt;- generate_binary_data(n1, n2, m1, s1, m2, s2)
 X &lt;- data %&gt;% dplyr::select(-y, -y2) %&gt;% as.matrix
 y &lt;- data %&gt;% dplyr::select(y) %&gt;% as.matrix</code></pre>
-</div>
 <div id="data-appearance" class="section level3">
 <h3>Data Appearance</h3>
 <pre class="r"><code>plot_dataset &lt;- function(data){
@@ -372,7 +371,7 @@ y &lt;- data %&gt;% dplyr::select(y) %&gt;% as.matrix</code></pre>
   return(p)
 }
 plot_dataset(data)</code></pre>
-<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
 </div>
 <div id="fisher-discriminant-analysis" class="section level1">
@@ -449,12 +448,10 @@ plot_dataset(data)</code></pre>
     labs(color=&quot;Class&quot;, title=&quot;FDA-Embedded Dataset&quot;, x=&quot;X1&quot;, y=&quot;X2&quot;) + 
     theme(plot.title=element_text(hjust=0.5, size=20))
 }</code></pre>
-</div>
-<div id="results" class="section level3">
-<h3>Results</h3>
+<p>We can now look at the results of our optimization.</p>
 <pre class="r"><code>fda_object &lt;- fda(X, y)
 plot(fda_object)</code></pre>
-<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 </div>
 </div>
 <div id="naive-bayes" class="section level1">
@@ -504,6 +501,7 @@ Let’s assume each class is Gaussian distributed.</p>
 </div>
 <div id="plot-method-for-naive-bayes" class="section level3">
 <h3>Plot Method for Naive Bayes</h3>
+<p>This will plot the two classes and will predict points on a grid, to show the decision boundary.</p>
 <pre class="r"><code>plot.naive_bayes &lt;- function(x, y=NULL, ngrid=75, ...){
   if (ncol(x$X) &gt; 2) {
     print(&quot;Naive Bayes plotting for more than 2 dimensions, not implemented.&quot;)
@@ -525,11 +523,8 @@ Let’s assume each class is Gaussian distributed.</p>
       theme(plot.title=element_text(hjust=0.5, size=20))
   }
 }</code></pre>
-</div>
-<div id="results-1" class="section level3">
-<h3>Results</h3>
 <pre class="r"><code>plot(naive_bayes(X, y))</code></pre>
-<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 </div>
 </div>
 <div id="logistic-regression" class="section level1">
@@ -592,7 +587,7 @@ where the step size <span class="math inline">\(\gamma\)</span> can either be ch
 <h3>Gradient Ascent (MAP, Ridge Regularization)</h3>
 <p>The update takes the form
 <span class="math display">\[
-\boldsymbol{\mathbf{\beta}}_{k+1}\leftarrow  \boldsymbol{\mathbf{\beta}}_k + \gamma_k\left[\sigma_{\boldsymbol{\mathbf{\beta}}}^2X^\top(\boldsymbol{\mathbf{y}}- \sigma(X\boldsymbol{\mathbf{\beta}}_k)) - \boldsymbol{\mathbf{\beta}}_k\right]
+\boldsymbol{\mathbf{\beta}}_{k+1}\leftarrow  \boldsymbol{\mathbf{\beta}}_k + \gamma \left[\sigma_{\boldsymbol{\mathbf{\beta}}}^2X^\top(\boldsymbol{\mathbf{y}}- \sigma(X\boldsymbol{\mathbf{\beta}}_k)) - \boldsymbol{\mathbf{\beta}}_k\right]
 \]</span></p>
 </div>
 <div id="newtons-method-mle-no-regularization" class="section level3">
@@ -619,6 +614,7 @@ and then perform the update
 </div>
 <div id="implementations-of-the-optimization-methods" class="section level3">
 <h3>Implementations of the Optimization Methods</h3>
+<p>Below we define gradient ascent and newton’s method both for the MLE and MAP cases.</p>
 <pre class="r"><code>sigmoid &lt;- function(x) 1.0 / (1.0 + exp(-x))</code></pre>
 <pre class="r"><code>grad_ascent &lt;- function(beta, niter=100, gamma=0.001, cost=&quot;MLE&quot;, sigmab=1.0){
   if (cost==&quot;MLE&quot;){
@@ -783,7 +779,7 @@ lr_nm_map   &lt;- logistic_regression(X, y, cost=&quot;MAP&quot;, method=&quot;N
 }</code></pre>
 <p>We can see indeed that the laplace approximation to the posterior is more uncertain when points from either side are closer together, as one would expect.</p>
 <pre class="r"><code>plot(logistic_regression(X, y, cost=&quot;MAP&quot;, method=&quot;BFGS&quot;, laplace = TRUE))</code></pre>
-<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><img src="/post/2020-01-15-optimization-portfolio_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 </div>
 </div>
 

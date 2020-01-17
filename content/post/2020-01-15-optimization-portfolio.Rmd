@@ -44,7 +44,7 @@ library(tidyverse)
 ```
 
 # Utility functions
-
+The `kernel_matrix` function calculates the kernel matrix with squared exponential in a vectorized way. This function is borrowed from the `profiling` portfolio.
 ```{r}
 kernel_matrix <- function(X, sigmasq, Y=NULL){
   if (is.null(Y)){
@@ -58,7 +58,10 @@ kernel_matrix <- function(X, sigmasq, Y=NULL){
   XY <- tcrossprod(X, Y)
   return(exp(-(Xnorm - 2*XY + Ynorm) / (2*sigmasq)))
 }
+```
 
+The function `make_flags` takes a `y` vector of length `n` and containing `K` class labels `0`, `1`, \ldots, `K-1` and returns a matrix with `n` rows and `K` columns, where each row is a one-hot encoding for the class corresponding to that observation.
+```{r}
 # Creates a logical one-hot encoding, assumes classes 0, .. , K-1
 make_flags <- function(y){
   classes <- unique(y)
@@ -69,11 +72,19 @@ make_flags <- function(y){
             matrix(nrow=nrow(y)) 
   return(flags)
 }
+```
+
+The function `calc_func_per_class` generate `flags` from the vector `y` and then uses each column to perform an operation on `X` for every element in the corresponding class.
+```{r}
 # Calculates a function (usually mean or sd) for all classes
 calc_func_per_class <- function(X, y, func){
   flags <- make_flags(y)
   return(t(apply(flags, 2, function(f) apply(X[f, ], 2, func))))
 }
+```
+
+This is a faster version of the classic `dmvnorm` leveraging  cholesky decomposition and computations in the log scale.
+```{r}
 # Calculates density of a gaussian
 gaussian_density <- function(x, mu, sigma, log=FALSE, precision=FALSE){
   # If precision=TRUE, we're provided with precision matrix, which is the inverse
@@ -92,24 +103,24 @@ gaussian_density <- function(x, mu, sigma, log=FALSE, precision=FALSE){
   }
   return(value[[1]])
 }
-# Fastest known pure-R way to compute means across dimensions.
+```
+
+Fastest known pure-R way to compute means across dimensions.
+```{r}
 center_matrix <- function(A){
   return(A - rep(1, nrow(A)) %*% t(colMeans(A)))
 }
 ```
 
 # Binary Dataset Generation
-### Settings for Data Creation
+Generate data from two multivariate gaussian distributions with similar means and same variance-covariance.
+Decide the number of data points for each class, the mean and the variance-covariance matrix.
 ```{r}
-# Settings
-n1 <- 100
-n2 <- 100
-m1 <- c(6, 6)
-m2 <- c(-1, 1)
-s1 <- matrix(c(1, 0, 0, 10), nrow=2, ncol=2)
-s2 <- matrix(c(1, 0, 0, 10), nrow=2, ncol=2)
+n1 <- 100; m1 <- c(6, 6);  s1 <- matrix(c(1, 0, 0, 10), nrow=2, ncol=2)
+n2 <- 100; m2 <- c(-1, 1); s2 <- matrix(c(1, 0, 0, 10), nrow=2, ncol=2)
 ```
-### Data Generating Function
+
+Then define the data-generating function.
 ```{r}
 generate_binary_data <- function(n1, n2, m1, s1, m2, s2){
   # x1, x2 and y for both classes (both 0,1 and -1,1 will be created for convenience)
@@ -121,12 +132,16 @@ generate_binary_data <- function(n1, n2, m1, s1, m2, s2){
   data <- data.frame(rbind(class1, class2), y, y2)
   return(data)
 }
-# Generate reproducible data
+```
+
+Finally, we generate data with a random seed for reproducibility.
+```{r}
 set.seed(123)
 data <- generate_binary_data(n1, n2, m1, s1, m2, s2)
 X <- data %>% dplyr::select(-y, -y2) %>% as.matrix
 y <- data %>% dplyr::select(y) %>% as.matrix
 ```
+
 ### Data Appearance
 ```{r}
 plot_dataset <- function(data){
@@ -217,7 +232,7 @@ plot.FDA <- function(x, y=NULL, ...){
 }
 ```
 
-### Results
+We can now look at the results of our optimization.
 ```{r}
 fda_object <- fda(X, y)
 plot(fda_object)
@@ -269,6 +284,7 @@ predict.naive_bayes <- function(x, xtest){
 ```
 
 ### Plot Method for Naive Bayes
+This will plot the two classes and will predict points on a grid, to show the decision boundary.
 ```{r}
 plot.naive_bayes <- function(x, y=NULL, ngrid=75, ...){
   if (ncol(x$X) > 2) {
@@ -293,11 +309,9 @@ plot.naive_bayes <- function(x, y=NULL, ngrid=75, ...){
 }
 ```
 
-### Results
 ```{r}
 plot(naive_bayes(X, y))
 ```
-
 
 # Logistic Regression
 ### Mathematical Setting
@@ -354,7 +368,7 @@ where the step size $\gamma$ can either be chosen small.
 ### Gradient Ascent (MAP, Ridge Regularization)
 The update takes the form
 $$
-\vbeta_{k+1}\leftarrow  \vbeta_k + \gamma_k\left[\sigma_{\vbeta}^2X^\top(\vy - \sigma(X\vbeta_k)) - \vbeta_k\right]
+\vbeta_{k+1}\leftarrow  \vbeta_k + \gamma \left[\sigma_{\vbeta}^2X^\top(\vy - \sigma(X\vbeta_k)) - \vbeta_k\right]
 $$
 
 ### Newton's Method (MLE, No Regularization)
@@ -378,6 +392,7 @@ $$
 $$
 
 ### Implementations of the Optimization Methods
+Below we define gradient ascent and newton's method both for the MLE and MAP cases.
 
 ```{r}
 sigmoid <- function(x) 1.0 / (1.0 + exp(-x))

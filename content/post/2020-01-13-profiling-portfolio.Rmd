@@ -11,6 +11,8 @@ tags:
   - gaussian-processes
 keywords:
   - tech
+header-includes:
+  - \usepackage{amsmath}
 ---
 
 ```{r setup, include=FALSE}
@@ -67,6 +69,7 @@ regression_function <- function(x){
 ```
 Now let's actually generate some data
 ```{r}
+set.seed(12345)
 # training data
 xtrain <- matrix(runif(ntrain, min=-5, max=5))
 ytrain <- regression_function(xtrain) + matrix(rnorm(ntrain, sd=sigma_n))
@@ -74,20 +77,20 @@ ytrain <- regression_function(xtrain) + matrix(rnorm(ntrain, sd=sigma_n))
 xtest <- matrix(seq(-5,5, len=ntest))
 ```
 ### Naive Vectorized Implementation
-The firt implementation that we look at is naive in the sense that it basically blindly copies the operations. This means that we invert $K + \sigma_n^2 I$ directly.
+The first implementation that we look at is naive in the sense that it basically blindly copies the operations. This means that we invert $K + \sigma_n^2 I$ directly.
 ```{r}
 source("gp_naive.R", keep.source = TRUE)
 profvis(result <- gp_naive(xtrain, ytrain, xtest, sigma_n, sigmasq))
 ```
 
-### Smart Implementation
+### Online Non-Vectorized Cholesky Implementation
 This implementation can also be used _online_. It is recommended in the "Gaussian Processes for Machine Learning" book.
 ```{r}
 source("gp_online.R", keep.source = TRUE)
 profvis(result_online <- gp_online(xtrain, ytrain, xtest, sigma_n, sigmasq))
 ```
 
-### Implementation using a vectorized kernel matrix
+### Online Vectorized-Kernel Cholesky Implementation
 We can see that most of the time is spent computing the kernel matrix. We can therefore find a faster way to compute it as follows
 ```{r}
 kernel_matrix_vectorized <- function(X, sigmasq, Y=NULL){
@@ -175,31 +178,31 @@ data.frame(x=xtest, t(mvrnorm(npost_samples, gpmean, gpvcov))) %>%
 One might wonder why in the function `kernel_matrix_vectorized()` we fill the matrix `Ynorm` by row. Afterall `R` works with column-major storage so this should be inefficient. One can compare filling in a matrix by row versus filling it by column and then taking the transpose in different cases:
 
 * Number of rows < Number of columns
-```{r, eval=FALSE}
+```{r, eval=TRUE}
 nrows <- 100
-ncols <- 1000
+ncols <- 2000
 microbenchmark(
-  matrix(0, nrows, ncols, byrow=TRUE),
-  t(matrix(0, nrows, ncols))
+  rowwise=matrix(0, nrows, ncols, byrow=TRUE),
+  transpose=t(matrix(0, nrows, ncols))
   )
 ```
 * Number of rows = Number of columns
-```{r, eval=FALSE}
-nrows <- 1000
-ncols <- 1000
+```{r, eval=TRUE}
+nrows <- 2000
+ncols <- 2000
 microbenchmark(
-  matrix(0, nrows, ncols, byrow=TRUE),
-  t(matrix(0, nrows, ncols))
+  rowwise=matrix(0, nrows, ncols, byrow=TRUE),
+  transpose=t(matrix(0, nrows, ncols))
   )
 ```
 * Number of rows > Number of columns
-```{r, eval=FALSE}
-nrows <- 1000
+```{r, eval=TRUE}
+nrows <- 2000
 ncols <- 100
 microbenchmark(
-  matrix(0, nrows, ncols, byrow=TRUE),
-  t(matrix(0, nrows, ncols))
+  rowwise=matrix(0, nrows, ncols, byrow=TRUE),
+  transpose=t(matrix(0, nrows, ncols))
   )
 ```
 
-Generally, `byrow=TRUE` is faster, except when the number of rows is smaller than the number of columns. One could see if implementing an if-statement checking for `n<m` and then using `t()` rather than `byrow=TRUE` would lead to serious performance improvement.
+Generally, `byrow=TRUE` is faster.

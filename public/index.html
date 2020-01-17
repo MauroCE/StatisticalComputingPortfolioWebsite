@@ -323,7 +323,8 @@ rwmh &lt;- function(start, niter, proposal, target){ # Store accepted, rejected 
     </div>
     <div class="postShorten-excerpt" itemprop="articleBody">
       
-        library(MASS) library(microbenchmark) library(tidyverse) Utility functions kernel_matrix &lt;- function(X, sigmasq, Y=NULL){ if (is.null(Y)){ Y &lt;- X } n &lt;- nrow(X) m &lt;- nrow(Y) # Find three matrices above Xnorm &lt;- matrix(apply(X^2, 1, sum), n, m) Ynorm &lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE) XY &lt;- tcrossprod(X, Y) return(exp(-(Xnorm - 2*XY + Ynorm) / (2*sigmasq))) } # Creates a logical one-hot encoding, assumes classes 0, .. , K-1 make_flags &lt;- function(y){ classes &lt;- unique(y) flags &lt;- data.
+        library(MASS) library(microbenchmark) library(tidyverse) Utility functions The kernel_matrix function calculates the kernel matrix with squared exponential in a vectorized way. This function is borrowed from the profiling portfolio.
+kernel_matrix &lt;- function(X, sigmasq, Y=NULL){ if (is.null(Y)){ Y &lt;- X } n &lt;- nrow(X) m &lt;- nrow(Y) # Find three matrices above Xnorm &lt;- matrix(apply(X^2, 1, sum), n, m) Ynorm &lt;- matrix(apply(Y^2, 1, sum), n, m, byrow=TRUE) XY &lt;- tcrossprod(X, Y) return(exp(-(Xnorm - 2*XY + Ynorm) / (2*sigmasq))) } The function make_flags takes a y vector of length n and containing K class labels 0, 1, , K-1 and returns a matrix with n rows and K columns, where each row is a one-hot encoding for the class corresponding to that observation.
       
       <p>
         <a href="/2020/01/optimization-portfolio/" class="postShorten-excerpt_link link">Continue reading</a>
